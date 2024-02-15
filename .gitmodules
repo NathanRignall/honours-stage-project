@@ -1,0 +1,3 @@
+[submodule "elafry"]
+	path = elafry
+	url = https://github.com/nathanrignall/elafry
