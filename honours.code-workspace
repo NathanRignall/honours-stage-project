@@ -1,0 +1,22 @@
+{
+  "folders": [
+    {
+      "name": "elafry",
+      "path": "elafry"
+    },
+    {
+      "mail": "data",
+      "path": "data"
+    },
+    {
+      "name": "report",
+      "path": "report"
+    },
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "workbench.colorTheme": "Default Light Modern"
+  }
+}
