@@ -1,3 +1,19 @@
 \chapter{Second Chapter}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Several machine learning techniques have been applied to a multi-digit classification problem. We reduced the classification space from one thousand to thirty by encoding the model using multi-label methods. The simple CNN models dramatically outperformed the decision tree models due to them being better suited to hierarchical feature learning. 
+
+Next, we tested splitting the images with a variety of techniques and performing classification on single digits at a time. This yields a small but significant increase in performance. The final model does not use a splitting layer, this allows the entire model to be trained on a GPU which is much faster. Because of the increased performance, more in-depth hyperparameter tuning could take place. An accuracy of 99.93\% is achieved. The majority of the failed classifications would be exceptionally challenging for a human to interpret also. In some cases, the provided labels in the dataset could be considered incorrect, examples are shown in \autoref{tbl:accuracyComparison}.
+
+\vspace{10pt}
+\bgroup
+    \begin{table}[!htbp]
+        \centering
+        \begin{tabular}{ccccc}
+            \hline
+            Simple CNN & Simple CNN (encoding) & Decision Tree & Splitting CNN & Final CNN \\ \hline
+            66.56\% & 99.51\% & 18.96\% & 99.65\% & 99.93\% \\
+        \end{tabular}
+        \caption{Accuracy of models}
+        \label{tbl:accuracyComparison}
+    \end{table}
+\egroup
