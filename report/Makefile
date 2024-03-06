@@ -14,13 +14,19 @@ SHELL=/bin/bash
 %.ps: %.dvi
 	dvips -Ppdf -G0 $*.dvi
 
-TEX_DEPS := $(shell find . -name '*.tex')
-
+# build the final PDF from the LaTeX source
+TEX_DEPS := $(shell find . -name '*.tex') $(shell find . -name '*.py')
 %.pdf: %.tex $(TEX_DEPS)
 	(pdflatex $<; makeindex $*; makeglossaries $*; bibtex $*; pdflatex $<)
 	while grep 'Rerun to get ' $*.log ; do (makeindex $*; makeglossaries $*; bibtex $*; pdflatex $<); done
 	
-all: thesis.pdf   # or thesis.ps
+# run all python scripts to generate figures
+PYTHON_DEPS := $(shell find . -name 'generate.py')
+graphics: $(PYTHON_DEPS)
+	@echo "Running python scripts to generate figures"
+	@for f in $(PYTHON_DEPS); do cd `dirname $$f` && python `basename $$f` && cd -; done
+
+all: graphics thesis.pdf
 
 clean:
 	rm -f *~ *.dvi *.log *.bak *.aux *.toc *.ps *.eps *.blg *.bbl
