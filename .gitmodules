@@ -1,3 +1,9 @@
 [submodule "elafry"]
 	path = elafry
 	url = https://github.com/nathanrignall/elafry
+[submodule "data/rt-socket-test"]
+	path = data/rt-socket-test
+	url = https://github.com/NathanRignall/rt-socket-test.git
+[submodule "data/rt-mem-test"]
+	path = data/rt-mem-test
+	url = https://github.com/NathanRignall/rt-mem-test.git
