@@ -1,11 +1,23 @@
 \chapter{Implementation}
+
+% In this section you will describe what you did, and why you made the important decisions affecting your actions.  It's not a diary - don't write a blow-by-blow account of every little thing that happened.  Be selective and report those choices and techniques which made a difference.  Make sure you discuss what options you considered.  Explain how the criteria and methodology you used to select amongst different options (which tools are most appropriate, for example).
+
+% It may help to imagine that you are reading this project in the future, trying to replicate the work without making the same mistakes along the way.  What would you need to know to make your job easier, and what is unimportant or obvious?  Explain how you implemented the design in the previous chapter.
+
+% This is the place in which you would explain any novel or especially complex algorithms, data structures or systems you have used.
+
+% Make it clear what you have done, and what is pre-existing.  For example, if you are using third party software libraries, describe how you have used them, and how they have benefited your project rather than simply what they do.  If you have built on a framework, make it clear how you have developed new functionality.
+
+
 Scheduler
 
-To implement an event based scheduler we must be able to send signals between processes without significant jitter and latency. We can estimate what level of jitter is acceptable by calculating a worst case executing time for a control loop….
+To implement an event based scheduler it must be able to send signals between processes without significant jitter and latency. The level of jitter that is acceptable can be estimated by calculating a worst case execution time for a control loop in a particular application.
 
-Unix domain sockets, these can be easily transported onto a POSIX system.
-Shared memory with events, more complex to implement.
-Mention something to do with the Raspberry Pi 5 vs 4 
+There are several different methods that can be used to send signals between processes in a Linux system. Unix shared memory and sockets shall both be investigated as they can be easily transported onto a non-linux POSIX system.
+
+
+
+% Mention something to do with the Raspberry Pi 5 vs 4 
 
 \begin{figure}[ht]
     \centering

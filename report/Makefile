@@ -17,8 +17,7 @@ SHELL=/bin/bash
 # build the final PDF from the LaTeX source
 TEX_DEPS := $(shell find . -name '*.tex') $(shell find . -name '*.py')
 %.pdf: %.tex $(TEX_DEPS)
-	(pdflatex $<; makeindex $*; makeglossaries $*; bibtex $*; pdflatex $<)
-	while grep 'Rerun to get ' $*.log ; do (makeindex $*; makeglossaries $*; bibtex $*; pdflatex $<); done
+	latexmk -shell-escape -pdf $*.tex
 	
 # run all python scripts to generate figures
 PYTHON_DEPS := $(shell find . -name 'generate.py')
