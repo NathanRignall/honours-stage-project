@@ -1,1 +1,30 @@
 \chapter{Implementation}
+Scheduler
+
+To implement an event based scheduler we must be able to send signals between processes without significant jitter and latency. We can estimate what level of jitter is acceptable by calculating a worst case executing time for a control loop….
+
+Unix domain sockets, these can be easily transported onto a POSIX system.
+Shared memory with events, more complex to implement.
+Mention something to do with the Raspberry Pi 5 vs 4 
+
+\begin{figure}[ht]
+    \centering
+    \begin{sequencediagram}
+        \newinst{r}{Runner}
+        \newinst[6]{c}{Component}
+
+        \mess[1]{r}{Execute}{c}
+        \mess[1]{c}{Acknowledge}{r}
+        \mess{r}{Wake}{c}
+        \mess{c}{Acknowledge}{r}
+
+        \stepcounter{seqlevel}
+
+        \mess[1]{r}{Execute}{c}
+        \mess[1]{c}{Acknowledge}{r}
+        \mess{r}{Wake}{c}
+        \mess{c}{Acknowledge}{r}
+
+    \end{sequencediagram}
+    \caption{Client-Server messaging}
+\end{figure}

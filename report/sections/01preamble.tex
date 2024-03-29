@@ -1,3 +1,29 @@
 \RequirePackage{amsmath}
 \RequirePackage{amssymb}
 \RequirePackage{xspace}
+
+% tikz drawing
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows, shadows, fit, calc, matrix}
+\tikzset{block/.style={draw, thick, text width=3cm, minimum height=1.5cm, align=center}, line/.style={-latex}}  
+
+% tikz uml thread diagrams
+\usepackage{pgf-umlsd}
+
+% tikz uml diagrams
+\usepackage{pgf-umlcd}
+\renewcommand{\umltextcolor}{black}
+\renewcommand{\umldrawcolor}{black}
+\renewcommand{\umlfillcolor}{white}
+
+% tikz schedule diagram
+\usepackage{tikz-timing}[2014/10/29]
+\usepackage{xparse}
+\usetikztiminglibrary[rising arrows]{clockarrows}
+
+% command to draw bus
+\NewDocumentCommand{\busref}{som}{\texttt{%
+#3%
+\IfValueTF{#2}{[#2]}{}%
+\IfBooleanTF{#1}{\#}{}%
+}}

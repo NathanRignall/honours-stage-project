@@ -1,0 +1,122 @@
+\newpage
+
+\subsection{Development Cards}
+
+In order to build and test the real time software, dedicated development hardware is required to ensure an isolated testing environment.
+
+These test cards consist of a Raspberry Pi Compute Module 4 (CM4).
+This contains the same overall hardware as the standard raspberry pi 4.
+EMMC flash for high vibration environments.
+Exception being the ethernet IC and EMMC flash (This later caused problems with compiling the operating system and bootloader)
+
+Key requirement is remote debugging, full remote power and data control.
+Also placed in a rack
+Selected the Pi KVM project for remote control as is supports deploy as well as additional GPIO control.
+
+The CM4’s display is captured using the CSI port on the KVM with a HDMI to CSI converter.
+The power is controlled using a relay, that controls the 12v supply to the CM4.
+The signal flags of the EMMC storage are directly connected to the KVM. EXPLAIN the signal flags
+These are configured in the KVM user interface
+UART is connected to a USB serial converter.
+USB host is connected to the KVM for flashing the CM4.
+Finally a debugger (JTAG) in case of modifications to the kernel itself.
+
+\begin{figure}[ht]
+    \centering
+        \begin{tikzpicture}  
+            \node[block, text width=1.75cm ] (h) {HDMI\\Capture};  
+            \node[block, text width=1.75cm, right=0.1cm of h] (u) {USB\\Serial};  
+            \node[block, text width=1.75cm, right=0.1cm of u] (j) {JTAG\\Debugger};  
+            \node[block, text width=1.75cm, right=0.1cm of j] (p) {Power\\Relay};
+
+            \node[block, text width=1.75cm, right=0.1cm of p] (m) {Flash\\Mode};
+            \node[block, text width=1.75cm, right=0.1cm of m] (l) {Flash\\Lock};
+            \node[block, text width=1.75cm, right=0.1cm of l] (f) {USB};
+
+            \node[block, text width=11.75cm, above=1cm of p] (d) {Development Card};  
+            \node[block, text width=11.75cm, below=1cm of p] (k) {Remote KVM};  
+
+            \draw[<->,thick] ([xshift=-4.5cm]d.south) to node [midway,fill=white] {HDMI} (h.north);
+            \draw[<->,thick] ([xshift=-3cm]d.south) to node [midway,fill=white] {UART} (u.north);
+            \draw[<->,thick] ([xshift=-1.5cm]d.south) to node [midway,fill=white] {JTAG} (j.north);
+            \draw[<->,thick] ([xshift=-0cm]d.south) to node [midway,fill=white] {12V} (p.north);
+            \draw[<->,thick] ([xshift=1.5cm]d.south) edge (m.north);
+            \draw[<->,thick] ([xshift=3cm]d.south) edge (l.north);
+            \draw[<->,thick] ([xshift=4.5cm]d.south) edge (f.north);
+
+            \draw[<->,thick] (h.south) to node [midway,fill=white] {CSI} ([xshift=-4.5cm]k.north);
+            \draw[<->,thick] (u.south) to node [midway,fill=white] {USB} ([xshift=-3cm]k.north);
+            \draw[<->,thick] (j.south) to node [midway,fill=white] {USB} ([xshift=-1.5cm]k.north);
+            \draw[<->,thick] (p.south) to node [midway,fill=white] {GPIO} ([xshift=0cm]k.north);
+            \draw[<->,thick] (m.south) to node [midway,fill=white] {GPIO} ([xshift=1.5cm]k.north);
+            \draw[<->,thick] (l.south) to node [midway,fill=white] {GPIO} ([xshift=3cm]k.north);
+            \draw[<->,thick] (f.south) to node [midway,fill=white] {USB} ([xshift=4.5cm]k.north);
+        \end{tikzpicture}  
+    \caption[Development Hardware]
+    {Development Hardware}
+    \label{fig:developmentHardware}
+\end{figure}
+
+
+Two of these so that multiple benchmarking activities can be performed at once and compared.
+
+
+Use the uBoot boot loader.
+This allows the development images to be loaded over TFTP, we have a dedicated tftp boot server.
+
+Connected to a managed switch. The test harness is connected to this on a separate VLAN.
+
+\begin{figure}
+    \centering
+    \resizebox{\columnwidth}{!}{
+        %
+        \begin{tikzpicture}  
+            \node[block] (d1) {Development Card};  
+            \node[block,right=of a] (k1) {Debug KVM};
+
+            \node[block,below=of a] (d) {Reciever};  
+            \node[block,right=of d] (e) {Destination};  
+
+            % \node[draw,inner xsep=4mm,inner ysep=7mm,fit=(a)(b) ] (c1) {Application Layer};
+            % \node[draw,inner xsep=4mm,inner ysep=7mm,fit=(d)(e) ] {Infrastructure Layer};  
+            % \node[draw,inner xsep=4mm,inner ysep=7mm,fit=(d)(e),label={Hardware Layer}]{};
+        \end{tikzpicture}  
+        %
+    }
+    \caption[Heatmap for class distribution in dataset]
+    {Heatmap for class distribution in dataset}
+    \label{fig:heatmap}
+\end{figure}
+
+\begin{tikzpicture}[node distance=1.75cm]
+    \node[draw] (node1) {Node 1};
+    \node[draw, below of=node1] (node2) {Node 2};
+    
+    % Create a node that fits both node1 and node2
+    \node[fit=(node1)(node2), draw, inner sep=0pt] (fitnode) {};
+    
+    % Adjusting the fitting node to match the sizes
+    \node[above right] at (fitnode.south west) {Fitting Node};
+\end{tikzpicture}
+
+\begin{tikzpicture}[
+    mymatrix/.style={matrix of nodes, nodes=block, row sep=1em},
+    mycontainer/.style={draw=gray, inner sep=1ex},
+    typetag/.style={draw=gray, inner sep=1ex, anchor=west},
+    title/.style={draw=none, color=gray, inner sep=0pt}
+    ]
+    \matrix[mymatrix] (mx1) {
+      |[title]|Decomposition \\
+      Independent \\
+      Reduction \\
+      DivideAndConquer \\
+    };
+    \matrix[mymatrix, right=of mx1.north east, matrix anchor=north west] (mx2) {
+      |[title]|Dependency \\
+      Atomic \\
+      Range \\
+    };
+    \node[mycontainer, fit=(mx1)] {};
+    \node[mycontainer, fit=(mx2)] {};
+  
+  \end{tikzpicture}
