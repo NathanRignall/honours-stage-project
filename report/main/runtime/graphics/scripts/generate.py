@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.rcParams.update({
@@ -8,6 +9,7 @@ matplotlib.rcParams.update({
     'text.usetex': True,
     'pgf.rcfonts': False,
 })
+plt.rcParams['axes.prop_cycle'] = plt.cycler(color=plt.cm.Set1(np.linspace(0, 1, 10)))
 
 # Load all .csv files in ./store folder
 def load_data():
@@ -63,16 +65,16 @@ plt.ylabel('Frequency')
 plt.savefig('../linux-i100-1h-sm4.pdf', format='pdf', bbox_inches='tight')
 plt.close()
 
-# xen-i100-1h
-# plt.figure(figsize=(12,4))
-# plt.semilogy(data['xen-i100-1h_histogram']['time'], data['xen-i100-1h_histogram']['core1'], label='Dom0')
-# plt.semilogy(data['xen-vm-rt-guest-i100-1h_histogram']['time'], data['xen-vm-guest-i100-1h_histogram']['core1'], label='Dom1')
-# plt.legend()
-# plt.grid()
-# plt.margins(0)
-# plt.xlim(0, 500)
-# plt.ylim(0, 100000000)
-# plt.xlabel('Latency (us)')
-# plt.ylabel('Frequency')
-# plt.savefig('xen-i100-1h.pdf', format='pdf', bbox_inches='tight')
-# plt.close()
+# Compare i100 for linux and xen
+plt.figure(figsize=(12,4))
+plt.semilogy(data['xen-i100-1h_histogram']['time'], data['xen-i100-1h_histogram']['core1'], label='Dom0')
+plt.semilogy(data['xen-vm-rt-guest-i100-1h_histogram']['time'], data['xen-vm-guest-i100-1h_histogram']['core1'], label='Dom1')
+plt.legend()
+plt.grid()
+plt.margins(0)
+plt.xlim(0, 500)
+plt.ylim(0, 100000000)
+plt.xlabel('Latency (us)')
+plt.ylabel('Frequency')
+plt.savefig('../xen-i100-1h.pdf', format='pdf', bbox_inches='tight')
+plt.close()
