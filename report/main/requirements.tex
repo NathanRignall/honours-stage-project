@@ -18,44 +18,145 @@
 
 % Design Constraints
 
-The project's primary objective is to develop multiple system archietctures to enable live software updates in a running control real-time system. 
+% Create a custom list based on enumerate
+\newlist{reqitems}{enumerate}{3}
+  
+% Configure the behaviour of level 1 entries
+\setlist[reqitems, 1]
+{label=REQ\arabic{reqitemsi},
+align=left,
+rightmargin=5pt}
+
+% Configure the behaviour of level 2 entries
+\setlist[reqitems, 2]
+{label=REQ\arabic{reqitemsi}.\arabic{reqitemsii},
+align=left,
+rightmargin=10pt}
+
+% Configure the behaviour of level 3 entries
+\setlist[reqitems, 3]
+{label=REQ\arabic{reqitemsi}.\arabic{reqitemsii}.\arabic{reqitemsiii},
+align=left,
+rightmargin=15pt}
+
+\newpage
+
+\section{Software Infrastructure}
+
+Embedded middleware is an intermediary abstraction layer that handles the interactions between applications and the underlying operating system/hardware (Noergaard, 2010). The project will develop the embedded software and the companion tools to support software updates that may take the form of middleware.
 
 Framework for developers to run software components which can be dynamically updated
+During operation (define)
+Maybe some initial design too from the high level requirements
 
+\subsection{Functional Requirements}
+
+\subsubsection{High-Level}
+
+\begin{reqitems}
+    \item The software infrastructure must provide the functionality to run software components with a cyclic schedule. \label{item:reqSIComp}
+    \begin{reqitems}
+        \item The software infrastructure must allow users to create/start/stop/remove software components during operation. \label{item:reqSICompStartStop}
+        \item The software infrastructure must allow users to change the configured cyclic schedule during operation. \label{item:reqSICompSched}
+    \end{reqitems}
+    \item The software infrastructure must provide the functionality to allow components to communicate using messages passing. \label{item:reqSIMess}
+    \begin{reqitems}
+        \item The software infrastructure must allow users to configure communications between components using routes and channels. \label{item:reqSIMessRoute}
+        \item The software infrastructure must allow users to add/remove routes between software components during operation. \label{item:reqSIMessRouteChange}
+    \end{reqitems}
+    \item The software infrastructure must provide the functionality to save and restore state between components. \label{item:reqSIState}
+    \begin{reqitems}
+        \item The software infrastructure must allow users to define which software components must save state during operation. \label{item:reqSIStateSave}
+        \item The software infrastructure must allow users to configure which component restore from state during operation. \label{item:reqSIStateRestore}
+        \item The software infrastructure must allow users define state transformation maps so different versions of state can be restored. \label{item:reqSIStateTransform}
+    \end{reqitems}
+\suspend{reqitems}
+
+\subsubsection{Low-Level}
+
+\resume{reqitems}
+    \item The software infrastructure must be configured using task lists.
+    \begin{reqitems}
+        \item A task list must contain a series of actions with relevant data and is either non-blocking or blocking.
+        \item A blocking action must complete in one execution cycle.
+        \item All blocking actions in a task must complete in the same execution cycle.
+        \item A non-blocking action can take multiple execution cycles to complete.
+    \end{reqitems}
+
+    \item A software component must be defined as a software template that developers can implement e.g. a Rust trait.
+    \begin{reqitems}
+        \item Something to do with them being a process.
+    \end{reqitems}
+
+    \item The software infrastructure must implement the create component non-blocking action.
+    \begin{reqitems}
+        \item The create component action must first load the software component binary from remote storage.
+        \item The create component action must then start the software component binary as a separate process
+    \end{reqitems}
+
+    \item The software infrastructure must implement the start component blocking action.
+    \begin{reqitems}
+        \item The start component action must mark the software component as ready to run.
+    \end{reqitems}
+
+    \item The software infrastructure must implement the stop component blocking action.
+    \begin{reqitems}
+        \item The start component action must mark the software component as not ready to run.
+    \end{reqitems}
+
+    \item The software infrastructure must implement the add route blocking action.
+    \begin{reqitems}
+        \item The add route action must add the relevant source and destination to the routing table.
+    \end{reqitems}
+
+    \item The software infrastructure must implement the remove route blocking action.
+    \begin{reqitems}
+        \item The remove route action must remove the relevant source and destination from the routing table.
+    \end{reqitems}
+
+    \item The software infrastructure must implement the set schedule blocking action.
+    \begin{reqitems}
+        \item The set schedule action must first check if the schedule is valid.
+        \item Only components that are created can be added to the schedule.
+        \item The schedule must define a execution frequency.
+        \item The schedule must define which order components execute.
+    \end{reqitems}
+
+\suspend{reqitems}
+
+\subsection{Non-Functional Requirements}
+
+% \newpage
+
+% \noindent In this paragraph, I talk a bit about the Useful/Important Information and then reference the item number~(\ref{item:reqSICompStartStop}).
+
+\newpage
+
+\section{Test Harness}
+
+To accurately test the real-time behaviour of the system, an external test harness is required. While latencies and jitter can be measured on-target with instrumentation, this does not independently measure the system's performance. The following requirements define the high-level functionality required for a successful test harness.
+
+\resume{reqitems}
+    \item The test harness must measure the timed latency and jitter between sending/receiving data to/from the software infrastructure.
+    \begin{reqitems} 
+        \item The test harness must use independent software and hardware from the core infrastructure to verify the results.
+        \item The test harness must use a hard real-time platform to measure timings, for example a microprocessor.
+        \item The test harness must be paired with an analysis tool to visualize and analyze the measured data.
+    \end{reqitems}
+    \item An example software component must interface with the test harness using messages.
+\end{reqitems}
+
+\section{Demonstration Components}
+
+While the test harness is designed to evaluate the real-time behaviour of the system, additional software components are required to evaluate the correct behaviour of the system during update.
+
+% demo apps
 Example application that uses one differential equation and requires its state to be maintained with a plant for the example application to test it's functionality
 
-Testing harness that can measure the
-
-
-\textbf{High-Level}
-During operation
-
-The software infrastucture must 
-    provide the functionality to run software components with a cyclic schedule
-        allow users to create/start/stop/remove software components during operation
-        allow users to change the configured cyclic schedule during operation
-
-    provide the functionality to allow components to comunicate using messages passing
-        allow users to configure communications between components using routes and channels
-        allow users to add/remove routes between software components during operation
-
-\textbf{Low-Level}  
-    create
-        - loads the software component binary
-        - starts the software component 
-
-    start
-        - marks the software component as ready to run
-
-    stop
-        - marks the software components as not ready to run
-
-    stop
-
-The example application must 
+    % demo fcs
+    The example application must 
     maintained
 
-The plant must
+    % demo plant model
+    The plant must
     model a mass falling due to gravity
-
-    
