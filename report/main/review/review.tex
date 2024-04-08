@@ -1,0 +1,139 @@
+\graphicspath{{main/review/graphics/}}
+
+\chapter{Literature Review}
+
+% The literature review is a survey of the history and state of the art in the domain of your project. It will summarize the work that has already been done in the field; this may be scientific literature, known techniques, and even previous student projects. It will provide a historical perspective on how the subject area has arrived at its current state by looking at important developments over time. If appropriate, it may examine existing software in the domain, especially in terms of the technology used and the features offered. The focus of the literature review is to summarise the existing arguments and ideas of others, identifying which are important.
+
+% A good literature review could be a project on its own, and form a very useful guide to anyone new to the particular field. It would identify the important work, authors and publications which would be a good place to begin research activity. Open questions and areas where new work is required would be discussed. Really good reviews are often published in scientific journals. Your literature review is not expected to be quite so substantial, but should still provide a comprehensive summary which will allow the reader to understand the field.
+
+Regular firmware upgrades requires systems to be taken offline for firmware change and restart, time consuming and breaks continuity. High availability systems typically using hardware redundancy to provide operational continuity through updates. At the cost of extra hardware. \autocite{raoLiveSeamlessFirmware2023}
+
+Physical tasks performed by the software are often expensive to interrupt. High down time and start-up costs. For example power substation - power outage for customers. Software is hardley updated during an embedded systems lifetime (typically of over 30 years). There are several solutions to updating software dynamically; few of these have actually been adapted to real-time systems. \autocite{wahlerDynamicSoftwareUpdates2009}
+
+\section{Review}
+Analysis of existing dynamic software updating techniques for safe and secure industrial control systems
+
+Challenges in Dynamic Software Updating
+
+A survey of dynamic software updating
+
+% Review categories for the papers in more depth
+Categories
+Hardware Handover
+Synchronisation
+State Continuity
+State Transformation
+
+\newpage
+
+\section{Case Study}
+
+\subsection{Control Systems}
+% intro
+\autocite{raoLiveSeamlessFirmware2023} implements live firmware upgrades on a single microcontroller, without using additional hardware. This paper describes the techniques used in hardware and software to achieve such seamless updates.
+
+% test case
+To validate the updates they, implemented a DC-DC buck converter with a tightly regulated output voltage, typically used in server power supplies. These converters are often controlled using a digital power controller implemented on an microcontroller. A live update must complete within the  idle time between interrupts on the PSU, with less than 1us of switch time
+
+% implementation
+and resets
+Hardware support for vector and function pointer swapping
+Compiler support for live updates and optimal switchover point
+
+Persistence of state
+Keeping static and global variable addresses consistent between firmware versions
+
+Updates involve
+Branching to the new firmware entrypoint
+Execute the live update initialisation routine
+Arrives in mew main and performs initialisation
+This is when interrupts are temporally disabled
+
+Hardware
+Multi-Bank Non Volatile Memory
+Interrupt Vector table swap
+Ram block swap
+Hardware LFU flag
+
+% critical evaluation
+Some text
+
+\subsection{Dynamic Updates}
+% intro 
+\autocite{wahlerDynamicSoftwareUpdates2009} defines a solution for updating component-based cyclic embedded systems, without violating real-time constraints. 
+
+% test case
+Some text
+
+% implementation
+This implementation focused on using COTS operating systems.
+
+They used a custom component-based framework infrastructure on top of the operating system to execute software components, effectively an embedded middleware. Each component had its own address space with script separation and defined inputs and outputs. These components communicated using using message passing (channel buffers). A manager program (which was also an upgradable component) created and maintained the channels.
+
+How to identify points in time when an update can occur
+System performs the checks at the end of every execution cycle
+
+New update is sent to the target machine using OS functionality in a low priority thread
+Upload is detected by the component manager
+Tells the old component 
+Hands the connections to channels back to the component manager and terminates
+Component prime acquires the connects to the channels and begins operations
+
+Steps 1 and 2 are not required to meet and deadlines, steps 3 to 5 must execute before the end of the cycle/
+
+How to transfer the state of a component to a new version
+State must be transferred in the same cycle of the handover
+Data types may need to be converted (celsius to kelvin)
+
+Component manager creates an area of shared memory that is passed to components.
+Before a component terminates it writes its state to the area and adds version information.
+When a component starts it reads the memory, asses if a state transformation must occur (these are stored within the components)
+
+% critical evaluation
+Successful, maximum cycle frequency of about 300hz.
+
+\subsection{Disruption-free}
+Disruption-free software updates in automation systems \autocite{wahlerDisruptionfreeSoftwareUpdates2014}
+
+Approach to updating software at runtime without disruption
+
+Component based architecture developed by ABB Corporate Research
+Cyclic application execution
+State transfer mechanisms
+
+% intro
+
+% test Case
+Validated the solution with a test case, magnetic levitation experiment, instable physical process
+Control algorithm of a magnetic levitation device at 1kHz
+
+% implementation
+
+% critical evaluation
+Most through implementation
+
+\subsection{A model}
+A Model for Updating Real-Time Applications 
+
+% intro
+
+% test case
+
+% implementation
+
+% critical evaluation
+
+\subsection{Grid-connected}
+Enhanced Uptime and Firmware Cybersecurity for Grid-Connected Power Electronics
+
+% intro
+
+% test case
+
+% implementation
+
+% critical evaluation
+
+\newpage
+
+\section{Project Rational}
