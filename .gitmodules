@@ -7,3 +7,6 @@
 [submodule "data/rt-mem-test"]
 	path = data/rt-mem-test
 	url = https://github.com/NathanRignall/rt-mem-test.git
+[submodule "data/rt-signal-test"]
+	path = data/rt-signal-test
+	url = https://github.com/NathanRignall/rt-signal-test.git
