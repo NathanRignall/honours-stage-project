@@ -43,11 +43,7 @@ rightmargin=15pt}
 
 \section{Software Infrastructure}
 
-Embedded middleware is an intermediary abstraction layer that handles the interactions between applications and the underlying operating system/hardware (Noergaard, 2010). The project will develop the embedded software and the companion tools to support software updates that may take the form of middleware.
-
-Framework for developers to run software components which can be dynamically updated
-During operation (define)
-Maybe some initial design too from the high level requirements
+To facilitate real-time software updates this project will develop an embedded middleware framework that shall be known as the software infrastructure. This framework's should run software components which can be dynamically updated. The high-level requirements are first defined, followed by the more in-depth low-level requirement that shall be used to implement test-cases.
 
 \subsection{Functional Requirements}
 
@@ -75,6 +71,33 @@ Maybe some initial design too from the high level requirements
 \subsubsection{Low-Level}
 
 \resume{reqitems}
+    \item A software component must be defined as a software template that developers can implement, for example a Rust trait.
+    \begin{reqitems}
+        \item There must be sufficient separation between components, such that if one fails, other components are unaffected, for example containers.
+    \end{reqitems}
+
+    % what is a channel, not auto discovery. External input
+
+    \item The software infrastructure must execute components using a defined soft real-time schedule.
+    \begin{reqitems}
+        \item The schedule must execute cyclically, with a defined deadline.
+        \item The schedule must execute alternating major frames.
+        \item The schedule must execute all minor frames within a major frame.
+        \item A major frame must execute a single component until a defined deadline. If the component exceeds its deadline, its operation must be suspended.
+    \end{reqitems}
+
+    \item The software infrastructure must route messages between component using channels.
+    \begin{reqitems}
+        \item The message router must be configured using a routing table.
+        \item The routing table must contain source and destination channels.
+        \item The message router must pass messages between components when executed.
+    \end{reqitems}
+
+    % state sync 
+
+    % management thread
+    
+    % task lists
     \item The software infrastructure must be configured using task lists.
     \begin{reqitems}
         \item A task list must contain a series of actions with relevant data and is either non-blocking or blocking.
@@ -83,43 +106,64 @@ Maybe some initial design too from the high level requirements
         \item A non-blocking action can take multiple execution cycles to complete.
     \end{reqitems}
 
-    \item A software component must be defined as a software template that developers can implement e.g. a Rust trait.
-    \begin{reqitems}
-        \item Something to do with them being a process.
-    \end{reqitems}
-
+    % create component
     \item The software infrastructure must implement the create component non-blocking action.
     \begin{reqitems}
-        \item The create component action must first load the software component binary from remote storage.
+        \item The create component action must first load the software component binary from storage.
         \item The create component action must then start the software component binary as a separate process
+        \item The create component action must take the path of the software component binary and whether state syc should be enabled as parameters.
     \end{reqitems}
 
+    % start component
     \item The software infrastructure must implement the start component blocking action.
     \begin{reqitems}
         \item The start component action must mark the software component as ready to run.
     \end{reqitems}
 
+    % stop component
     \item The software infrastructure must implement the stop component blocking action.
     \begin{reqitems}
         \item The start component action must mark the software component as not ready to run.
     \end{reqitems}
 
+    % add route
     \item The software infrastructure must implement the add route blocking action.
     \begin{reqitems}
         \item The add route action must add the relevant source and destination to the routing table.
+        \item The add route action must take source component plus channel and target component plus channel as parameters.
     \end{reqitems}
 
+    % remove route
     \item The software infrastructure must implement the remove route blocking action.
     \begin{reqitems}
         \item The remove route action must remove the relevant source and destination from the routing table.
     \end{reqitems}
 
+    % set schedule
     \item The software infrastructure must implement the set schedule blocking action.
     \begin{reqitems}
         \item The set schedule action must first check if the schedule is valid.
         \item Only components that are created can be added to the schedule.
         \item The schedule must define a execution frequency.
         \item The schedule must define which order components execute.
+    \end{reqitems}
+
+    % add state sync
+    \item The software infrastructure must implement the add state synchronise blocking action.
+    \begin{reqitems}
+        \item stuff
+    \end{reqitems}
+
+    % remove state sync
+    \item The software infrastructure must implement the remove state synchronise blocking action.
+    \begin{reqitems}
+        \item stuff
+    \end{reqitems}
+
+    % wait state sync
+    \item The software infrastructure must implement the wait state synchronise non-blocking action.
+    \begin{reqitems}
+        \item stuff
     \end{reqitems}
 
 \suspend{reqitems}
@@ -134,7 +178,9 @@ Maybe some initial design too from the high level requirements
 
 \section{Test Harness}
 
-To accurately test the real-time behaviour of the system, an external test harness is required. While latencies and jitter can be measured on-target with instrumentation, this does not independently measure the system's performance. The following requirements define the high-level functionality required for a successful test harness.
+To accurately test the real-time behaviour of the system, an external test harness is required. While latency and jitter can be measured on-target, with instrumentation, this does not independently measure the system's performance. The following requirements define the high-level requirements required for a successful test harness.
+
+\subsubsection{High-Level}
 
 \resume{reqitems}
     \item The test harness must measure the timed latency and jitter between sending/receiving data to/from the software infrastructure.
@@ -143,12 +189,29 @@ To accurately test the real-time behaviour of the system, an external test harne
         \item The test harness must use a hard real-time platform to measure timings, for example a microprocessor.
         \item The test harness must be paired with an analysis tool to visualize and analyze the measured data.
     \end{reqitems}
-    \item An example software component must interface with the test harness using messages.
-\end{reqitems}
+
+    \item An example software component, that is executed on the software infrastructure must interface with the test harness.
+\suspend{reqitems}
+
+\newpage
 
 \section{Demonstration Components}
 
-While the test harness is designed to evaluate the real-time behaviour of the system, additional software components are required to evaluate the correct behaviour of the system during update.
+While the test harness is designed to evaluate the real-time behaviour of the system, additional software components are required to evaluate the correct behaviour of the system during update. These components must run on the software infrastructure.
+
+\subsubsection{High-Level}
+
+\resume{reqitems}
+    \item The demonstration application 
+    \item 
+    \begin{reqitems} 
+        \item The test harness must use independent software and hardware from the core infrastructure to verify the results.
+        \item The test harness must use a hard real-time platform to measure timings, for example a microprocessor.
+        \item The test harness must be paired with an analysis tool to visualize and analyze the measured data.
+    \end{reqitems}
+
+    \item An example software component, that is executed on the software infrastructure must interface with the test harness.
+\end{reqitems}
 
 % demo apps
 Example application that uses one differential equation and requires its state to be maintained with a plant for the example application to test it's functionality

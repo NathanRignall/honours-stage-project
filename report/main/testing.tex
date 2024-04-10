@@ -3,3 +3,23 @@
 % If you are developing software or hardware, you must test it.  This section should explain how your work will be (or has been) tested.
 
 % You should have a test plan at the very least (full details of it and its results if required can go in an appendix).  Ideally, you will have automated tests for any software you build.  You will also define user acceptance tests, or something similar which can be used to determine whether your output meets the requirements stated earlier.  Explain how and when the tests should be conducted
+
+\begin{table}[!htbp]
+    \centering
+    \begin{tabular}{ll|c}
+        \hline
+        Parameter & Values & Selected \\ \hline
+        kernel\_size\_1 & 2, 3, 4, 5 & 4 \\
+        kernel\_size\_2 & 2, 3, 4, 5 & 3 \\
+        kernel\_size\_3 & 2, 3, 4, 5 & 4 \\
+        kernel\_size\_4 & 2, 3, 4, 5 & 4 \\
+        pool\_size\_1 & 2, 3, 4 & 4 \\
+        pool\_siz\_2 & 2, 3, 4 & 3 \\
+        $\checkmark$ & 0.2, 0.8, step=0.1 & 0.6 \\
+        dropout\_2 & 0.2, 0.8, step=0.1 & 0.5 \\
+        dense\_layer\_units & 1000, 2000, 3000, 4000, 5000 & 3000 \\
+        learning\_rate & min=0.0001, max=0.1, sampling="LOG" & 0.00024 \\
+    \end{tabular}
+    \caption{Hyperparameter values for CNN}
+    \label{tbl:hyperCNN}
+\end{table}

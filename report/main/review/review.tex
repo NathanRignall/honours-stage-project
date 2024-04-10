@@ -10,7 +10,7 @@ Regular firmware upgrades requires systems to be taken offline for firmware chan
 
 Physical tasks performed by the software are often expensive to interrupt. High down time and start-up costs. For example power substation - power outage for customers. Software is hardley updated during an embedded systems lifetime (typically of over 30 years). There are several solutions to updating software dynamically; few of these have actually been adapted to real-time systems. \autocite{wahlerDynamicSoftwareUpdates2009}
 
-\section{Review}
+\section{Review Strategy}
 Analysis of existing dynamic software updating techniques for safe and secure industrial control systems
 
 Challenges in Dynamic Software Updating
@@ -26,17 +26,17 @@ State Transformation
 
 \newpage
 
-\section{Case Study}
+\section{Case Studies}
 
-\subsection{Control Systems}
-% intro
-\autocite{raoLiveSeamlessFirmware2023} implements live firmware upgrades on a single microcontroller, without using additional hardware. This paper describes the techniques used in hardware and software to achieve such seamless updates.
+% ----- CASE STUDY 1 -----
 
-% test case
-To validate the updates they, implemented a DC-DC buck converter with a tightly regulated output voltage, typically used in server power supplies. These converters are often controlled using a digital power controller implemented on an microcontroller. A live update must complete within the  idle time between interrupts on the PSU, with less than 1us of switch time
+\subsection{Live \& Seamless Firmware Upgrade in Real Time Control Systems}
+\autocite{raoLiveSeamlessFirmware2023} implements live firmware upgrades on a single microcontroller, without using any additional hardware or operating system. This paper describes the techniques used in both hardware and software to achieve such updates without reset (seamless).
 
-% implementation
-and resets
+\subsubsection*{Implementation}
+Key innovation, 
+Function and vector pointer swapping
+
 Hardware support for vector and function pointer swapping
 Compiler support for live updates and optimal switchover point
 
@@ -55,20 +55,47 @@ Interrupt Vector table swap
 Ram block swap
 Hardware LFU flag
 
-% critical evaluation
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=8cm]{raoLiveSeamlessFirmware2023_LfuFlow}
+    \caption[Application live firmware upgrade flow \autocite{raoLiveSeamlessFirmware2023}]
+    {Application live firmware upgrade flow \autocite{raoLiveSeamlessFirmware2023}}
+    \label{fig:raoLiveSeamlessFirmware2023_LfuFlow}
+\end{figure}
+
+\subsubsection*{Test Case}
+To validate the updates they, implemented a DC-DC buck converter with a tightly regulated output voltage, typically used in server power supplies. These converters are often controlled using a digital power controller implemented on an microcontroller. A live update must complete within the  idle time between interrupts on the PSU, with less than 1us of switch time.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=8cm]{raoLiveSeamlessFirmware2023_Logic}
+    \caption[Live firmware upgrade switchover steps \autocite{raoLiveSeamlessFirmware2023}]
+    {Live firmware upgrade switchover steps \autocite{raoLiveSeamlessFirmware2023}}
+    \label{fig:raoLiveSeamlessFirmware2023_Logic}
+\end{figure}
+
+\subsubsection*{Evaluation}
 Some text
 
-\subsection{Dynamic Updates}
-% intro 
+\newpage
+
+% ----- CASE STUDY 2 -----
+
+\subsection{Dynamic Software Updates for Real-Time Systems}
 \autocite{wahlerDynamicSoftwareUpdates2009} defines a solution for updating component-based cyclic embedded systems, without violating real-time constraints. 
 
-% test case
-Some text
-
-% implementation
+\subsubsection*{Implementation}
 This implementation focused on using COTS operating systems.
 
 They used a custom component-based framework infrastructure on top of the operating system to execute software components, effectively an embedded middleware. Each component had its own address space with script separation and defined inputs and outputs. These components communicated using using message passing (channel buffers). A manager program (which was also an upgradable component) created and maintained the channels.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=8cm]{wahlerDynamicSoftwareUpdates2009_Function}
+    \caption[Updating component 'History' \autocite{wahlerDynamicSoftwareUpdates2009}]
+    {Updating component 'History' \autocite{wahlerDynamicSoftwareUpdates2009}}
+    \label{fig:wahlerDynamicSoftwareUpdates2009_Function}
+\end{figure}
 
 How to identify points in time when an update can occur
 System performs the checks at the end of every execution cycle
@@ -89,50 +116,78 @@ Component manager creates an area of shared memory that is passed to components.
 Before a component terminates it writes its state to the area and adds version information.
 When a component starts it reads the memory, asses if a state transformation must occur (these are stored within the components)
 
-% critical evaluation
+\subsubsection*{Test Case}
+Some text
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=8cm]{wahlerDynamicSoftwareUpdates2009_History}
+    \caption[Updating component 'History' \autocite{wahlerDynamicSoftwareUpdates2009}]
+    {Updating component 'History' \autocite{wahlerDynamicSoftwareUpdates2009}}
+    \label{fig:wahlerDynamicSoftwareUpdates2009_History}
+\end{figure}
+
+\subsubsection*{Evaluation}
 Successful, maximum cycle frequency of about 300hz.
 
-\subsection{Disruption-free}
-Disruption-free software updates in automation systems \autocite{wahlerDisruptionfreeSoftwareUpdates2014}
+\newpage
 
-Approach to updating software at runtime without disruption
+% ----- CASE STUDY 3 -----
 
-Component based architecture developed by ABB Corporate Research
-Cyclic application execution
-State transfer mechanisms
+\subsection{Disruption-free Software Updates in Automation Systems}
+Another approach to updating software at runtime without disruption was developed by \autocite{wahlerDisruptionfreeSoftwareUpdates2014}. This uses a component based architecture developed by ABB Corporate Research (FASA), shown in \autoref{fig:wahlerDisruptionfreeSoftwareUpdates2014_FASA}.
 
-% intro
+\subsubsection*{Implementation}
+FASA defines function blocks that can be aggregated together to form a component, only compute components are stateful. These function blocks are executed cyclically at a desired frequency and connected by communication channels. A background thread with low priority performs the management actions. Multiple FASA systems are synchronised over the network using precision time protocol (PTP.)
 
-% test Case
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=8cm]{wahlerDisruptionfreeSoftwareUpdates2014_FASA}
+    \caption[FASA system architecture \autocite{wahlerDisruptionfreeSoftwareUpdates2014}]
+    {FASA system architecture \autocite{wahlerDisruptionfreeSoftwareUpdates2014}}
+    \label{fig:wahlerDisruptionfreeSoftwareUpdates2014_FASA}
+\end{figure}
+
+First the component binaries are loaded using shared libraries (DLLs), it is assumed the components are already present in the system. Next, the system is configured using configurations that define the layout of the components and channels. State is transferred between components using Teach and Learn blocks, optional type conversions occurs in these Learn blocks. Once all the controllers in the FASA network are ready to transfer to the new configuration, the switch command is issued.
+
+\subsubsection*{Test Case}
 Validated the solution with a test case, magnetic levitation experiment, instable physical process
 Control algorithm of a magnetic levitation device at 1kHz
 
-% implementation
-
-% critical evaluation
+\subsubsection*{Evaluation}
 Most through implementation
+Cyclic application execution
+State transfer mechanisms
 
-\subsection{A model}
-A Model for Updating Real-Time Applications 
+% ----- CASE STUDY 4 -----
 
-% intro
+\subsection{A Model for Updating Real-Time Applications }
+\autocite{montgomeryModelUpdatingRealTime2004}
 
-% test case
+\subsubsection*{Implementation}
+Text
 
-% implementation
+\subsubsection*{Test Case}
+Text
 
-% critical evaluation
+\subsubsection*{Evaluation}
+Text
 
-\subsection{Grid-connected}
-Enhanced Uptime and Firmware Cybersecurity for Grid-Connected Power Electronics
+\newpage
 
-% intro
+% ----- CASE STUDY 5 -----
 
-% test case
+\subsection{Enhanced Uptime and Firmware Cybersecurity for Grid-Connected Power Electronics}
+\autocite{moquinEnhancedUptimeFirmware2019}
 
-% implementation
+\subsubsection*{Implementation}
+Text
 
-% critical evaluation
+\subsubsection*{Test Case}
+Text
+
+\subsubsection*{Evaluation}
+Text
 
 \newpage
 

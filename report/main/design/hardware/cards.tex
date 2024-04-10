@@ -13,7 +13,7 @@ Key requirement is remote debugging, full remote power and data control.
 Also placed in a rack
 Selected the Pi KVM project for remote control as is supports deploy as well as additional GPIO control.
 
-The CM4’s display is captured using the CSI port on the KVM with a HDMI to CSI converter.
+The CM4s display is captured using the CSI port on the KVM with a HDMI to CSI converter.
 The power is controlled using a relay, that controls the 12v supply to the CM4.
 The signal flags of the EMMC storage are directly connected to the KVM. EXPLAIN the signal flags
 These are configured in the KVM user interface
@@ -66,27 +66,27 @@ This allows the development images to be loaded over TFTP, we have a dedicated t
 
 Connected to a managed switch. The test harness is connected to this on a separate VLAN.
 
-\begin{figure}
-    \centering
-    \resizebox{\columnwidth}{!}{
-        %
-        \begin{tikzpicture}  
-            \node[block] (d1) {Development Card};  
-            \node[block,right=of a] (k1) {Debug KVM};
+% \begin{figure}
+%     \centering
+%     \resizebox{\columnwidth}{!}{
+%         %
+%         \begin{tikzpicture}  
+%             \node[block] (d1) {Development Card};  
+%             \node[block,right=of a] (k1) {Debug KVM};
 
-            \node[block,below=of a] (d) {Reciever};  
-            \node[block,right=of d] (e) {Destination};  
+%             \node[block,below=of a] (d) {Reciever};  
+%             \node[block,right=of d] (e) {Destination};  
 
-            % \node[draw,inner xsep=4mm,inner ysep=7mm,fit=(a)(b) ] (c1) {Application Layer};
-            % \node[draw,inner xsep=4mm,inner ysep=7mm,fit=(d)(e) ] {Infrastructure Layer};  
-            % \node[draw,inner xsep=4mm,inner ysep=7mm,fit=(d)(e),label={Hardware Layer}]{};
-        \end{tikzpicture}  
-        %
-    }
-    \caption[Heatmap for class distribution in dataset]
-    {Heatmap for class distribution in dataset}
-    \label{fig:heatmap}
-\end{figure}
+%             % \node[draw,inner xsep=4mm,inner ysep=7mm,fit=(a)(b) ] (c1) {Application Layer};
+%             % \node[draw,inner xsep=4mm,inner ysep=7mm,fit=(d)(e) ] {Infrastructure Layer};  
+%             % \node[draw,inner xsep=4mm,inner ysep=7mm,fit=(d)(e),label={Hardware Layer}]{};
+%         \end{tikzpicture}  
+%         %
+%     }
+%     \caption[Heatmap for class distribution in dataset]
+%     {Heatmap for class distribution in dataset}
+%     \label{fig:heatmap}
+% \end{figure}
 
 \begin{tikzpicture}[node distance=1.75cm]
     \node[draw] (node1) {Node 1};
