@@ -21,6 +21,15 @@
 \usepackage{xparse}
 \usetikztiminglibrary[rising arrows]{clockarrows}
 
+% special command for shifted
+\newcommand{\newthreadShift}[4][gray!30]{
+  \newinst[#4]{#2}{#3}
+  \stepcounter{threadnum}
+  \node[below of=inst\theinstnum,node distance=0.8cm] (thread\thethreadnum) {};
+  \tikzstyle{threadcolor\thethreadnum}=[fill=#1]
+  \tikzstyle{instcolor#2}=[fill=#1]
+}
+
 % command to draw bus
 \NewDocumentCommand{\busref}{som}{\texttt{%
 #3%
@@ -28,9 +37,13 @@
 \IfBooleanTF{#1}{\#}{}%
 }}
 
+% lists
 \usepackage{enumitem} %% for effortless customization of enumeration
 \usepackage{hyperref} %% Just to provide clickable links
 \usepackage{cleveref} %% for clever referencing
 \usepackage{mdwlist}
 \newcommand{\randomtext}{Hello, here is some text without a meaning. Hello, here is some text without a meaning.}
   \newcommand{\shortrandomtext}{Hello, here is some text.}
+
+%  code previews
+\usepackage{listings}
