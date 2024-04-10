@@ -1,52 +1,130 @@
 \graphicspath{{main/design/scheduler/graphics/}}
 
-\section{Scheduler}
+\section{Scheduler Signalling}
 
-To implement an event based scheduler it must be able to send signals between processes without significant jitter and latency. The level of jitter that is acceptable can be estimated by calculating a worst case execution time for a control loop in a particular application.
+To implement an event based scheduler, the scheduler must be able to send signals between processes without significant jitter and latency. This is because the signals can effectively send execution requests for each component. The level of jitter that is acceptable can be estimated by calculating a worst case execution time for a control loop in a particular application.
 
-There are several different methods that can be used to send signals between processes in a Linux system. Unix shared memory and sockets shall both be investigated as they can be easily transported onto a non-linux POSIX system.
+There are several different methods that can be used to send signals between processes in a Linux system. Shared memory, sockets and signalling shall all be investigated as they can be easily transported onto a non-linux POSIX system if required. This evaluation will focus on gathering latency and jitter metrics for the different techniques.
 
-% \begin{figure}[ht]
-%     \centering
-%     \includegraphics[width=\textwidth]{rt-comapre-test-times.pdf}
-%     \caption[Compare Execution Latency]
-%     {Compare Execution Latency}
-%     \label{fig:rtCompareExecutionLatency}
-% \end{figure}
+\subsubsection*{Test Program Design}
 
-% \begin{figure}[ht]
-%     \centering
-%     \includegraphics[width=\textwidth]{rt-mem-test-sleeps.pdf}
-%     \caption[Shared Memory Loop Execution]
-%     {Shared Memory Loop Execution}
-%     \label{fig:rtSharedMemoryLoopExecution}
-% \end{figure}
+Each evaluation will use a parent-child arrangement of processes, whereby a parent process spawns a child processes. These processes will both be given the highest real-time scheduler priority and pinned to two separate cores that are isolated from the operating system. The parent process shall run at a controlled frequency of 100Hz for 10,000 iterations, each iteration will request the child process to execute. At each execution, the time requested $t_0$ and actual execution time $t_1$ shall be recorded, shown in \autoref{fig:parentChildExecuteDelay}. These shall be later evaluated where $\Delta{}t$ is calculated.
 
-% \begin{figure}[ht]
-%     \centering
-%     \includegraphics[width=\textwidth]{rt-mem-test-times.pdf}
-%     \caption[Shared Memory Execution Latency]
-%     {Shared Memory Execution Latency}
-%     \label{fig:rtSharedMemoryExecutionLatency}
-% \end{figure}
+% diagram here of the time delay between execution
+\begin{figure}[ht]
+    \centering
+    \begin{sequencediagram}
+        \newthread{p}{Parent}
+        \newthreadShift{c}{Child}{4cm}
 
-% \begin{figure}[ht]
-%     \centering
-%     \includegraphics[width=\textwidth]{rt-socket-test-sleeps.pdf}
-%     \caption[Socket Loop Execution]
-%     {Socket Loop Execution}
-%     \label{fig:rtSocketLoopExecution}
-% \end{figure}
+        \mess[1]{p}{}{c}
+        \node[anchor=east] (t0) at (mess from) {$t_0$};
+        \node[anchor=west] (t1) at (mess to) {$t_1$};
 
-% \begin{figure}[ht]
-%     \centering
-%     \includegraphics[width=\textwidth]{rt-socket-test-times.pdf}
-%     \caption[Socket Execution Latency]
-%     {Socket Execution Latency}
-%     \label{fig:rtSocketExecutionLatency}
-% \end{figure}
+        \path (t0.east) |- coordinate(t12) (t1); \draw[dashed] (t1) -- (t12);
+        \node[anchor=south west] at (t12) {$\Delta{}t$};
+
+    \end{sequencediagram}
+    \caption{Parent-child process execution delay}
+    \label{fig:parentChildExecuteDelay}
+\end{figure}
+
+
+% diagram of the time delay
+
+\subsubsection*{Implementation}
+% something about using rust
+\textit{All tests were performed on the target development hardware (CM4) with Linux kernel 6.1.65 and the real-time batch applied.}
+
+\newpage
+
+\subsection{Shared Memory}
+
+% explain shared memory current
+
+% past tense
+ To access the shared memory functionality of Linux in the Rust language this test used the \verb|shared_memory| crate  \autocite{elast0nyElast0nyShared_memory2024}.
+
+ The parent process created the shared memory and a file link which the child process used to 
+
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{rt-pi4-mem-times.pdf}
+    \caption[Experiment latency graph for shared memory]
+    {Experiment latency graph for shared memory}
+    \label{fig:rtPi4MemTimes}
+\end{figure}
+
+\newpage
+
+\subsection{Sockets}
+
+
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{rt-pi4-socket-times-blocking.pdf}
+    \caption[Experiment latency graph for blocking sockets]
+    {Experiment latency graph for blocking sockets}
+    \label{fig:rtPi4SocketTimesBlocking}
+\end{figure}
+
+Although the blocking socket test did perform reasonably well, it was on average over 50\% slower than the shared memory implementation.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{rt-pi4-socket-times.pdf}
+    \caption[Experiment latency graph for non-blocking sockets]
+    {Experiment latency graph for non-blocking sockets}
+    \label{fig:rtPi4SocketTimes}
+\end{figure}
+
+Something about how I planned to actually implement this.
+
+\newpage
+
+\subsection{Signalling}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{rt-pi4-signal-times.pdf}
+    \caption[Experiment latency graph for signals]
+    {Experiment latency graph for signals}
+    \label{fig:rtPi4SignalTimes}
+\end{figure}
+
+\newpage
+
+\subsection{Evaluation}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{rt-pi4-compare-times.pdf}
+    \caption[Comparison experiment latency graph for all methods]
+    {Comparison experiment latency graph for all methods}
+    \label{fig:rtPi4CompareTimes}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{rt-pi4-compare-times-jitter.pdf}
+    \caption[Comparison experiment latency graph for all methods]
+    {Comparison experiment jitter graph for all methods}
+    \label{fig:rtPi4CompareTimesJitter}
+\end{figure}
+
+\subsubsection*{Processor Differences}
 
 % Mention something to do with the Raspberry Pi 5 vs 4 
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{rt-pi4-vs-pi5.pdf}
+    \caption[Comparison experiment latency graph for all methods on Raspberry Pi 4 vs 5]
+    {Comparison experiment latency graph for all methods on Raspberry Pi 4 vs 5}
+    \label{fig:rtPi4vsPi5CompareTimes}
+\end{figure}
 
 \begin{figure}[ht]
     \centering
