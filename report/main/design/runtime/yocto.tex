@@ -1,0 +1,22 @@
+\graphicspath{{main/design/software/graphics/}}
+
+\subsection{Build Process}
+
+
+% getting the software working
+All software images for the development cards were created using the Yocto Project build environment because of it's support for both Linux and Xen. Although some images for Linux were initially created manually, this process was exceptionally slow and an inefficient use of time.
+
+Yocto is an open source project that uses various layers to build an image using scripts.
+
+poky
+meta-openembedded
+meta-raspberrypi
+meta-virtualization
+
+meta-cm4-uboot-fix
+meta-rpi4-kernel
+
+meta-rust-bin
+meta-app
+
+Use the uBoot boot loader.
