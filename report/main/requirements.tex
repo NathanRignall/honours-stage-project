@@ -19,23 +19,39 @@
 % Design Constraints
 
 % Create a custom list based on enumerate
-\newlist{reqitems}{enumerate}{3}
-  
+\newlist{srsitems}{enumerate}{3}
 % Configure the behaviour of level 1 entries
-\setlist[reqitems, 1]
-{label=REQ\arabic{reqitemsi},
+\setlist[srsitems, 1]
+{label=SRS\arabic{srsitemsi},
 align=left,
 rightmargin=5pt}
-
 % Configure the behaviour of level 2 entries
-\setlist[reqitems, 2]
-{label=REQ\arabic{reqitemsi}.\arabic{reqitemsii},
+\setlist[srsitems, 2]
+{label=SRS\arabic{srsitemsi}.\arabic{srsitemsii},
 align=left,
 rightmargin=10pt}
-
 % Configure the behaviour of level 3 entries
-\setlist[reqitems, 3]
-{label=REQ\arabic{reqitemsi}.\arabic{reqitemsii}.\arabic{reqitemsiii},
+\setlist[srsitems, 3]
+{label=SRS\arabic{srsitemsi}.\arabic{srsitemsii}.\arabic{srsitemsiii},
+align=left,
+rightmargin=15pt}
+
+% Create a custom list based on enumerate
+\newlist{hrsitems}{enumerate}{3}
+  
+% Configure the behaviour of level 1 entries
+\setlist[hrsitems, 1]
+{label=HRS\arabic{hrsitemsi},
+align=left,
+rightmargin=5pt}
+% Configure the behaviour of level 2 entries
+\setlist[hrsitems, 2]
+{label=HRS\arabic{hrsitemsi}.\arabic{hrsitemsii},
+align=left,
+rightmargin=10pt}
+% Configure the behaviour of level 3 entries
+\setlist[hrsitems, 3]
+{label=HRS\arabic{hrsitemsi}.\arabic{hrsitemsii}.\arabic{hrsitemsiii},
 align=left,
 rightmargin=15pt}
 
@@ -49,49 +65,49 @@ To facilitate real-time software updates this project will develop an embedded m
 
 \subsubsection{High-Level}
 
-\begin{reqitems}
+\begin{srsitems}
     \item The software infrastructure must provide the functionality to run software components with a cyclic schedule. \label{item:reqSIComp}
-    \begin{reqitems}
+    \begin{srsitems}
         \item The software infrastructure must allow users to create/start/stop/remove software components during operation. \label{item:reqSICompStartStop}
         \item The software infrastructure must allow users to change the configured cyclic schedule during operation. \label{item:reqSICompSched}
-    \end{reqitems}
+    \end{srsitems}
     \item The software infrastructure must provide the functionality to allow components to communicate using messages passing. \label{item:reqSIMess}
-    \begin{reqitems}
+    \begin{srsitems}
         \item The software infrastructure must allow users to configure communications between components using routes and channels. \label{item:reqSIMessRoute}
         \item The software infrastructure must allow users to add/remove routes between software components during operation. \label{item:reqSIMessRouteChange}
-    \end{reqitems}
+    \end{srsitems}
     \item The software infrastructure must provide the functionality to save and restore state between components. \label{item:reqSIState}
-    \begin{reqitems}
+    \begin{srsitems}
         \item The software infrastructure must allow users to define which software components must save state during operation. \label{item:reqSIStateSave}
         \item The software infrastructure must allow users to configure which component restore from state during operation. \label{item:reqSIStateRestore}
         \item The software infrastructure must allow users define state transformation maps so different versions of state can be restored. \label{item:reqSIStateTransform}
-    \end{reqitems}
-\suspend{reqitems}
+    \end{srsitems}
+\suspend{srsitems}
 
 \subsubsection{Low-Level}
 
-\resume{reqitems}
+\resume{srsitems}
     \item A software component must be defined as a software template that developers can implement, for example a Rust trait.
-    \begin{reqitems}
+    \begin{srsitems}
         \item There must be sufficient separation between components, such that if one fails, other components are unaffected, for example containers.
-    \end{reqitems}
+    \end{srsitems}
 
     % what is a channel, not auto discovery. External input
 
     \item The software infrastructure must execute components using a defined soft real-time schedule.
-    \begin{reqitems}
+    \begin{srsitems}
         \item The schedule must execute cyclically, with a defined deadline.
         \item The schedule must execute alternating major frames.
         \item The schedule must execute all minor frames within a major frame.
         \item A major frame must execute a single component until a defined deadline. If the component exceeds its deadline, its operation must be suspended.
-    \end{reqitems}
+    \end{srsitems}
 
     \item The software infrastructure must route messages between component using channels.
-    \begin{reqitems}
+    \begin{srsitems}
         \item The message router must be configured using a routing table.
         \item The routing table must contain source and destination channels.
         \item The message router must pass messages between components when executed.
-    \end{reqitems}
+    \end{srsitems}
 
     % state sync 
 
@@ -99,74 +115,74 @@ To facilitate real-time software updates this project will develop an embedded m
     
     % task lists
     \item The software infrastructure must be configured using task lists.
-    \begin{reqitems}
+    \begin{srsitems}
         \item A task list must contain a series of actions with relevant data and is either non-blocking or blocking.
         \item A blocking action must complete in one execution cycle.
         \item All blocking actions in a task must complete in the same execution cycle.
         \item A non-blocking action can take multiple execution cycles to complete.
-    \end{reqitems}
+    \end{srsitems}
 
     % create component
     \item The software infrastructure must implement the create component non-blocking action.
-    \begin{reqitems}
+    \begin{srsitems}
         \item The create component action must first load the software component binary from storage.
         \item The create component action must then start the software component binary as a separate process
         \item The create component action must take the path of the software component binary and whether state syc should be enabled as parameters.
-    \end{reqitems}
+    \end{srsitems}
 
     % start component
     \item The software infrastructure must implement the start component blocking action.
-    \begin{reqitems}
+    \begin{srsitems}
         \item The start component action must mark the software component as ready to run.
-    \end{reqitems}
+    \end{srsitems}
 
     % stop component
     \item The software infrastructure must implement the stop component blocking action.
-    \begin{reqitems}
+    \begin{srsitems}
         \item The start component action must mark the software component as not ready to run.
-    \end{reqitems}
+    \end{srsitems}
 
     % add route
     \item The software infrastructure must implement the add route blocking action.
-    \begin{reqitems}
+    \begin{srsitems}
         \item The add route action must add the relevant source and destination to the routing table.
         \item The add route action must take source component plus channel and target component plus channel as parameters.
-    \end{reqitems}
+    \end{srsitems}
 
     % remove route
     \item The software infrastructure must implement the remove route blocking action.
-    \begin{reqitems}
+    \begin{srsitems}
         \item The remove route action must remove the relevant source and destination from the routing table.
-    \end{reqitems}
+    \end{srsitems}
 
     % set schedule
     \item The software infrastructure must implement the set schedule blocking action.
-    \begin{reqitems}
+    \begin{srsitems}
         \item The set schedule action must first check if the schedule is valid.
         \item Only components that are created can be added to the schedule.
         \item The schedule must define a execution frequency.
         \item The schedule must define which order components execute.
-    \end{reqitems}
+    \end{srsitems}
 
     % add state sync
     \item The software infrastructure must implement the add state synchronise blocking action.
-    \begin{reqitems}
+    \begin{srsitems}
         \item stuff
-    \end{reqitems}
+    \end{srsitems}
 
     % remove state sync
     \item The software infrastructure must implement the remove state synchronise blocking action.
-    \begin{reqitems}
+    \begin{srsitems}
         \item stuff
-    \end{reqitems}
+    \end{srsitems}
 
     % wait state sync
     \item The software infrastructure must implement the wait state synchronise non-blocking action.
-    \begin{reqitems}
+    \begin{srsitems}
         \item stuff
-    \end{reqitems}
+    \end{srsitems}
 
-\suspend{reqitems}
+\suspend{srsitems}
 
 \subsection{Non-Functional Requirements}
 
@@ -182,16 +198,16 @@ To accurately test the real-time behaviour of the system, an external test harne
 
 \subsubsection{High-Level}
 
-\resume{reqitems}
+\resume{srsitems}
     \item The test harness must measure the timed latency and jitter between sending/receiving data to/from the software infrastructure.
-    \begin{reqitems} 
+    \begin{srsitems} 
         \item The test harness must use independent software and hardware from the core infrastructure to verify the results.
         \item The test harness must use a hard real-time platform to measure timings, for example a microprocessor.
         \item The test harness must be paired with an analysis tool to visualize and analyze the measured data.
-    \end{reqitems}
+    \end{srsitems}
 
     \item An example software component, that is executed on the software infrastructure must interface with the test harness.
-\suspend{reqitems}
+\suspend{srsitems}
 
 \newpage
 
@@ -201,17 +217,17 @@ While the test harness is designed to evaluate the real-time behaviour of the sy
 
 \subsubsection{High-Level}
 
-\resume{reqitems}
+\resume{srsitems}
     \item The demonstration application 
     \item 
-    \begin{reqitems} 
+    \begin{srsitems} 
         \item The test harness must use independent software and hardware from the core infrastructure to verify the results.
         \item The test harness must use a hard real-time platform to measure timings, for example a microprocessor.
         \item The test harness must be paired with an analysis tool to visualize and analyze the measured data.
-    \end{reqitems}
+    \end{srsitems}
 
     \item An example software component, that is executed on the software infrastructure must interface with the test harness.
-\end{reqitems}
+\end{srsitems}
 
 % demo apps
 Example application that uses one differential equation and requires its state to be maintained with a plant for the example application to test it's functionality
@@ -223,3 +239,14 @@ Example application that uses one differential equation and requires its state t
     % demo plant model
     The plant must
     model a mass falling due to gravity
+
+\newpage
+
+\section{Development Hardware}
+
+\begin{hrsitems}
+    \item The development hardware must use dedicated hardware and not be virtualized.
+    \item The development hardware must have hardware support for ethernet networking.
+    \item The development hardware must support Linux and at least one open source hypervisor.
+    \item The development hardware 
+\end{hrsitems}
