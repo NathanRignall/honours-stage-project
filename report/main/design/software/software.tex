@@ -1,0 +1,118 @@
+\section{Software}
+
+% \section{Operation}
+
+% \begin{sequencediagram}
+%     \newthread[white]{c}{CLI}
+%     \newinst[3]{a}{Agent}
+%     \newinst[3]{r}{Runner}
+
+%     \begin{call}{c}{Init()}{a}{}
+%     \end{call}
+% \end{sequencediagram}
+
+% \begin{tikzpicture}
+%     \begin{package} {State} 
+%         \begin{class}[text width=8cm]{StateManager} {0,0}
+%             \attribute{stream : UnixStream}
+%             \attribute{data : Vecu8}
+%             \operation{new(UnixStream) : self}
+%             \operation{run}
+%             \operation{getdata : Vecu8}
+%             \operation{setdata(Vecu8) : Done}
+%         \end{class}
+
+%         \begin{class}[text width=8cm]{CommunicationManager} {-5,-5}
+%             \attribute{stream : UnixStream}
+%             \attribute{data : Vecu8}
+%             \operation{new(UnixStream)}
+%             \operation{run}
+%             \operation{getdata : Vecu8}
+%             \operation{setdata(Vecu8) : Done}
+%         \end{class}
+%     \end{package}
+
+%     % \begin{class}[text width=8cm]{ClassName}{0,0}
+%     %     \attribute{name : attribute type}
+%     %     \attribute{name : attribute type = default value}
+%     %     \operation{name(parameter list) : type of value returned}
+%     %     \operation[0]{name(parameters list) : type of value returned}
+%     % \end{class}
+% \end{tikzpicture}
+
+% \tikzset{
+%     ->,
+%     >=stealth,
+%     node distance=3cm,
+%     every state/.style={thick, fill=gray!10},
+%     initial text=$ $,
+% }
+
+% \begin{tikzpicture} 
+%     \node[state, initial, accepting] (1) {$1$};
+%     \node[state, below left of=1] (2) {$2$};
+%     \node[state, right of=2] (3) {$3$};
+%     \draw   (1) edge[above] node{$b$} (2)
+%                 (1) edge[below, bend right, left=0.3] node{$\epsilon$} (3)
+%                 (2) edge[loop left] node{$a$} (2)
+%                 (2) edge[below] node{$a, b$} (3)
+%                 (3) edge[above, bend right, right=0.3] node{$a$} (1);
+% \end{tikzpicture}
+
+% why rust ferrocene, ada
+
+% \begin{itemize}
+%     \item Create Component \textbf{Non-Blocking}
+%     \begin{itemize}
+%         \item Component Identifier
+%     \end{itemize}
+%     \item Start Component \textbf{Blocking}
+%     \begin{itemize}
+%         \item Component Identifier
+%     \end{itemize}
+
+%     \item Stop Component \textbf{Blocking}
+%     \begin{itemize}
+%         \item Component Identifier
+%     \end{itemize}
+
+%     \item Remove Component \textbf{Non-Blocking}
+%     \begin{itemize}
+%         \item Component Identifier
+%     \end{itemize}
+    
+%     \item Add Route \textbf{Blocking}
+%     \begin{itemize}
+%         \item Component Identifier
+%     \end{itemize}
+
+%     \item Remove Route \textbf{Blocking}
+%     \begin{itemize}
+%         \item Component Identifier
+%     \end{itemize}
+
+%     \item Set Schedule \textbf{Blocking}
+%     \begin{itemize}
+%         \item Component Identifier
+%     \end{itemize}
+
+%     \item Add State Synchronisation \textbf{Blocking}
+%     \begin{itemize}
+%         \item Component Identifier
+%     \end{itemize}
+
+%     \item Remove State Synchronisation \textbf{Blocking}
+%     \begin{itemize}
+%         \item Component Identifier
+%     \end{itemize}
+    
+%   \end{itemize}
+
+
+% middleware
+    % message passing
+    % scheduler
+    % state sync
+    % configuration
+        % background thread
+        % state machines
