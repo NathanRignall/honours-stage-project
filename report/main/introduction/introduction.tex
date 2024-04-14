@@ -4,8 +4,33 @@
 
 \section{Project Background}
 
+Real-time systems are used in a variety of sectors, including avionics, manufacturing, power, automotive, and medical, these are predominantly safety-critical environments. This real-time software is increasingly being used within embedded systems that power the world's critical infrastructure.
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture} [block/.style = {draw, rectangle, minimum height=2em,minimum width=4em}]
+
+        \node[block] (input) {Input}; 
+        \node[block, right=2cm of input] (est) {Estimation};
+        \node[block, right=1cm of est] (con) {Control};  
+        \node[block, right=2cm of con] (output) {Output}; 
+
+        \node[draw,inner xsep=4mm,inner ysep=7mm,fit=(est)(con),label={Controller}, dashed]{};  
+
+        \draw [->] (input) -- (est);
+        \draw [->] (est) -- (con);
+        \draw [->] (con) -- (output);
+
+    \end{tikzpicture}  
+    \caption[Example real-time control system]
+    {Example real-time control system}
+    \label{fig:realTimeSystem}
+\end{figure}
+
 % Real Time
 % Software Updates
+
+\newpage
 
 \section{Project Objectives}
 
@@ -17,7 +42,7 @@ Another primary objective is to implement a reliable external testing method for
 
 % Secondary Objectives
 
-% \section{Research Question}
+\section{Research Question}
 
 % Is this important
 
