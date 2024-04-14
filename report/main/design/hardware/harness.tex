@@ -1,12 +1,8 @@
-\newpage
-
 \graphicspath{{main/design/hardware/graphics/}}
 
-\subsection{Test Harness}
+\subsection{Development Test Harness}
 
-% present tense 
-
-Though this harness, an example control loop implementation can be simulated to ensure all deadlines are met during a live software update.
+Similar to the development cards, dedicated and isolated hardware was required for the test harness. This was to perform validation against the developed software to ensure the real-time requirements were maintained. Through the harness, an example control loop implementation could be simulated to ensure all deadlines are met during a live software update.
 
 \begin{figure}[ht]
     \centering
@@ -31,6 +27,7 @@ Though this harness, an example control loop implementation can be simulated to 
     \label{fig:testHarnessDesign}
 \end{figure}
 
+% WRONG TENSE
 \autoref{fig:testHarnessDesign} contains a signal generator, this randomly produces a signal and outputs a packet. These packets are ingested by the software infrastructure where processing occurs. An output packet is subsequently generated (mirroring the input) and sent to a signal receiver, which captures this packet.
 
 The signal generator and receiver output their current state over discrete digital signals so that a logic analyser can record the state of the system over time. Specifically the states can be compared to measure the complete system latency during standard operation and software update. If the generator and receiver produce additional reference clock signals, the logic analyser can more closely calculate the software infrastructure induced latency.
@@ -73,7 +70,7 @@ The signal generator and receiver output their current state over discrete digit
 
 The generator, receiver and logic analyser were all implemented using the RP2040 microprocessor from Raspberry Pi for hardware simplification. 
 
-The two controllers that performed packet communication used the W5500 chip to send UDP packets over ethernet, this integrates nicely with Elafry messages. This co-processor offloads the complex ethernet drivers and communicates to the main proicessor over
+The two controllers that performed packet communication used the W5500 chip to send UDP packets over ethernet, this integrates nicely with Elafry messages. This co-processor offloads the complex ethernet drivers and communicates to the main processor over
 
 % DIAGRAM - SPI block diagram
 

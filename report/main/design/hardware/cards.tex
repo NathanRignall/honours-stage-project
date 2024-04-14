@@ -1,122 +1,127 @@
-\newpage
+\graphicspath{{main/design/hardware/graphics/}}
 
 \subsection{Development Cards}
 
-In order to build and test the real time software, dedicated development hardware is required to ensure an isolated testing environment.
+To build and test the real-time software dedicated development hardware was required to ensure an isolated testing environment. The Raspberry Pi 4 Compute Module 4 was selected as the development card of choice for its comprehensive software support for operating systems and hypervisors. The Compute Module 4 contains the same overall hardware as the standard Raspberry Pi 4 but is more suited to industrial environments, with the option for custom carrier boards. Exception being the ethernet IC and EMMC flash, which both caused issued when compiling the custom operating system and bootloader images.
 
-These test cards consist of a Raspberry Pi Compute Module 4 (CM4).
-This contains the same overall hardware as the standard raspberry pi 4.
-EMMC flash for high vibration environments.
-Exception being the ethernet IC and EMMC flash (This later caused problems with compiling the operating system and bootloader)
+Another requirement for the hardware was remote debugging support, with full power and data control. This was to ensure that development could take place away from the physical cards, remotely. To cater for the remote development the Pi KVM project was selected to control the cards. This was because it supported customisation of GPIO switches and could run on Raspberry Pi 4s that were also available.
 
-Key requirement is remote debugging, full remote power and data control.
-Also placed in a rack
-Selected the Pi KVM project for remote control as is supports deploy as well as additional GPIO control.
+\begin{figure}[ht]
+  \centering
+      \begin{tikzpicture}  
+          \node[block, text width=1.75cm ] (h) {HDMI\\Capture};  
+          \node[block, text width=1.75cm, right=0.1cm of h] (u) {USB\\Serial};  
+          \node[block, text width=1.75cm, right=0.1cm of u] (j) {JTAG\\Debugger};  
+          \node[block, text width=1.75cm, right=0.1cm of j] (p) {Power\\Relay};
 
-The CM4s display is captured using the CSI port on the KVM with a HDMI to CSI converter.
-The power is controlled using a relay, that controls the 12v supply to the CM4.
-The signal flags of the EMMC storage are directly connected to the KVM. EXPLAIN the signal flags
-These are configured in the KVM user interface
-UART is connected to a USB serial converter.
-USB host is connected to the KVM for flashing the CM4.
-Finally a debugger (JTAG) in case of modifications to the kernel itself.
+          \node[block, text width=1.75cm, right=0.1cm of p] (m) {Flash\\Mode};
+          \node[block, text width=1.75cm, right=0.1cm of m] (l) {Flash\\Lock};
+          \node[block, text width=1.75cm, right=0.1cm of l] (f) {USB};
+
+          \node[block, text width=11.75cm, above=1cm of p] (d) {Development Card};  
+          \node[block, text width=11.75cm, below=1cm of p] (k) {Remote KVM};  
+
+          \draw[<->,thick] ([xshift=-4.5cm]d.south) to node [midway,fill=white] {HDMI} (h.north);
+          \draw[<->,thick] ([xshift=-3cm]d.south) to node [midway,fill=white] {UART} (u.north);
+          \draw[<->,thick] ([xshift=-1.5cm]d.south) to node [midway,fill=white] {JTAG} (j.north);
+          \draw[<->,thick] ([xshift=-0cm]d.south) to node [midway,fill=white] {12V} (p.north);
+          \draw[<->,thick] ([xshift=1.5cm]d.south) edge (m.north);
+          \draw[<->,thick] ([xshift=3cm]d.south) edge (l.north);
+          \draw[<->,thick] ([xshift=4.5cm]d.south) edge (f.north);
+
+          \draw[<->,thick] (h.south) to node [midway,fill=white] {CSI} ([xshift=-4.5cm]k.north);
+          \draw[<->,thick] (u.south) to node [midway,fill=white] {USB} ([xshift=-3cm]k.north);
+          \draw[<->,thick] (j.south) to node [midway,fill=white] {USB} ([xshift=-1.5cm]k.north);
+          \draw[<->,thick] (p.south) to node [midway,fill=white] {GPIO} ([xshift=0cm]k.north);
+          \draw[<->,thick] (m.south) to node [midway,fill=white] {GPIO} ([xshift=1.5cm]k.north);
+          \draw[<->,thick] (l.south) to node [midway,fill=white] {GPIO} ([xshift=3cm]k.north);
+          \draw[<->,thick] (f.south) to node [midway,fill=white] {USB} ([xshift=4.5cm]k.north);
+      \end{tikzpicture}  
+  \caption[Development hardware block diagram]
+  {Development hardware block diagram}
+  \label{fig:developmentHardwareBlockDiagram}
+\end{figure}
+
+The CM4's display was captured using the CSI port on the KVM with a HDMI to CSI converter. While this was not strictly necessary it was useful for debugging. To access the development card's console UART from the CM4 was connected to a USB serial converter. A Segger JTAG debugger was connected to the CM4 in case the kernel or bootloader require debugging. The power for the CM4 was controlled using a simple relay, that switched the 12v supply through GPIO pins. The signal flags of the EMMC storage, mode and lock, were directly connected to the KVM GPIO pins. This was so that the storage could be flashed and locked remotely. Hence, the USB host was connected to the KVM for flashing the CM4. The used GPIO channels were configured in the KVM user interface.
+
+So that both software development and benchmarking/testing activities could take place at the same time two development setups were created. These were connected together using a managed switch so that the cards could either communicate with test hardware or connect to external development infrastructure. For the flexibility of loading software images over the network, a TFTP server was added to the network. This network arrangement is shown in \autoref{fig:developmentNetworkBlockDiagram}.
 
 \begin{figure}[ht]
     \centering
-        \begin{tikzpicture}  
-            \node[block, text width=1.75cm ] (h) {HDMI\\Capture};  
-            \node[block, text width=1.75cm, right=0.1cm of h] (u) {USB\\Serial};  
-            \node[block, text width=1.75cm, right=0.1cm of u] (j) {JTAG\\Debugger};  
-            \node[block, text width=1.75cm, right=0.1cm of j] (p) {Power\\Relay};
+    \begin{tikzpicture}  
+        \node[block, text width=16cm, minimum height=1cm] (sw) {Managed Switch}; 
 
-            \node[block, text width=1.75cm, right=0.1cm of p] (m) {Flash\\Mode};
-            \node[block, text width=1.75cm, right=0.1cm of m] (l) {Flash\\Lock};
-            \node[block, text width=1.75cm, right=0.1cm of l] (f) {USB};
+        \node[block, above=1cm of sw, xshift=-6cm] (dc1) {Development\\Card}; 
+        \node[block, right=1cm of dc1, text width = 2cm] (rk1) {Remote\\KVM};
 
-            \node[block, text width=11.75cm, above=1cm of p] (d) {Development Card};  
-            \node[block, text width=11.75cm, below=1cm of p] (k) {Remote KVM};  
+        \node[block, above=1cm of sw, xshift=2cm] (dc2) {Development\\Card};  
+        \node[block, right=1cm of dc2, text width = 2cm] (rk2) {Remote\\KVM};
 
-            \draw[<->,thick] ([xshift=-4.5cm]d.south) to node [midway,fill=white] {HDMI} (h.north);
-            \draw[<->,thick] ([xshift=-3cm]d.south) to node [midway,fill=white] {UART} (u.north);
-            \draw[<->,thick] ([xshift=-1.5cm]d.south) to node [midway,fill=white] {JTAG} (j.north);
-            \draw[<->,thick] ([xshift=-0cm]d.south) to node [midway,fill=white] {12V} (p.north);
-            \draw[<->,thick] ([xshift=1.5cm]d.south) edge (m.north);
-            \draw[<->,thick] ([xshift=3cm]d.south) edge (l.north);
-            \draw[<->,thick] ([xshift=4.5cm]d.south) edge (f.north);
+        \node[block, below=1cm of sw, xshift=-5cm] (tftp) {TFTP\\Server};
+        \node[block, below=1cm of sw, xshift=-1cm] (build) {Build\\Server};
 
-            \draw[<->,thick] (h.south) to node [midway,fill=white] {CSI} ([xshift=-4.5cm]k.north);
-            \draw[<->,thick] (u.south) to node [midway,fill=white] {USB} ([xshift=-3cm]k.north);
-            \draw[<->,thick] (j.south) to node [midway,fill=white] {USB} ([xshift=-1.5cm]k.north);
-            \draw[<->,thick] (p.south) to node [midway,fill=white] {GPIO} ([xshift=0cm]k.north);
-            \draw[<->,thick] (m.south) to node [midway,fill=white] {GPIO} ([xshift=1.5cm]k.north);
-            \draw[<->,thick] (l.south) to node [midway,fill=white] {GPIO} ([xshift=3cm]k.north);
-            \draw[<->,thick] (f.south) to node [midway,fill=white] {USB} ([xshift=4.5cm]k.north);
-        \end{tikzpicture}  
-    \caption[Development Hardware]
-    {Development Hardware}
-    \label{fig:developmentHardware}
+        \node[block, below=1cm of sw, text width = 2cm, xshift=7cm] (test) {Test\\Harness};
+
+        \draw[<->,thick] (dc1) edge (rk1);
+        \draw[<->,thick] (dc2) edge (rk2);
+
+        \draw[<->,thick] (dc1.south) edge ([xshift=-6cm]sw.north);
+        \draw[<->,thick] (dc2.south) edge ([xshift=2cm]sw.north);
+
+        \draw[<->,thick] (rk1.south) edge ([xshift=-2.2cm]sw.north);
+        \draw[<->,thick] (rk2.south) edge ([xshift=5.8cm]sw.north);
+
+        \draw[->,thick] (tftp.north) edge ([xshift=-5cm]sw.south);
+        \draw[->,thick] (build.north) edge ([xshift=-1cm]sw.south);
+
+        \draw[->,thick] (test.north) edge ([xshift=7cm]sw.south);
+
+    \end{tikzpicture}  
+    \caption[Development network block diagram]
+    {Development network block diagram}
+    \label{fig:developmentNetworkBlockDiagram}
 \end{figure}
 
+To securely mount the development hardware together, a mounting bracket was designed and 3D Printed using Fusion 360. \autoref{fig:DevelopmentHardwareFrameMount} displays this model, with the assembled view on the left and frame mount on the right.
 
-Two of these so that multiple benchmarking activities can be performed at once and compared.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth, clip, trim=0.5cm 4cm 0.5cm 3.5cm]{DevelopmentHardwareFrameMount.pdf}
+    \caption[Development hardware frame mount design]
+    {Development hardware frame mount design}
+    \label{fig:DevelopmentHardwareFrameMount}
+\end{figure}
 
+% BOM
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{ c|ccc } 
+        \hline
+        Name & Manufacturer & Quantity & Task \\ 
+        \hline
+        \href{https://www.raspberrypi.com/products/compute-module-4/}{Compute Module 4} & Raspberry Pi & 1 & Development Card \\ 
+        \href{https://www.raspberrypi.com/products/raspberry-pi-4-model-b/}{Raspberry Pi 4} & Raspberry Pi & 1 & Remote KVM \\ 
+        \href{https://wiki.geekworm.com/C790}{CSI-2 Module C790}  & Geekworm & 1 & HDMI Capture \\ 
+        Raspberry Pi Pico & Raspberry Pi & 1 & USB Serial \\ 
+        SEGGER J-Link EDU & Segger Pi & 1 & Debugger \\ 
+        \href{https://wiki.seeedstudio.com/Grove-Relay/}{Grove Relay} & Grove & 1 & Debugger \\ 
 
-Use the uBoot boot loader.
-This allows the development images to be loaded over TFTP, we have a dedicated tftp boot server.
+        HDMI Male-Male & & 1 & \\ 
+        USB Micro B - A Cable & & 3 & \\ 
+        Dupont Jumper & & X & \\ 
+        \hline
+    \end{tabular}
+    \caption[Development hardware bill-of-materials]
+    {Development hardware bill-of-materials}
+    \label{tbl:DevelopmentHardwareBOM}
+\end{table}
 
-Connected to a managed switch. The test harness is connected to this on a separate VLAN.
+Two sets of hardware and frames were assembled and attached to a 1u rack shelf so that the hardware could be mounted inside a standard rack. The final shelf is displayed in \autoref{fig:DevelopmentHardwareRack} with two assembled cards.
 
-% \begin{figure}
-%     \centering
-%     \resizebox{\columnwidth}{!}{
-%         %
-%         \begin{tikzpicture}  
-%             \node[block] (d1) {Development Card};  
-%             \node[block,right=of a] (k1) {Debug KVM};
-
-%             \node[block,below=of a] (d) {Reciever};  
-%             \node[block,right=of d] (e) {Destination};  
-
-%             % \node[draw,inner xsep=4mm,inner ysep=7mm,fit=(a)(b) ] (c1) {Application Layer};
-%             % \node[draw,inner xsep=4mm,inner ysep=7mm,fit=(d)(e) ] {Infrastructure Layer};  
-%             % \node[draw,inner xsep=4mm,inner ysep=7mm,fit=(d)(e),label={Hardware Layer}]{};
-%         \end{tikzpicture}  
-%         %
-%     }
-%     \caption[Heatmap for class distribution in dataset]
-%     {Heatmap for class distribution in dataset}
-%     \label{fig:heatmap}
-% \end{figure}
-
-\begin{tikzpicture}[node distance=1.75cm]
-    \node[draw] (node1) {Node 1};
-    \node[draw, below of=node1] (node2) {Node 2};
-    
-    % Create a node that fits both node1 and node2
-    \node[fit=(node1)(node2), draw, inner sep=0pt] (fitnode) {};
-    
-    % Adjusting the fitting node to match the sizes
-    \node[above right] at (fitnode.south west) {Fitting Node};
-\end{tikzpicture}
-
-\begin{tikzpicture}[
-    mymatrix/.style={matrix of nodes, nodes=block, row sep=1em},
-    mycontainer/.style={draw=gray, inner sep=1ex},
-    typetag/.style={draw=gray, inner sep=1ex, anchor=west},
-    title/.style={draw=none, color=gray, inner sep=0pt}
-    ]
-    \matrix[mymatrix] (mx1) {
-      |[title]|Decomposition \\
-      Independent \\
-      Reduction \\
-      DivideAndConquer \\
-    };
-    \matrix[mymatrix, right=of mx1.north east, matrix anchor=north west] (mx2) {
-      |[title]|Dependency \\
-      Atomic \\
-      Range \\
-    };
-    \node[mycontainer, fit=(mx1)] {};
-    \node[mycontainer, fit=(mx2)] {};
-  
-  \end{tikzpicture}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth, clip]{DevelopmentHardwareRack}
+  \caption[Development hardware assembled]
+  {Development hardware assembled}
+  \label{fig:DevelopmentHardwareRack}
+\end{figure}
