@@ -11,6 +11,8 @@ To select the most optimal environment to develop the software infrastructure up
 
 \subsubsection{Test Suite}
 
+% little intro
+
 % PRESENT --
 The RT-Tests suite includes a cyclictest program. This is a simple yet effective program that can be used to estimate the real time latencies in a system. It measures real time jitter by creating a interrupt event at a specific time in the future and measuring the time delay between the requested wake-up and actual wake-up time. While this provides a good method for identifying operating system induced latency and jitter it does not isolate latencies induced by hardware or low-level firmware. At this stage it can be assumed that the selected development targets do not induce significant latencies.
 % -- PRESENT
@@ -19,9 +21,13 @@ The RT-Tests suite includes a cyclictest program. This is a simple yet effective
 
 \autocite{abeniUsingXenKVM2020} compiled a similar study into the real time performance of open source hypervisors. Every hypervisor introduces some latencies into a virtual machine that can affect the correctness of the existing real-time analysis. Abeni and Faggioli compared the performance of both KVM and Xen on various intel x86 processors.
 
+The study found that the KVM hypervisor would be suitable for serving real-time workloads with worst-case latencies under 100 $\mu$s. This is applicable only when using RT kernels on both the guest and host. Likewise when using the Xen hypervisor the RT kernels on both the guest and host must also be used. Para-virtualised (PV) guests performed well but fully virtualised (HVM) guests 
+
+
+
+
+
 % SUMMARISE THE WORK HERE
-
-
 
 
 % OUR ANALYSIS
