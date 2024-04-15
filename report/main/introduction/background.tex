@@ -47,6 +47,8 @@ Virtual machines create isolated or emulated computing environments by abstracti
 
 A fully virtualized Type 1 hypervisor (KVM) emulates privileged instructions and I/O operations, abstracting the hardware resources from the virtual machine. The guest operating system therefore requires no modifications as it is unaware of the virtualisation. In contrast, with paravirtualizaion the guest operating system requires significant modifications and is aware of the underlying hardware. Xen uses paravirtualizaion and a modified version of the Linux kernel can run as a guest OS. Hardware assisted virtualisation uses additional CPU instructions to isolate virtual machines in a hypervisor, for example AMD-V \autocite{liSurveyVirtualMachine2010}.
 
+HVM, PV, PVH
+
 Type 2 hypervisors negotiate resource allocation with the operating system, which makes the process slower and less efficient \autocite{awsWhatDifferenceType} such as VMware Workstation \autocite{vmwareWhatHypervisorVMware}.
 
 \subsection{Mixed Criticality}
@@ -59,3 +61,5 @@ Type 2 hypervisors negotiate resource allocation with the operating system, whic
 % aircraft focused middleware (IMA DIMA)
 
 \subsection{Software Updates}
+% why do we even need updates, cyber threats etcs
+% Update vs Upgrade
