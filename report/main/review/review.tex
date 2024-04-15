@@ -6,26 +6,81 @@
 
 % A good literature review could be a project on its own, and form a very useful guide to anyone new to the particular field. It would identify the important work, authors and publications which would be a good place to begin research activity. Open questions and areas where new work is required would be discussed. Really good reviews are often published in scientific journals. Your literature review is not expected to be quite so substantial, but should still provide a comprehensive summary which will allow the reader to understand the field.
 
-Regular firmware upgrades requires systems to be taken offline for firmware change and restart, time consuming and breaks continuity. High availability systems typically using hardware redundancy to provide operational continuity through updates. At the cost of extra hardware. \autocite{raoLiveSeamlessFirmware2023}
+% An excellent literature review will provide a clear starting point for the project. It will examine the state of the art in the relevant field, show where similar work has already been done and make clear where there is scope for further work. Discussion will demonstrate a breadth of awareness and solid understanding of relevant principles and techniques. Full source references will be made to background material on all significant issues concerned, including traditional and formal academic sources. A high class report will be further strengthened by a critical appraisal of the problem domain.
 
-Physical tasks performed by the software are often expensive to interrupt. High down time and start-up costs. For example power substation - power outage for customers. Software is hardley updated during an embedded systems lifetime (typically of over 30 years). There are several solutions to updating software dynamically; few of these have actually been adapted to real-time systems. \autocite{wahlerDynamicSoftwareUpdates2009}
+Dynamic software updating (DSU) refers to software applications which can be updated while running and without interrupting operation. \autocite{hicksDynamicSoftwareUpdating2005}
 
-Taking software systems off-line to perform code changes may pose an unacceptable risk or danger to human life. \autocite{montgomeryModelUpdatingRealTime2004}
+Regular firmware upgrades require systems to be taken offline for firmware change and restart, which is generally time consuming and breaks continuity. High availability systems typically use hardware redundancy to provide operational continuity throughout updates. This is at the cost of extra hardware and complexity. \autocite{raoLiveSeamlessFirmware2023}
 
-Air traffic control
-Rail control systems
-Industrial control systems
-Patient monitoring systems
+Physical tasks performed by software are often expensive to interrupt with high down time costs. For example within power substations, a power outage for customers would be costly. Hence, software is hardley updated during an embedded systems lifetime (typically of over 30 years). There are several solutions to updating software dynamically; few of these have been adapted to real-time systems. \autocite{wahlerDynamicSoftwareUpdates2009}
 
-Update vs Upgrade
+This chapter evaluates the requirements for a dynamic software updates system and the challenges involved. In addition, four existing implementations of dynamic updates for real-time systems are evaluated, considering both the advantages and disadvantages of each solution.
 
-\section{Review Strategy}
-Analysis of existing dynamic software updating techniques for safe and secure industrial control systems
+\clearpage
 
-Challenges in Dynamic Software Updating
+\section{Review}
+
+Mlinarić completed an in-depth analysis into the challenges in dynamic software updating \autocite{mlinaricChallengesDynamicSoftware2020}. 
+
+This built upon the work on previous surveys into dynamic software updating \autocite{seifzadehSurveyDynamicSoftware2013}.
+
+% Challenges in Dynamic Software Updating
+
+\subsection{Requirements for dynamic updates}
+availability
+
+correctness
+
+flexibility
+
+performance
+
+simplicity
+
+All systems balance these requirements
+
+\subsection{Techniques and Mechanisms}
+
+\subsubsection*{Level of Update}
+How much of the software is updated, components or entire system
+
+Update of Dependent Components
+
+Time of Update
+
+State Transfer
+
+Cleaning
+
+Rollback
+
+\subsection{Implementation}
+Programming Language
+
+Application Type
+
+Runtime environment
+
+Type Safety
+
+Concurrency
+
+Sets of changes
+
+Version coexistence
 
 A survey of dynamic software updating
 
+% mention two differnet 'types' of updates vector swap and component
+
+\newpage
+
+\section{Case Studies}
+
+Analysis of existing dynamic software updating techniques for safe and secure industrial control systems
+
+\subsubsection*{Review Strategy}
+What is the plan, scoring etc
 % Review categories for the papers in more depth
 Categories
 Hardware Handover
@@ -33,11 +88,6 @@ Synchronisation
 State Continuity
 State Transformation
 
-% mention two differnet 'types' of updates vector swap and component
-
-\newpage
-
-\section{Case Studies}
 
 % ----- CASE STUDY 1 -----
 

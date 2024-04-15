@@ -16,26 +16,6 @@ Rail control systems
 Industrial control systems
 Patient monitoring systems
 
-\begin{figure}[ht]
-    \centering
-    \begin{tikzpicture} [block/.style = {draw, rectangle, minimum height=2em,minimum width=4em}]
-
-        \node[block] (input) {Input}; 
-        \node[block, right=2cm of input] (est) {Estimation};
-        \node[block, right=1cm of est] (con) {Control};  
-        \node[block, right=2cm of con] (output) {Output}; 
-
-        \node[draw,inner xsep=4mm,inner ysep=7mm,fit=(est)(con),label={Controller}, dashed]{};  
-
-        \draw [->] (input) -- (est);
-        \draw [->] (est) -- (con);
-        \draw [->] (con) -- (output);
-
-    \end{tikzpicture}  
-    \caption[Example real-time control system]
-    {Example real-time control system}
-    \label{fig:realTimeSystem}
-\end{figure}
 
 % Real Time
 % Software Updates
@@ -44,17 +24,21 @@ Patient monitoring systems
 
 \section{Project Objectives}
 
-% Primary Objectives
+\subsection{Primary Objectives}
 
 This project seeks to develop multiple methods and system architectures for live software updates in a real-time system via an example application. Using a timing analysis solution, such as a logic analyser, this will be tested to ensure that the real-time application meets all imposed deadlines (defined latency and jitter). The goal of this is to prove that it is feasibly possible to update software on a live system whilst maintaining real-time guarantees. Although this is a complex task the intention is to achieve this before February.
 
 Another primary objective is to implement a reliable external testing method for a real-time environment, using existing research. This will allow for accurate measurement of the real-time behaviour of the program at all stages of the update, to validate that the upgrade is successful. Minimal external hardware is required, and the plan is to achieve this before February.
 
-% Secondary Objectives
+\subsection{Secondary Objectives}
+Some points
 
 \section{Research Question}
+A question?
 
 % Is this important
+
+% Ethical review
 
 \newpage
 

@@ -2,6 +2,8 @@
 
 \section{Technical Background}
 
+% define software component
+
 \subsection{Real-Time}
 A real-time system is defined as a system which requires correct logical operation with completion in a configured deadline. This is in contrast to a non-real-time system which correct operation is desired but lacks configured deadlines. \autocite{kaviRealTimeSystems2009}
 
@@ -13,15 +15,46 @@ These real-time systems can be categorised into hard and soft. Hard real-time sy
 Typical hard real-time systems include aircraft or robotic control computers and soft real-time systems include media players or gaming computers. Soft real-time systems can be used in control applications, but the soft timing must be considered in the system design.
 
 \subsection{Control Systems}
-A control system
-Differential equation
+A control system is a system that is designed to manage, regulate and stabilize the behaviour of a dynamic system. Often computers are used to implement real-time control laws in applications such as aircraft fight control or chemical process controls.
 
-% open loop and closed loop
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture} [block/.style = {draw, rectangle, minimum height=2em,minimum width=4em}]
+
+        \node[block] (input) {Sensor}; 
+        \node[block, right=2cm of input] (est) {Estimation};
+        \node[block, right=1cm of est] (con) {Control};  
+        \node[block, right=2cm of con] (output) {Actuator}; 
+
+        \node[draw,inner xsep=4mm,inner ysep=7mm,fit=(est)(con),label={Controller}, dashed]{};  
+
+        \draw [->] (input) -- (est);
+        \draw [->] (est) -- (con);
+        \draw [->] (con) -- (output);
+
+    \end{tikzpicture}  
+    \caption[Example real-time control system]
+    {Example real-time control system}
+    \label{fig:realTimeSystem}
+\end{figure}
+
+Sensors measure signals from the environment such as speed or pressure. Controllers take an input from a sensor a completes processing to determine the appropriate action. An example control algorithm is a Proportion-Integral-Derivative (PID) controller. Actuators are devices that receive an input and perform an action in an environment for example motors or values.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=8cm]{pidController}
+    \caption[Sample PID controller \autocite{pazDesignPIDController2001}]
+    {Sample PID controller \autocite{pazDesignPIDController2001}}
+    \label{fig:pidController}
+\end{figure}
+
+\subsection{Safety Critical Software}
+Some Explanation
 
 \subsection{Operating Systems}
 An Operating System (OS) is a piece of software that controls the execution of application programs on a system. Usually this involves managing resource allocations, such as a processor execution time, memory usage and generic inputs/outputs. \autocite{stallings2018operating}
 
-In order to develop a real-time applications with an OS, a RTOS (Real-Time Operating System) is usually required. This is to ensure the time deadlines of an application are inforced.
+In order to develop a real-time applications with an OS, a RTOS (Real-Time Operating System) is usually required. This is to ensure the time deadlines of an application are enforced.
 
 Hard real time operating system are designed to run applications with absolute timing
 Worst-Case Execution Time
@@ -35,7 +68,11 @@ Memory
 UNIX, POSIX
 
 \subsection{Virtualization}
-Virtual machines create isolated or emulated computing environments by abstracting resources within a physical machine \autocite{liSurveyVirtualMachine2010}. Software known as hypervisors can provide this abstraction layer \autocite{rountreeSystemSecurity2011}. Hypervisors that directly access the underlying machine resources are known as Type 1 \textit{bare metal} hypervisors, examples include Hyper-V \autocite{phsteeHyperVArchitecture2023}, Xen \autocite{xenprojectVirtualization}, ESXi \autocite{vmwareWhatESXI} or KVM \autocite{redhatWhatKVM}. 
+% intro
+Virtual machines create isolated and/or emulated computing environments by abstracting resources within a physical machine \autocite{liSurveyVirtualMachine2010}. Software known as hypervisors can provide this abstraction layer \autocite{rountreeSystemSecurity2011}.
+
+% type 1
+Hypervisors that directly access the underlying machine resources are known as Type 1 \textit{bare metal} hypervisors, examples include Hyper-V \autocite{phsteeHyperVArchitecture2023}, Xen \autocite{xenprojectVirtualization}, ESXi \autocite{vmwareWhatESXI} or KVM \autocite{redhatWhatKVM}.
 
 \begin{figure}[ht]
     \centering
@@ -45,20 +82,48 @@ Virtual machines create isolated or emulated computing environments by abstracti
     \label{fig:awsWhatDifferenceType}
 \end{figure}
 
-A fully virtualized Type 1 hypervisor (KVM) emulates privileged instructions and I/O operations, abstracting the hardware resources from the virtual machine. The guest operating system therefore requires no modifications as it is unaware of the virtualisation. In contrast, with paravirtualizaion the guest operating system requires significant modifications and is aware of the underlying hardware. Xen uses paravirtualizaion and a modified version of the Linux kernel can run as a guest OS. Hardware assisted virtualisation uses additional CPU instructions to isolate virtual machines in a hypervisor, for example AMD-V \autocite{liSurveyVirtualMachine2010}.
+% type 2
+Rather type 2 hypervisors negotiate resource allocation with the operating system, which makes the process slower and less efficient, \autocite{awsWhatDifferenceType} such as VMware Workstation \autocite{vmwareWhatHypervisorVMware}.
 
-HVM, PV, PVH
+% types
+A fully virtualized hypervisor emulates privileged instructions and I/O operations, abstracting the hardware resources from the virtual machine. The guest operating system therefore requires no modifications as it is unaware of the virtualisation. In contrast, with para-virtualization the guest operating system requires significant modifications and is aware of the underlying hardware. Hardware assisted virtualisation uses additional CPU instructions to isolate virtual machines in a hypervisor, for example AMD-V \autocite{liSurveyVirtualMachine2010}.
 
-Type 2 hypervisors negotiate resource allocation with the operating system, which makes the process slower and less efficient \autocite{awsWhatDifferenceType} such as VMware Workstation \autocite{vmwareWhatHypervisorVMware}.
+% why
+Hypervisors, particularly type 1, are a useful tool for isolating software components on a single piece of hardware. 
 
 \subsection{Mixed Criticality}
+Mixed criticality refers to heterogeneous software with mixed software integrities running on a shared hardware platform. Virtualisation technology is often used to isolate this software, even in a real-time environment. \autocite{guStateoftheArtSurveyRealTime2012}.
 
+The ARINC 653 standard is a software standard that defines a software architecture for both spatial and temporal partitioning of virtual machines or \textit{partitions}. Spatial refers to the isolation of code and data between virtual machines while temporal aims to limit the impacts of resource consumptions across virtual machines \autocite{cinqueVirtualizingMixedcriticalitySystems2022}. Hypervisors that follow this standard or similar must be certified when used in a safety critical application.
 
-\subsection{Middleware}
+\subsection{Embedded Middleware}
+% intro
+There is no one definition for middleware used in embedded systems. It is usually considered the piece of software that resides between the operating system and application software. Software that sits between application software can also be classed as middleware. \autocite{gazisMiddleware101What2022}
 
-%  generic embedded middleware
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=8cm]{middleware}
+    \caption[Embedded systems middleware models \autocite{ednEmbeddedOperatingSystems2013}]
+    {Embedded systems middleware models \autocite{ednEmbeddedOperatingSystems2013}}
+    \label{fig:embeddedSystemsMiddleware}
+\end{figure}
 
-% aircraft focused middleware (IMA DIMA)
+% what is middleware for
+The goal of middleware is to make software components more portable and flexible as developed software should be agnostic of the underlying hardware. Middleware can also provide the infrastructure for software components to communicate between each other. Message passing is just one example of a communication technique. \autocite{noergaardDemystifyingEmbeddedSystems2010}
+
+\subsection{Integrated Modular Avionics (IMA)}
+Avionics are a category of electronic systems that are specifically design for use in aircraft. 
+There are several architectures that are used in avionics. Middleware solutions are often used in this scenario for the benefits of software portability. \autocite{darweshDemonstratorVerificationSelective2018}
+
+Aircraft systems have gradually evolved away from a federated architecture into a more modular system. A federated architecture usually consists of multiple independent components with self-allocation and self-management. An integrated modular avionics (IMA) architecture brings the independent components into a single physical region, with resource sharing. A distributed integrated modular avionics (DIMA) architecture separates into multiple physical regions with distributed management for redundancy. \autocite{debarrosDistributedIntegratedModular2019}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=8cm]{distributedIntegratedModularAvionics}
+    \caption[Distributed integrated modular avionics architecture \autocite{wolfigDistributedIMADO2972008}]
+    {Distributed integrated modular avionics architecture \autocite{wolfigDistributedIMADO2972008}}
+    \label{fig:distributedIntegratedModularAvionics}
+\end{figure}
 
 \subsection{Software Updates}
 % why do we even need updates, cyber threats etcs
