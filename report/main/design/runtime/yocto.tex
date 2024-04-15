@@ -4,8 +4,23 @@
 \subsection{Operating Systems}
 RT Linux Kernel
 
+Linux
+VxWorks
+FreeRTOS
+Zephyr
+
 \subsection{Hypervisors}
-Xen, KVM
+
+\autocite{ayresVirtualisationMeansDynamic2019} completed a short study into the different available virtualisation technologies for embedded safety critical systems.
+
+VxWorks, Jailhouse, KVM, Xen, Sel 4
+All have public support for the raspberry pi 4
+
+Xen was selected for te hypervisor for its independence from linux and open source nature
+
+HVM, PV, PVH
+Xen uses para-virtualization and a modified version of the Linux kernel can run as a guest OS.
+
 
 \subsection{Build Process}
 
