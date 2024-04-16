@@ -20,74 +20,148 @@ This chapter evaluates the requirements for a dynamic software updates system an
 
 \section{Review}
 
-Mlinarić completed an in-depth analysis into the challenges in dynamic software updating \autocite{mlinaricChallengesDynamicSoftware2020}. 
-
-This built upon the work on previous surveys into dynamic software updating \autocite{seifzadehSurveyDynamicSoftware2013}.
-
-% Challenges in Dynamic Software Updating
+Mlinarić completed an in-depth analysis into the challenges in dynamic software updating \autocite{mlinaricChallengesDynamicSoftware2020}. This built upon the work on previous surveys into dynamic software updating \autocite{seifzadehSurveyDynamicSoftware2013}.
 
 \subsection{Requirements for dynamic updates}
-availability
+A dynamic software system can be summarised into several requirements, regardless of the implementation. Almost every DSU approach balances between the following requirements as they are contrary to each other. \autocite{mlinaricChallengesDynamicSoftware2020}
 
-correctness
-
-flexibility
-
-performance
-
-simplicity
-
-All systems balance these requirements
+\begin{description}
+    \item [Availability/Correctness] - Performing the software update should not impact the system's availability.
+    \item [Flexibility] - Any part of a running system should be updatable without downtime. This includes low level drivers and application software.
+    \item [Low Overhead]- The additional infrastructure required to support software updates should impact performance as little as possible.
+    \item [Simplicity] - The dynamic update system should be simple, both to reduce complexity of a system and to ease developer usage.
+\end{description}
 
 \subsection{Techniques and Mechanisms}
+The software techniques used to implement a DSU system are expressed by Mlinarić. The requirements defined for a DSU system can be resolved with the appropriate techniques. \autocite{mlinaricChallengesDynamicSoftware2020}
 
-\subsubsection*{Level of Update}
+\subsubsection{Level of Update}
 How much of the software is updated, components or entire system
+Sometimes a single line of code can fix a bug
 
-Update of Dependent Components
+\subsubsection{Update of Dependent Components}
+Connections between components can sometimes be duplex
+Sometimes the communications between software also changes
+Proxies and Wrappers
 
-Time of Update
+\subsubsection{Time of Update}
+Activeness safety (AS), confreeness safety (CFS), and manual identification. (REFERENCE)
 
-State Transfer
+\subsubsection{State Transfer}
+Automatic or programmer defined
 
-Cleaning
+Automatic, primitive type changes
 
-Rollback
+Manual written transformation functions from previous state, to the next state
+Useful for large code chnages but adds complexity.
 
-\subsection{Implementation}
-Programming Language
+Time of state transformation
+Lazy transformation
+Multiple cycles to transfer in a cyclic system 
 
-Application Type
+\subsubsection{Cleaning}
+High level languages (garbage collector)
+Stop old component
 
-Runtime environment
+\subsubsection{Rollback}
+In case of errors to support the availability of a system rollback is required
+Atomic actions, reversible operations 
 
-Type Safety
-
-Concurrency
-
-Sets of changes
-
-Version coexistence
-
-A survey of dynamic software updating
+% \subsection{Implementation}
+% Programming Language
+% Application Type
+% Runtime environment
+% Type Safety
+% Concurrency
+% Sets of changes
+% Version coexistence
+% A survey of dynamic software updating
 
 % mention two differnet 'types' of updates vector swap and component
+% There are two 
 
 \newpage
 
 \section{Case Studies}
 
-Analysis of existing dynamic software updating techniques for safe and secure industrial control systems
+\subsection{Review Criteria}
+To evaluate existing implementations of dynamic software updates in a real-time control system the following categories were selected. These specifically targeted the problems associated with implementing 'live' updates in real-time system. 
 
-\subsubsection*{Review Strategy}
-What is the plan, scoring etc
-% Review categories for the papers in more depth
-Categories
-Hardware Handover
-Synchronisation
-State Continuity
-State Transformation
+% While the source code for these implementations was not public, the respective papers were used to summarise the different techniques that could be used.
 
+\subsubsection{Hardware Handover}
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture} [block/.style = {draw, rectangle, minimum height=2em,minimum width=4em}, controller/.style = {draw, rectangle, minimum height=2em,minimum width=6em}]
+
+        \node[block] (input1) [label=left: $t_0$] {Sensor}; 
+        \node[controller, right=1cm of input1] (control1) {{$Controller$}};
+        \node[block, right=1cm of control1] (output1) {Actuator}; 
+
+        \draw [->] (input1) -- (control1);
+        \draw [->] (control1) -- (output1);
+
+        \node[block, below=0.25cm of input1] (input2) [label=left: $t_1$] {Sensor}; 
+        \node[controller, right=1cm of input2] (control2) {{$Controller$}};
+        \node[block, right=1cm of control2] (output2) {Actuator}; 
+
+        \draw [->] (input2) -- (control2);
+        \draw [->] (control2) -- (output2);
+
+        \path (control1.south) -- coordinate (aux1) (control1.south|-control2.north);
+        \draw[dashed] ([xshift=-4cm]control2.north west|-aux1) -- ([xshift=9cm]control2.north east|-aux1);  
+
+        \node[block, below=0.25cm of input2] (input3) [label=left: $t_2$]  {Sensor}; 
+        \node[controller, right=1cm of input3] (control3) {{$Controller^{\prime}$}};    
+        \node[block, right=1cm of control3] (output3) {Actuator}; 
+
+        \draw [->] (input3) -- (control3);
+        \draw [->] (control3) -- (output3);
+
+        \path (control2.south) -- coordinate (aux2) (control2.south|-control3.north);
+        \draw[dashed] ([xshift=-4cm]control3.north west|-aux2) -- ([xshift=9cm]control3.north east|-aux2);  
+
+        \node[block, below=0.25cm of input3] (input4) [label=left: $t_3$]  {Sensor}; 
+        \node[controller, right=1cm of input4] (control4) {{$Controller^{\prime}$}};  
+        \node[block, right=1cm of control4] (output4) {Actuator}; 
+
+        \draw [->] (input4) -- (control4);
+        \draw [->] (control4) -- (output4);
+
+        \path (control3.south) -- coordinate (aux3) (control3.south|-control4.north);
+        \draw[dashed] ([xshift=-4cm]control4.north west|-aux3) -- ([xshift=9cm]control4.north east|-aux3);  
+
+        \node[controller, right=2cm of output2] (control5) {{$Controller^{\prime}$}};
+        \coordinate[left=1cm of control5] (input5);
+        \coordinate[right=1cm of control5] (output5);
+        
+        \draw [dashed, red, ->] (input5) -- (control5);
+        \draw [dashed, red, ->] (control5) -- (output5);
+
+        \node[controller, right=2cm of output3] (control6) {{$Controller$}};
+        \coordinate[left=1cm of control6] (input6);
+        \coordinate[right=1cm of control6] (output6);
+
+        \draw [dashed, red, ->] (input6) -- (control6);
+        \draw [dashed, red, ->] (control6) -- (output6);
+
+    \end{tikzpicture}  
+    \caption[Software component hardware handover]
+    {Software component hardware handover}
+    \label{fig:problemHardwareHandover}
+\end{figure}
+
+\subsubsection{Synchronisation}
+Text
+
+\subsubsection{State Continuity \& Transformation}
+Text
+
+\subsubsection{Optimal Time}
+Text
+
+\newpage
 
 % ----- CASE STUDY 1 -----
 
@@ -102,15 +176,13 @@ Hardware support for vector and function pointer swapping
 Compiler support for live updates and optimal switchover point
 Talk about the compiler
 
-
-
 This process uses multiple hardware features to implement the live software update processes. The first is multi-bank non volatile memory to store multiple different versions of the firmware image (usually two). Next interrupt vector swap enables hardware support for quickly swapping multiple interrupt vectors in a simple cpu cycle, rather than multiple. Ram block swap is similar and allows blocks of memory to be swapped during execution e.g. function points. Finally, a hardware upgrade flag is used to indicates whether a live upgrade is in progress.
 
 First the controller boots into the latest firmware image on the appropriate flash bank. Upon update, the user generated request is processed in a background task and the new firmware is loaded onto the opposite flash bank. The main function the branches to the new main where the compiler generated initialisation routine is executed. This initializes any new variables and sets the hardware update register flag to indicate the update is in progress. Now the new firmware's main routine is executed, performing any variable transformations and initialisation. During this process all the previous control loop functions can still run.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=8cm]{raoLiveSeamlessFirmware2023_LfuFlow}
+    \includegraphics[height=10cm]{raoLiveSeamlessFirmware2023_LfuFlow}
     \caption[Application live firmware upgrade flow \autocite{raoLiveSeamlessFirmware2023}]
     {Application live firmware upgrade flow \autocite{raoLiveSeamlessFirmware2023}}
     \label{fig:raoLiveSeamlessFirmware2023_LfuFlow}
@@ -123,7 +195,7 @@ To validate the updates they, implemented a DC-DC buck converter with a tightly 
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=8cm]{raoLiveSeamlessFirmware2023_Logic}
+    \includegraphics[width=12cm]{raoLiveSeamlessFirmware2023_Logic}
     \caption[Live firmware upgrade switchover steps \autocite{raoLiveSeamlessFirmware2023}]
     {Live firmware upgrade switchover steps \autocite{raoLiveSeamlessFirmware2023}}
     \label{fig:raoLiveSeamlessFirmware2023_Logic}
@@ -163,7 +235,7 @@ The example application used to validate the dynamic software updates was an ent
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=8cm]{wahlerDynamicSoftwareUpdates2009_History}
+    \includegraphics[width=14cm]{wahlerDynamicSoftwareUpdates2009_History}
     \caption[Updating component 'History' \autocite{wahlerDynamicSoftwareUpdates2009}]
     {Updating component 'History' \autocite{wahlerDynamicSoftwareUpdates2009}}
     \label{fig:wahlerDynamicSoftwareUpdates2009_History}
@@ -184,7 +256,7 @@ FASA defines function blocks that can be aggregated together to form a component
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=5cm]{wahlerDisruptionfreeSoftwareUpdates2014_FASA}
+    \includegraphics[width=6cm]{wahlerDisruptionfreeSoftwareUpdates2014_FASA}
     \caption[FASA system architecture \autocite{wahlerDisruptionfreeSoftwareUpdates2014}]
     {FASA system architecture \autocite{wahlerDisruptionfreeSoftwareUpdates2014}}
     \label{fig:wahlerDisruptionfreeSoftwareUpdates2014_FASA}
@@ -205,7 +277,7 @@ This software update component architecture was testing using a magnetic levitat
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=8cm]{wahlerDisruptionfreeSoftwareUpdates2014_Graph}
+    \includegraphics[width=14cm]{wahlerDisruptionfreeSoftwareUpdates2014_Graph}
     \caption[Measurements before/during/after software update \autocite{wahlerDisruptionfreeSoftwareUpdates2014}]
     {Measurements before/during/after software update \autocite{wahlerDisruptionfreeSoftwareUpdates2014}}
     \label{fig:wahlerDisruptionfreeSoftwareUpdates2014_Graph}
