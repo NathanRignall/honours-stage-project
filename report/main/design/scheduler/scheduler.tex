@@ -8,12 +8,14 @@ To implement an event based cyclic scheduler, the scheduler must be able to send
 % DIAGRAM (WHAT DO I ACTUALLY MEAN)
 
 % past tense
-There were several different methods that could be used to send signals between processes in a Linux system. Shared memory, sockets and signalling were all investigated as they could be easily migrated onto a non-linux POSIX compatible system if required. This evaluation focused on gathering latency and jitter metrics for the different techniques.
+There are several different methods that can be used to send signals between processes in a Linux system. Shared memory, sockets and signalling were all investigated as they could be easily migrated onto a non-linux POSIX compatible system if required. This evaluation focused on gathering latency and jitter metrics for the different techniques.
 
 \subsubsection*{Test Program Design}
 
 % past tense
-Each evaluation used a parent-child arrangement of processes, whereby a parent process spawned a child processes. These processes were both be given the highest real-time scheduler priority and pinned to two separate cores that were isolated from the operating system. The parent process ran at a controlled frequency of 100Hz for 10,000 iterations, each iteration requested the child process to execute. At each execution, the time requested $t_0$ and actual execution time $t_1$ were recorded, shown in \autoref{fig:parentChildExecuteDelay}. These were later evaluated where $\Delta{}t$ is calculated.
+Each evaluation used a parent-child arrangement of processes, whereby a parent process spawned a child process. These processes were both be given the highest real-time scheduler priority and pinned to two separate cores that were isolated from the operating system. This was to ensure that no other application could interfere with the tests.
+
+The parent process ran at a controlled frequency of 100Hz for 3,000 iterations, each iteration requested the child process to execute. At each execution, the time requested $t_0$ and actual execution time $t_1$ were recorded, shown in \autoref{fig:parentChildExecuteDelay}. These were later evaluated where $\Delta{}t$ is calculated.
 
 % diagram here of the time delay between execution
 \begin{figure}[ht]
@@ -36,21 +38,17 @@ Each evaluation used a parent-child arrangement of processes, whereby a parent p
 
 % diagram of the time delay
 
-\subsubsection*{Implementation}
-
 % past tense
-Test programs executed on the target development hardware (CM4) with Linux kernel 6.1.65 and the real-time kernel batch applied. These programs used the Rust programming language to align with the final development software infrastructure. To set schedule parameters and interface with Linux they used the \verb|libc| crate \autocite{RustlangLibc2024}. In addition, they used the \verb|csv| crate \autocite{gallantBurntSushiRustcsv2024} to save timing data to a csv file.
+Test programs were executed on the target development hardware (CM4) with Linux kernel 6.1.65 and the real-time kernel patch applied. These programs used the Rust programming language to align with the final development software infrastructure. To set schedule parameters and interface with Linux they used the \verb|libc| crate \autocite{RustlangLibc2024}. In addition, they used the \verb|csv| crate \autocite{gallantBurntSushiRustcsv2024} to save timing data to a csv file.
 
 \newpage
 
 \subsection{Shared Memory}
 
 % present tense
-On a UNIX system each process has its own virtual memory space, so no process can normally access the memory of another process. This is to ensure isolation between processes. Shared memory can be used to allow multiple processes to access the same memory segment, though synchronisation methods such as mutexes must be used to ensure data and program integrity. \autocite{SharedMemory}
+On a UNIX system each process has its own virtual memory space, so no process can normally access the memory of another process. This is to ensure proper isolation between processes. Shared memory can be used to allow multiple processes to access the same memory segment, though synchronisation methods such as mutexes must be used to ensure data and program integrity. \autocite{SharedMemory}
 
-To allocate \verb|shmget()| returns an identifier \verb|shm_id| that can later be used to access the memory segment. \autocite{ShmgetLinuxManual}. To add the memory segment to the current processes the \verb|shmat()| function is used, when provided with the \verb|shm_id| \autocite{ShmopLinuxManual}. Conditional variables, a synchronisation method, can then be allocated and waited using \verb|pthread_cond_wait| \autocite{Pthread_cond_timedwait3pLinux}.
-
-\subsubsection*{Implementation}
+To allocate \verb|shmget()| returns an identifier \verb|shm_id| that can later be used to access the memory segment. \autocite{ShmgetLinuxManual}. To add the memory segment to the current processes the \verb|shmat()| function is used, when provided with the \verb|shm_id| \autocite{ShmopLinuxManual}. Conditional variables, a synchronisation method, can then be waited on using \verb|pthread_cond_wait| \autocite{Pthread_cond_timedwait3pLinux}.
 
 % past tense
 To access the shared memory functionality of Linux in the Rust language, this test used the \verb|shared_memory| crate  \autocite{elast0nyElast0nyShared_memory2024}. The parent process created two shared memory locations and a files containing the \verb|shm_id|. Using the shared memory, event synchronisation data structures were created using the \verb|raw_sync| crate \autocite{elast0nyElast0nyRaw_syncrs2024}. These events could then be used to signal when the child process should execute \verb|send_event| and when the task had completed \verb|recv_event|. The parent then spawned the child process which indefinitely looped and waited (blocked) for an event to execute.
@@ -63,7 +61,7 @@ To access the shared memory functionality of Linux in the Rust language, this te
     \label{fig:rtPi4MemTimes}
 \end{figure}
 
-Shown in \autoref{fig:rtPi4MemTimes}, the average latency from request to execute was approximately 20us.
+Shown in \autoref{fig:rtPi4MemTimes}, the average latency from parent request to child execute was 19$\mu$s. During the real-time analysis of the Linux kernel an average response time of 11$\mu$s was observed. This shows that the tests are approximately correct as the results are within the same order of magnitude. The additional latencies are likely due to the unpredictable nature of the conditional variable interrupts.
 
 \newpage
 
@@ -72,14 +70,10 @@ Shown in \autoref{fig:rtPi4MemTimes}, the average latency from request to execut
 % present tense
 Unix domain sockets are a useful tool for implementing interprocess communication (IPC). They are a special type of socket that behave similarly to local network sockets but bypass the network stack for efficiency. These sockets can either be unnamed or bound to a filesystem path. \autocite{UnixLinuxManualc}. 
 
-\subsubsection*{Implementation}
-
 % past tense
 The second test implemented a simple unnamed socket pair between a parent and child process. The child socket was shared with the child process using file descriptors with the \verb|command_fds| crate \autocite{GoogleCommandfds2024}.
 
 To signal the child component a two byte message was sent from the parent. This contained a byte indicating run and another byte with the iteration loop and was useful in ensuring no executions were missed. The iteration loop was incremented on the parent process from 0-255, the child checked the message was exactly one increment up from the previous iteration.
-
-\subsubsection*{Evaluation}
 
 \begin{figure}[ht]
     \centering
@@ -89,9 +83,11 @@ To signal the child component a two byte message was sent from the parent. This 
     \label{fig:rtPi4SocketTimesBlocking}
 \end{figure}
 
-Although the blocking socket test did perform reasonably well, it was on average over 50\% slower than the shared memory implementation at 30us.
+Although the blocking socket test did perform reasonably well, it was on average over 50\% slower than the shared memory conditional variable implementation at 30$\mu$s.
 
 The was assumed to be because of how the sockets are implemented in the Linux kernel. When the child process is blocked waiting for a message, the time taken to move the process back into the unblocked state is unpredictable. This is in contrast to the conditional variables which appeared to move out of the blocked state much quicker. With further investigation into the kernel, this could be investigated but is out of the scope of the project.
+
+\newpage
 
 To prove this is due to the process taking time to move out of the blocked state additional tests were performed. These test used a non-blocking socket which instead busy waited on receiving data. The results of this approach are shown in \autoref{fig:rtPi4SocketTimes}.
 
@@ -103,11 +99,13 @@ To prove this is due to the process taking time to move out of the blocked state
     \label{fig:rtPi4SocketTimes}
 \end{figure}
 
-The non-blocking socket performed much better than both the blocking socket and events in shared memory. However, approximately 100 cycles (1 second) significant latencies were introduced at over 40ms, making this solution unviable for a real-time system. It is assumed that these latencies are introduced periodically due to the kernel itself being moved onto the CPU. As the program is busy waiting it never enters the blocked state. Therefore it consumes 100\% of the CPU resources with no opportunity for the kernel to perform management functions.
+The non-blocking socket performed much better than both the blocking socket and events in shared memory with an average latency of $13{\mu}s$ ($462{\mu}s$ including overruns).
 
-One possible implementation for the scheduler could use a combination of both the blocking and non blocking sockets. The scheduler could first wakeup a component process using a blocking socket, once on the processor the component can now busy wait for a short period of time on the non blocking socket. Then the scheduler can send the execute command. This reduces the uncertainty of when the process will execute, but overall takes much longer to execute a component as two sequential messages are sent each cycle.
+However, approximately 100 cycles (1 second) significant latencies were introduced at over 40ms, making this solution completely unviable for a real-time system. It is assumed that these latencies are introduced periodically due to the kernel itself being moved onto the CPU. As the program is busy waiting it never enters the blocked state. Therefore it consumes 100\% of the CPU resources with no opportunity for the kernel to perform management functions.
 
-To work around this the components could be put into the busy state on alternating processors. Component $a$ could be put into the busy wait and executed, while component $b$ is in the blocked state. These could then be alternated. While this would improve the real-time response of the system, it would unnecessarily consume CPU resources and increase latencies.
+To resolve this, the scheduler could use a combination of both the blocking and non blocking sockets. The scheduler could first wakeup a component process using a blocking socket, once on the processor the component can now busy wait for a short period of time on the non blocking socket. Then the scheduler can send the execute command. This reduces the uncertainty of when the process will execute, but overall takes much longer to execute a component as two sequential messages are sent each cycle. An expected latency could be around $13{\mu}s + 19{\mu}s = 32{\mu}s$.
+
+To work around this the components could be put into the busy state on alternating processing cores. Component $a$ could be put into the busy wait and executed, while component $b$ is in the blocked state. These could then be alternated. While this would improve the real-time responsiveness of the system, it would unnecessarily consume CPU resources and increase latencies.
 
 This potential implementation is shown in \autoref{fig:socketDualComponentExecute}. The dashed red and blue lines represent when the components start and exit a busy wait state. If the goal was to ensure an exact time of execution across a number of synchronised schedulers this solution would be ideal. As this is a single scheduler, the additional compute utilization is unnecessary and simply adds additional time to a control loop.
 
@@ -166,7 +164,7 @@ This potential implementation is shown in \autoref{fig:socketDualComponentExecut
     \label{fig:socketDualComponentExecute}
 \end{figure}
 
-A better solution to this problem could use timers to wake up components at a specific time in the future. Rather than the scheduler having immediate control of when a component executes, it could simply request when a component should execute. This should reduce impact of the unpredictable blocking calls.
+A better solution to this problem could use timers to wake up components at a specific time in the future. Rather than the scheduler having immediate control of when a component executes, it could simply request when a component should execute. This should reduce impact of the unpredictable blocking calls. However, the scheduler looses finite control over processes and a child is responsible for its own wake-ups.
 
 % DIAGRAM (TIMER SCHEDULER)
 
@@ -174,11 +172,32 @@ A better solution to this problem could use timers to wake up components at a sp
 
 \subsection{Signalling}
 
-\subsubsection*{Implementation}
+In linux you can send signals to processes, these are commonly used to kill processes 
+There are additional signals that you can send
+\autoref{tbl:linuxSignalsSample}
 
-The final scheduling method investigated was Linux process signalling. 
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{l|ll}
+        Signal  & No & Description      \\ \hline
+        SIGINT  & 2  & The process was interrupted. \\
+        SIGKILL & 9  & The process was explicitly killed .  \\
+        SIGCONT & 18 & Used to resume processes after SIGSTOP.  \\
+        SIGSTOP & 19 & Used to block process and have it's state is persevered. 
+    \end{tabular}
+    \caption[List of relevant Linux signals \autocite{dowlingListSignalsWhat}]
+    {List of relevant Linux signals \autocite{dowlingListSignalsWhat}}
+    \label{tbl:linuxSignalsSample}
+\end{table}
 
-\subsubsection*{Evaluation}
+Hence the final scheduling method investigated was Linux process signalling. No additional Rust crates were required as \verb|libc| implements the signalling functionalities. 
+
+However, the signal based programs were implemented slightly different.
+Rather than acknowledging a response to the parent process the child simply executed.
+
+This was because the signals tested were unidirectional, unlike the sockets and memory.
+
+This simply removes the overrun detection in the parent for the child process and should not impact the test results. 
 
 \begin{figure}[ht]
     \centering
@@ -188,10 +207,14 @@ The final scheduling method investigated was Linux process signalling.
     \label{fig:rtPi4SignalTimes}
 \end{figure}
 
+Shown in \autoref{fig:rtPi4SignalTimes} the signal-based scheduler approach resulted in a latency of $17{\mu}s$. This was the best of the different implementation methods tested.
+
 \newpage
 
+\subsection{Evaluation}
+Signals worked best, memory second
 
-
+Non blocking sockets were technically better on a single iteration but impractical 
 
 \begin{figure}[ht]
     \centering
@@ -201,17 +224,9 @@ The final scheduling method investigated was Linux process signalling.
     \label{fig:rtPi4CompareTimes}
 \end{figure}
 
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=\textwidth]{rt-pi4-compare-times-jitter.pdf}
-    \caption[Comparison experiment latency graph for all methods]
-    {Comparison experiment jitter graph for all methods}
-    \label{fig:rtPi4CompareTimesJitter}
-\end{figure}
-
 \subsubsection*{Processor Differences}
 
-% Mention something to do with the Raspberry Pi 5 vs 4 
+While all formal tests were carried out on the CM4, some quick tests were also performed on the Raspberry Pi 5. Displayed in \autoref{fig:rtPi4vsPi5CompareTimes} the Pi 5 performed much better than the CM4. This was ilkley due to the different processors and implementations of interrupts. The Pi 5 would be a good choice to implement a real-time system in a future project.
 
 \begin{figure}[ht]
     \centering
@@ -219,26 +234,4 @@ The final scheduling method investigated was Linux process signalling.
     \caption[Comparison experiment latency graph for all methods on Raspberry Pi 4 vs 5]
     {Comparison experiment latency graph for all methods on Raspberry Pi 4 vs 5}
     \label{fig:rtPi4vsPi5CompareTimes}
-\end{figure}
-
-\begin{figure}[ht]
-    \centering
-    \begin{sequencediagram}
-        \newinst{r}{Runner}
-        \newinst[6]{c}{Component}
-
-        \mess[1]{r}{Execute}{c}
-        \mess[1]{c}{Acknowledge}{r}
-        \mess{r}{Wake}{c}
-        \mess{c}{Acknowledge}{r}
-
-        \stepcounter{seqlevel}
-
-        \mess[1]{r}{Execute}{c}
-        \mess[1]{c}{Acknowledge}{r}
-        \mess{r}{Wake}{c}
-        \mess{c}{Acknowledge}{r}
-
-    \end{sequencediagram}
-    \caption{Client-Server messaging}
 \end{figure}
