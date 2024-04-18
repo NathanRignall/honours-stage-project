@@ -1,0 +1,49 @@
+\subsection*{Future Deployments}
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}  
+        \node[block, text width=16cm, minimum height=1cm] (switch) {Switch}; 
+
+        % Edges
+        \node[block, text width=1.5cm, minimum height=1cm, above=0.5cm of switch, xshift=-5.5cm] (edge1) {Edge 1};
+        \node[block, text width=1.5cm, minimum height=1cm, above=1.7cm of switch, xshift=-5.5cm] (edge2) {Edge 2};
+        \node[block, text width=1.5cm, minimum height=1cm, above=2.9cm of switch, xshift=-5.5cm] (edge3) {Edge 3};
+        \node[block, text width=1.5cm, minimum height=1cm, above=4.1cm of switch, xshift=-5.5cm] (edge4) {Edge 4};
+        \node[block, text width=1.5cm, minimum height=1cm, above=5.3cm of switch, xshift=-5.5cm] (edge5) {Edge 5};
+
+        % Devs
+        \node[block, text width=1cm, minimum height=1cm, left=0.5cm of edge1] (dev1) {IMU};
+        \node[block, text width=1cm, minimum height=1cm, left=0.5cm of edge2] (dev2) {GPS};
+        \node[block, text width=1cm, minimum height=1cm, left=0.5cm of edge3] (dev3) {ESC};
+        \node[block, text width=1cm, minimum height=1cm, left=0.5cm of edge4] (dev4) {RAD};
+        \node[block, text width=1cm, minimum height=1cm, left=0.5cm of edge5] (dev5) {CAM};
+
+        % Lines
+        \draw[<->,thick] (edge1.east) -- ([xshift=0.85cm]edge1.east) -- ([xshift=-3.75cm]core.north);
+        \draw[<->,thick] (edge2.east) -- ([xshift=1.35cm]edge2.east) -- ([xshift=-3.25cm]core.north);
+        \draw[<->,thick] (edge3.east) -- ([xshift=1.85cm]edge3.east) -- ([xshift=-2.75cm]core.north);
+        \draw[<->,thick] (edge4.east) -- ([xshift=2.35cm]edge4.east) -- ([xshift=-2.25cm]core.north);
+        \draw[<->,thick] (edge5.east) -- ([xshift=2.85cm]edge5.east) --  ([xshift=-1.75cm]core.north);
+
+        \draw[<->,thick] (dev1.east) -- (edge1.west);
+        \draw[<->,thick] (dev2.east) -- (edge2.west);
+        \draw[<->,thick] (dev3.east) -- (edge3.west);
+        \draw[<->,thick] (dev4.east) -- (edge4.west);
+        \draw[<->,thick] (dev5.east) -- (edge5.west);
+
+        % Middleware
+        \node[block, text width=7cm, minimum height=1cm, above=1.5cm of switch, xshift=4.5cm] (router1) {Message Router};
+        \node[block, minimum height=1cm, above=1cm of router1, xshift=-2cm] (comp1) {Component $a$}; 
+        \node[block, minimum height=1cm, above=1cm of router1, xshift=2cm] (comp2) {Component $b$}; 
+        \node[draw,inner xsep=4mm,inner ysep=7mm,fit=(comp1)(comp2)(router1),label={Middleware}, dashed]{};  
+
+        \draw[<->,thick] (comp1.south) -- ([xshift=-2cm]router1.north);
+        \draw[<->,thick] (comp2.south) -- ([xshift=2cm]router1.north);
+        \draw[<->,thick] (router1.south) -- ([xshift=4.5cm]core.north);
+
+    \end{tikzpicture}  
+    \caption[Development network block diagram]
+    {Development network block diagram}
+    \label{fig:droneDemo}
+\end{figure}

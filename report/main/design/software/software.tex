@@ -1,44 +1,143 @@
 \section{Software}
 
-% \section{Operation}
 
-% \begin{sequencediagram}
-%     \newthread[white]{c}{CLI}
-%     \newinst[3]{a}{Agent}
-%     \newinst[3]{r}{Runner}
+\subsection{Architecture}
+% don't like this comment at all
+The following designs elaborate upon the defined software infrastructure requirements. 
 
-%     \begin{call}{c}{Init()}{a}{}
-%     \end{call}
-% \end{sequencediagram}
+\subsubsection{Components and Scheduling}
+Each component shall operate in its own process to enable proper separation between components. Hence, the software infrastructure must be able to start and stop processes and keep track of them in the system.
 
-% \begin{tikzpicture}
-%     \begin{package} {State} 
-%         \begin{class}[text width=8cm]{StateManager} {0,0}
-%             \attribute{stream : UnixStream}
-%             \attribute{data : Vecu8}
-%             \operation{new(UnixStream) : self}
-%             \operation{run}
-%             \operation{getdata : Vecu8}
-%             \operation{setdata(Vecu8) : Done}
-%         \end{class}
+Explain the scheduler
 
-%         \begin{class}[text width=8cm]{CommunicationManager} {-5,-5}
-%             \attribute{stream : UnixStream}
-%             \attribute{data : Vecu8}
-%             \operation{new(UnixStream)}
-%             \operation{run}
-%             \operation{getdata : Vecu8}
-%             \operation{setdata(Vecu8) : Done}
-%         \end{class}
-%     \end{package}
+% maybe a digram too to shown the offload
 
-%     % \begin{class}[text width=8cm]{ClassName}{0,0}
-%     %     \attribute{name : attribute type}
-%     %     \attribute{name : attribute type = default value}
-%     %     \operation{name(parameter list) : type of value returned}
-%     %     \operation[0]{name(parameters list) : type of value returned}
-%     % \end{class}
-% \end{tikzpicture}
+To ensure each component implements a consistent interface for the software infrastructure to use, all components will implement a common abstract class (trait). This class is shown in \autoref{fig:umlComponentAbstractClass}.
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}
+        \begin{abstractclass}[text width=10cm]{Component} {0,0}
+            \operation{new() : Component}
+            \operation{run(Services)}
+            \operation{loadState(Vec(u8))}
+            \operation{saveState() : Vec(u8)}
+            \operation{resetState()}
+        \end{abstractclass}
+    \end{tikzpicture}
+    \caption[Component abstract class]
+    {Component abstract class}
+    \label{fig:umlComponentAbstractClass}
+\end{figure}
+
+Explain the new and run
+
+Explain Services
+
+Explain the state operations
+
+\subsubsection{Communications}
+To implement \autoref{item:reqSIMessRoute} the software infrastructure shall implement a message router within the software infrastructure.
+
+This shall use channels, 
+
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}  
+        \node[block, text width=10cm, minimum height=1cm] (core) {Message Router}; 
+
+        \node[block, minimum height=1cm, above=1cm of core, xshift=-3cm] (comp1) {Component $a$}; 
+
+        \node[block, minimum height=1cm, above=1cm of core, xshift=3cm] (comp2) {Component $b$};  
+
+        \node[block, minimum height=1cm, below=1.5cm of core, xshift=-3.5cm] (edge) {Edge};
+        \node[block, minimum height=1cm, below=1.5cm of core, xshift=3.5cm] (extern) {Message Router};
+
+        \draw[->,thick] ([xshift=-0.5cm]comp1.south) -- node[midway,fill=white] {$1$} ([xshift=-3.5cm]core.north);
+        \draw[<-,thick] (comp1.south) -- node[midway,fill=white] {$2$}  ([xshift=-3cm]core.north);
+        \draw[->,thick] ([xshift=0.5cm]comp1.south) -- node[midway,fill=white] {$3$} ([xshift=-2.5cm]core.north);
+
+        \draw[<-,thick] ([xshift=-0.5cm]comp2.south) -- node[midway,fill=white] {$1$} ([xshift=2.5cm]core.north);
+        \draw[->,thick] (comp2.south) -- node[midway,fill=white] {$2$} ([xshift=3cm]core.north);
+        \draw[<-,thick] ([xshift=0.5cm]comp2.south) -- node[midway,fill=white] {$3$} ([xshift=3.5cm]core.north);
+
+        \draw[<-,thick] (edge.north) -- node[midway,fill=white] {$1$} ([xshift=-3.5cm]core.south);
+        \draw[->,thick] (extern.north) -- node[midway,fill=white] {$1$} ([xshift=3.5cm]core.south);
+
+        \draw[<-,thick,dashed] ([xshift=-3cm]core.south) -- ([xshift=-3cm,yshift=-1cm]core.south) -- ([xshift=3cm,yshift=-1cm]core.south) -- ([xshift=3cm]core.south);
+
+        \draw[->,thick,dashed] ([xshift=-2.5cm]core.south) -- ([xshift=-2.5cm,yshift=-0.5cm]core.south) -- ([xshift=2.5cm,yshift=-0.5cm]core.south) -- ([xshift=2.5cm]core.south);
+
+    \end{tikzpicture}  
+    \caption[Development network block diagram]
+    {Development network block diagram}
+    \label{fig:developmentNetworkBlockDiagram}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}  
+        \node[block, text width=16cm, minimum height=1cm] (switch) {Switch}; 
+
+        \node[block, text width=7cm, minimum height=1cm, above=2cm of switch, xshift=-4.5cm] (router1) {Message Router};
+        \node[block, text width=7cm, minimum height=1cm, above=2cm of switch, xshift=4.5cm] (router2) {Message Router};
+
+        \node[block, minimum height=1cm, above=2cm of router1, xshift=-2cm] (comp1) {Component $a$}; 
+        \node[block, minimum height=1cm, above=2cm of router1, xshift=2cm] (comp2) {Component $b$}; 
+        \node[block, minimum height=1cm, above=2cm of router2, xshift=-2cm] (comp3) {Component $c$}; 
+        \node[block, minimum height=1cm, above=2cm of router2, xshift=2cm] (comp4) {Component $d$};  
+
+        \node[block, minimum height=1cm, below=1.5cm of switch, xshift=-5cm] (edge1) {Edge 1};
+        \node[block, minimum height=1cm, below=1.5cm of switch, xshift=0cm] (edge2) {Edge 2};
+        \node[block, minimum height=1cm, below=1.5cm of switch, xshift=5cm] (edge3) {Edge 3};
+
+        \node[draw,inner xsep=4mm,inner ysep=7mm,fit=(comp1)(comp2)(router1),label={Middleware}, dashed]{};  
+
+        \node[draw,inner xsep=4mm,inner ysep=7mm,fit=(comp3)(comp4)(router2),label={Middleware}, dashed]{};  
+
+        \draw[<->,thick] (router1.south) -- node[midway,yshift=-0.25cm,fill=white] {172.31.0.1} ([xshift=-4.5cm]core.north);
+        \draw[<->,thick] (router2.south) -- node[midway,yshift=-0.25cm,fill=white] {172.31.0.2} ([xshift=4.5cm]core.north);
+
+        \draw[<->,thick] (comp1.south) -- node[midway,fill=white] {/tmp/socket1} ([xshift=-2cm]router1.north);
+        \draw[<->,thick] (comp2.south) -- node[midway,fill=white] {/tmp/socket2} ([xshift=2cm]router1.north);
+
+        \draw[<->,thick] (comp3.south) -- node[midway,fill=white] {/tmp/socket1} ([xshift=-2cm]router2.north);
+        \draw[<->,thick] (comp4.south) -- node[midway,fill=white] {/tmp/socket2} ([xshift=2cm]router2.north);
+
+        \draw[<-,thick] (edge1.north) -- node[midway,fill=white] {172.31.0.3} ([xshift=-5cm]core.south);
+        \draw[->,thick] (edge2.north) -- node[midway,fill=white] {172.31.0.4} ([xshift=0cm]core.south);
+        \draw[->,thick] (edge3.north) -- node[midway,fill=white] {172.31.0.5} ([xshift=5cm]core.south);
+
+    \end{tikzpicture}  
+    \caption[Development network block diagram]
+    {Development network block diagram}
+    \label{fig:developmentNetworkBlockDiagram}
+\end{figure}
+
+\clearpage
+
+\subsubsection{Manager}
+Control state and configurations 
+
+Task lists
+
+\clearpage
+\input{main/design/software/walkthrough}
+
+% \clearpage
+% \input{main/design/software/uml.tex}
+
+\clearpage
+\input{main/design/software/drone.tex}
+
+
+
+The intention for this software was to also use Rust, however we could not get the Rust libaries for the W5500 working quickly, sure with extra time with sould have been possible.
+To simplify this software the arduino development environment was used. This as all the drivers for the w5500 are integrated in arduino libraries.
+
+
+% Extra info at the end about how would work in drone
 
 % \tikzset{
 %     ->,

@@ -90,6 +90,7 @@ plt.ylabel('Latency (us)')
 plt.savefig('../rt-pi4-signal-times.pdf', format='pdf', bbox_inches='tight')
 plt.close()
 
+
 # rt-pi4-compare-times
 plt.figure(figsize=(8,3))
 plt.plot(rt_pi4_socket_times, label='Socket')
@@ -105,6 +106,11 @@ plt.xlabel('Time Step')
 plt.ylabel('Latency (us)')
 plt.savefig('../rt-pi4-compare-times.pdf', format='pdf', bbox_inches='tight')
 plt.close()
+# print the average
+print(f"rt-pi4-socket-times: {np.mean(rt_pi4_socket_times)}")
+print(f"rt-pi4-socket-times-blocking: {np.mean(rt_pi4_socket_times_blocking)}")
+print(f"rt-pi4-mem-times: {np.mean(rt_pi4_mem_times)}")
+print(f"rt-pi4-signal-times: {np.mean(rt_pi4_signal_times)}")
 
 # rt-pi4-compare-times-histogram
 rt_pi4_socket_times_hist, rt_pi4_socket_times_bins = np.histogram(rt_pi4_socket_times, bins=range(0, 101, 1))

@@ -1,0 +1,323 @@
+\subsection{Walkthrough}
+
+First the software infrastructure loads configuration 0
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}  
+        \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
+
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {Agent}; 
+        \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
+        \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
+
+        \node[block, minimum height=1cm, below=0.8cm of core, xshift=-6.5cm] (manager) {Manager}; 
+        \draw[->,thick] (manager.north) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.south);
+        \draw[<-,thick] ([xshift=0.5cm]manager.north) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.south);
+
+        % \node[block, minimum height=1cm, above=1.5cm of core, xshift=-2cm] (comp1) {{$Controller$}}; 
+        % \draw[<-,thick] (comp1.south) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.north);
+        % \draw[->,thick] ([xshift=0.5cm]comp1.south) -- node[midway,fill=white] {$2$} ([xshift=-1.5cm]core.north);
+
+        % \node[block, minimum height=1cm, above=1.5cm of core, xshift=2cm] (comp2) {{$Controller^{\prime}$}}; 
+        % \draw[<-,thick] ([xshift=-0.5cm]comp2.south) -- node[midway,fill=white] {$1$} ([xshift=1.5cm]core.north);
+        % \draw[->,thick] (comp2.south) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.north);
+
+        \node[draw,inner xsep=4mm,inner ysep=4mm,fit=(agent)(manager)(core),label={[anchor=north east, inner sep=10pt]north east:Node}]{};
+        \node[draw,inner xsep=2mm,inner ysep=2mm,fit=(manager)(core),label={[shift={(-2.5,0)}]north east: Middleware}, dashed]{}; 
+
+        \node[block, minimum height=1cm, below=3cm of core, xshift=-2cm] (edge1) {Edge 1};
+        \node[block, minimum height=1cm, below=3cm of core, xshift=2cm] (edge2) {Edge 2};
+
+        % \draw[<-,thick] (edge2.north) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.south);
+        % \draw[->,thick] (edge1.north) -- ([yshift=2cm]edge1.north) -- node[midway,fill=white] {$1$} ([yshift=-1cm,xshift=1.5cm]core.south)  -- ([xshift=1.5cm]core.south);
+        
+        \draw[->,thick] (edge1.north) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.south);
+        \draw[<-,thick] (edge2.north) -- ([yshift=2cm]edge2.north) -- node[midway,fill=white] {$2$} ([yshift=-1cm,xshift=-1.5cm]core.south)  -- ([xshift=-1.5cm]core.south);
+        
+    \end{tikzpicture}  
+    \caption[Configuration 0]
+    {Configuration 0}
+    \label{fig:configDemo0}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}  
+        \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
+
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {Agent}; 
+        \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
+        \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
+
+        \node[block, minimum height=1cm, below=0.8cm of core, xshift=-6.5cm] (manager) {Manager}; 
+        \draw[->,thick] (manager.north) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.south);
+        \draw[<-,thick] ([xshift=0.5cm]manager.north) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.south);
+
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-2cm, dashed] (comp1) {{$Controller$}}; 
+        % \draw[<-,thick] (comp1.south) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.north);
+        % \draw[->,thick] ([xshift=0.5cm]comp1.south) -- node[midway,fill=white] {$2$} ([xshift=-1.5cm]core.north);
+
+        % \node[block, minimum height=1cm, above=1.5cm of core, xshift=2cm] (comp2) {{$Controller^{\prime}$}}; 
+        % \draw[<-,thick] ([xshift=-0.5cm]comp2.south) -- node[midway,fill=white] {$1$} ([xshift=1.5cm]core.north);
+        % \draw[->,thick] (comp2.south) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.north);
+
+        \node[draw,inner xsep=4mm,inner ysep=4mm,fit=(agent)(manager)(comp1)(core),label={[anchor=north east, inner sep=10pt]north east:Node}]{};
+        \node[draw,inner xsep=2mm,inner ysep=2mm,fit=(manager)(core),label={[shift={(-2.5,0)}]north east: Middleware}, dashed]{}; 
+
+        \node[block, minimum height=1cm, below=3cm of core, xshift=-2cm] (edge1) {Edge 1};
+        \node[block, minimum height=1cm, below=3cm of core, xshift=2cm] (edge2) {Edge 2};
+
+        % \draw[<-,thick] (edge2.north) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.south);
+        % \draw[->,thick] (edge1.north) -- ([yshift=2cm]edge1.north) -- node[midway,fill=white] {$1$} ([yshift=-1cm,xshift=1.5cm]core.south)  -- ([xshift=1.5cm]core.south);
+        
+        \draw[->,thick] (edge1.north) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.south);
+        \draw[<-,thick] (edge2.north) -- ([yshift=2cm]edge2.north) -- node[midway,fill=white] {$2$} ([yshift=-1cm,xshift=-1.5cm]core.south)  -- ([xshift=-1.5cm]core.south);
+        
+    \end{tikzpicture}  
+    \caption[Configuration 1a]
+    {Configuration 1a}
+    \label{fig:configDemo1a}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}  
+        \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
+
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {Agent}; 
+        \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
+        \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
+
+        \node[block, minimum height=1cm, below=0.8cm of core, xshift=-6.5cm] (manager) {Manager}; 
+        \draw[->,thick] (manager.north) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.south);
+        \draw[<-,thick] ([xshift=0.5cm]manager.north) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.south);
+
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-2cm] (comp1) {{$Controller$}}; 
+        \draw[<-,thick] (comp1.south) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.north);
+        \draw[->,thick] ([xshift=0.5cm]comp1.south) -- node[midway,fill=white] {$2$} ([xshift=-1.5cm]core.north);
+
+        % \node[block, minimum height=1cm, above=1.5cm of core, xshift=2cm] (comp2) {{$Controller^{\prime}$}}; 
+        % \draw[<-,thick] ([xshift=-0.5cm]comp2.south) -- node[midway,fill=white] {$1$} ([xshift=1.5cm]core.north);
+        % \draw[->,thick] (comp2.south) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.north);
+
+        \node[draw,inner xsep=4mm,inner ysep=4mm,fit=(agent)(manager)(comp1)(core),label={[anchor=north east, inner sep=10pt]north east:Node}]{};
+        \node[draw,inner xsep=2mm,inner ysep=2mm,fit=(manager)(core),label={[shift={(-2.5,0)}]north east: Middleware}, dashed]{}; 
+
+        \node[block, minimum height=1cm, below=3cm of core, xshift=-2cm] (edge1) {Edge 1};
+        \node[block, minimum height=1cm, below=3cm of core, xshift=2cm] (edge2) {Edge 2};
+
+        % \draw[<-,thick] (edge2.north) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.south);
+        % \draw[->,thick] (edge1.north) -- ([yshift=2cm]edge1.north) -- node[midway,fill=white] {$1$} ([yshift=-1cm,xshift=1.5cm]core.south)  -- ([xshift=1.5cm]core.south);
+        
+        \draw[->,thick] (edge1.north) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.south);
+        \draw[<-,thick] (edge2.north) -- ([yshift=2cm]edge2.north) -- node[midway,fill=white] {$2$} ([yshift=-1cm,xshift=-1.5cm]core.south)  -- ([xshift=-1.5cm]core.south);
+        
+    \end{tikzpicture}  
+    \caption[Configuration 1b]
+    {Configuration 1b}
+    \label{fig:configDemo1b}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}  
+        \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
+
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {Agent}; 
+        \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
+        \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
+
+        \node[block, minimum height=1cm, below=0.8cm of core, xshift=-6.5cm] (manager) {Manager}; 
+        \draw[->,thick] (manager.north) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.south);
+        \draw[<-,thick] ([xshift=0.5cm]manager.north) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.south);
+
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-2cm] (comp1) {{$Controller$}}; 
+        \draw[<-,thick] (comp1.south) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.north);
+        \draw[->,thick] ([xshift=0.5cm]comp1.south) -- node[midway,fill=white] {$2$} ([xshift=-1.5cm]core.north);
+
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=2cm, dashed] (comp2) {{$Controller^{\prime}$}}; 
+        % \draw[<-,thick] ([xshift=-0.5cm]comp2.south) -- node[midway,fill=white] {$1$} ([xshift=1.5cm]core.north);
+        % \draw[->,thick] (comp2.south) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.north);
+
+        \node[draw,inner xsep=4mm,inner ysep=4mm,fit=(agent)(manager)(comp1)(comp2)(core),label={[anchor=north east, inner sep=10pt]north east:Node}]{};
+        \node[draw,inner xsep=2mm,inner ysep=2mm,fit=(manager)(core),label={[shift={(-2.5,0)}]north east: Middleware}, dashed]{}; 
+
+        \node[block, minimum height=1cm, below=3cm of core, xshift=-2cm] (edge1) {Edge 1};
+        \node[block, minimum height=1cm, below=3cm of core, xshift=2cm] (edge2) {Edge 2};
+
+        % \draw[<-,thick] (edge2.north) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.south);
+        % \draw[->,thick] (edge1.north) -- ([yshift=2cm]edge1.north) -- node[midway,fill=white] {$1$} ([yshift=-1cm,xshift=1.5cm]core.south)  -- ([xshift=1.5cm]core.south);
+        
+        \draw[->,thick] (edge1.north) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.south);
+        \draw[<-,thick] (edge2.north) -- ([yshift=2cm]edge2.north) -- node[midway,fill=white] {$2$} ([yshift=-1cm,xshift=-1.5cm]core.south)  -- ([xshift=-1.5cm]core.south);
+        
+    \end{tikzpicture}  
+    \caption[Configuration 2a]
+    {Configuration 2a}
+    \label{fig:configDemo2a}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}  
+        \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
+
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {Agent}; 
+        \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
+        \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
+
+        \node[block, minimum height=1cm, below=0.8cm of core, xshift=-6.5cm] (manager) {Manager}; 
+        \draw[->,thick] (manager.north) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.south);
+        \draw[<-,thick] ([xshift=0.5cm]manager.north) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.south);
+
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-2cm, dashed] (comp1) {{$Controller$}}; 
+        % \draw[<-,thick] (comp1.south) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.north);
+        % \draw[->,thick] ([xshift=0.5cm]comp1.south) -- node[midway,fill=white] {$2$} ([xshift=-1.5cm]core.north);
+
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=2cm] (comp2) {{$Controller^{\prime}$}}; 
+        \draw[<-,thick] ([xshift=-0.5cm]comp2.south) -- node[midway,fill=white] {$1$} ([xshift=1.5cm]core.north);
+        \draw[->,thick] (comp2.south) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.north);
+
+        \node[draw,inner xsep=4mm,inner ysep=4mm,fit=(agent)(manager)(comp1)(comp2)(core),label={[anchor=north east, inner sep=10pt]north east:Node}]{};
+        \node[draw,inner xsep=2mm,inner ysep=2mm,fit=(manager)(core),label={[shift={(-2.5,0)}]north east: Middleware}, dashed]{}; 
+
+        \node[block, minimum height=1cm, below=3cm of core, xshift=-2cm] (edge1) {Edge 1};
+        \node[block, minimum height=1cm, below=3cm of core, xshift=2cm] (edge2) {Edge 2};
+
+        \draw[<-,thick] (edge2.north) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.south);
+        \draw[->,thick] (edge1.north) -- ([yshift=2cm]edge1.north) -- node[midway,fill=white] {$1$} ([yshift=-1cm,xshift=1.5cm]core.south)  -- ([xshift=1.5cm]core.south);
+        
+        % \draw[->,thick] (edge1.north) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.south);
+        % \draw[<-,thick] (edge2.north) -- ([yshift=2cm]edge2.north) -- node[midway,fill=white] {$2$} ([yshift=-1cm,xshift=-1.5cm]core.south)  -- ([xshift=-1.5cm]core.south);
+        
+    \end{tikzpicture}  
+    \caption[Configuration 2b]
+    {Configuration 2b}
+    \label{fig:configDemo2b}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}  
+        \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
+
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {Agent}; 
+        \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
+        \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
+
+        \node[block, minimum height=1cm, below=0.8cm of core, xshift=-6.5cm] (manager) {Manager}; 
+        \draw[->,thick] (manager.north) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.south);
+        \draw[<-,thick] ([xshift=0.5cm]manager.north) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.south);
+
+        % \node[block, minimum height=1cm, above=1.5cm of core, xshift=-2cm, dashed] (comp1) {{$Controller$}}; 
+        % \draw[<-,thick] (comp1.south) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.north);
+        % \draw[->,thick] ([xshift=0.5cm]comp1.south) -- node[midway,fill=white] {$2$} ([xshift=-1.5cm]core.north);
+
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=2cm] (comp2) {{$Controller^{\prime}$}}; 
+        \draw[<-,thick] ([xshift=-0.5cm]comp2.south) -- node[midway,fill=white] {$1$} ([xshift=1.5cm]core.north);
+        \draw[->,thick] (comp2.south) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.north);
+
+        \node[draw,inner xsep=4mm,inner ysep=4mm,fit=(agent)(manager)(comp2)(core),label={[anchor=north east, inner sep=10pt]north east:Node}]{};
+        \node[draw,inner xsep=2mm,inner ysep=2mm,fit=(manager)(core),label={[shift={(-2.5,0)}]north east: Middleware}, dashed]{}; 
+
+        \node[block, minimum height=1cm, below=3cm of core, xshift=-2cm] (edge1) {Edge 1};
+        \node[block, minimum height=1cm, below=3cm of core, xshift=2cm] (edge2) {Edge 2};
+
+        \draw[<-,thick] (edge2.north) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.south);
+        \draw[->,thick] (edge1.north) -- ([yshift=2cm]edge1.north) -- node[midway,fill=white] {$1$} ([yshift=-1cm,xshift=1.5cm]core.south)  -- ([xshift=1.5cm]core.south);
+        
+        % \draw[->,thick] (edge1.north) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.south);
+        % \draw[<-,thick] (edge2.north) -- ([yshift=2cm]edge2.north) -- node[midway,fill=white] {$2$} ([yshift=-1cm,xshift=-1.5cm]core.south)  -- ([xshift=-1.5cm]core.south);
+        
+    \end{tikzpicture}  
+    \caption[Configuration 2c]
+    {Configuration 2c}
+    \label{fig:configDemo2c}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}  
+        \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
+
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {Agent}; 
+        \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
+        \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
+
+        \node[block, minimum height=1cm, below=0.8cm of core, xshift=-6.5cm] (manager) {Manager}; 
+        \draw[->,thick] (manager.north) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.south);
+        \draw[<-,thick] ([xshift=0.5cm]manager.north) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.south);
+
+        % \node[block, minimum height=1cm, above=1.5cm of core, xshift=-2cm, dashed] (comp1) {{$Controller$}}; 
+        % \draw[<-,thick] (comp1.south) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.north);
+        % \draw[->,thick] ([xshift=0.5cm]comp1.south) -- node[midway,fill=white] {$2$} ([xshift=-1.5cm]core.north);
+
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=2cm, dashed] (comp2) {{$Controller^{\prime}$}}; 
+        % \draw[<-,thick] ([xshift=-0.5cm]comp2.south) -- node[midway,fill=white] {$1$} ([xshift=1.5cm]core.north);
+        % \draw[->,thick] (comp2.south) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.north);
+
+        \node[draw,inner xsep=4mm,inner ysep=4mm,fit=(agent)(manager)(comp2)(core),label={[anchor=north east, inner sep=10pt]north east:Node}]{};
+        \node[draw,inner xsep=2mm,inner ysep=2mm,fit=(manager)(core),label={[shift={(-2.5,0)}]north east: Middleware}, dashed]{}; 
+
+        \node[block, minimum height=1cm, below=3cm of core, xshift=-2cm] (edge1) {Edge 1};
+        \node[block, minimum height=1cm, below=3cm of core, xshift=2cm] (edge2) {Edge 2};
+
+        \draw[<-,thick] (edge2.north) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.south);
+        \draw[->,thick] (edge1.north) -- ([yshift=2cm]edge1.north) -- node[midway,fill=white] {$1$} ([yshift=-1cm,xshift=1.5cm]core.south)  -- ([xshift=1.5cm]core.south);
+        
+        % \draw[->,thick] (edge1.north) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.south);
+        % \draw[<-,thick] (edge2.north) -- ([yshift=2cm]edge2.north) -- node[midway,fill=white] {$2$} ([yshift=-1cm,xshift=-1.5cm]core.south)  -- ([xshift=-1.5cm]core.south);
+        
+    \end{tikzpicture}  
+    \caption[Configuration 3a]
+    {Configuration 3a}
+    \label{fig:configDemo3a}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}  
+        \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
+
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {Agent}; 
+        \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
+        \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
+
+        \node[block, minimum height=1cm, below=0.8cm of core, xshift=-6.5cm, dashed] (manager) {Manager}; 
+        \draw[->,thick] (manager.north) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.south);
+        \draw[<-,thick] ([xshift=0.5cm]manager.north) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.south);
+
+        % \node[block, minimum height=1cm, above=1.5cm of core, xshift=-2cm, dashed] (comp1) {{$Controller$}}; 
+        % \draw[<-,thick] (comp1.south) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.north);
+        % \draw[->,thick] ([xshift=0.5cm]comp1.south) -- node[midway,fill=white] {$2$} ([xshift=-1.5cm]core.north);
+
+        % \node[block, minimum height=1cm, above=1.5cm of core, xshift=2cm] (comp2) {{$Controller^{\prime}$}}; 
+        % \draw[<-,thick] ([xshift=-0.5cm]comp2.south) -- node[midway,fill=white] {$1$} ([xshift=1.5cm]core.north);
+        % \draw[->,thick] (comp2.south) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.north);
+
+        \node[draw,inner xsep=4mm,inner ysep=4mm,fit=(agent)(manager)(core),label={[anchor=north east, inner sep=10pt]north east:Node}]{};
+        \node[draw,inner xsep=2mm,inner ysep=2mm,fit=(manager)(core),label={[shift={(-2.5,0)}]north east: Middleware}, dashed]{}; 
+
+        \node[block, minimum height=1cm, below=3cm of core, xshift=-2cm] (edge1) {Edge 1};
+        \node[block, minimum height=1cm, below=3cm of core, xshift=2cm] (edge2) {Edge 2};
+
+        \draw[<-,thick] (edge2.north) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.south);
+        \draw[->,thick] (edge1.north) -- ([yshift=2cm]edge1.north) -- node[midway,fill=white] {$1$} ([yshift=-1cm,xshift=1.5cm]core.south)  -- ([xshift=1.5cm]core.south);
+        
+        % \draw[->,thick] (edge1.north) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.south);
+        % \draw[<-,thick] (edge2.north) -- ([yshift=2cm]edge2.north) -- node[midway,fill=white] {$2$} ([yshift=-1cm,xshift=-1.5cm]core.south)  -- ([xshift=-1.5cm]core.south);
+        
+    \end{tikzpicture}  
+    \caption[Configuration 3b]
+    {Configuration 3b}
+    \label{fig:configDemo3b}
+\end{figure}
+
+\clearpage
