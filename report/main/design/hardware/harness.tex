@@ -32,6 +32,8 @@ Similar to the development cards, dedicated and isolated hardware was required f
 
 The signal generator and receiver output their current state over discrete digital signals so that a logic analyser can record the state of the system over time. Specifically the states can be compared to measure the complete system latency during standard operation and software update. If the generator and receiver produce additional reference clock signals, the logic analyser can more closely calculate the software infrastructure induced latency.
 
+The theoretical logic analyser output is displayed in \autoref{fig:testHarnessCapture}. The latency between generate and receive is shown on the latency channel.
+
 \begin{figure}[ht]
     \centering
     \begin{tikztimingtable}[%
@@ -58,7 +60,51 @@ The signal generator and receiver output their current state over discrete digit
     \label{fig:testHarnessCapture}
 \end{figure}
 
-% start past tense
+The generator, receiver and logic analyser were all implemented using the RP2040 microprocessor from Raspberry Pi for hardware simplification. The two controllers that performed message communication used the W5500 chip to send UDP packets over ethernet, this integrated nicely with software infrastructure. The co-processor offloads the complex ethernet drivers and communicates to the main processor over SPI. The embedded network switch selected to connect the different elements of the test harness with the development cards was the SwitchBlox "Small Ethernet Switch".
+
+\autoref{fig:TestHardwareFrameMount} displays the frame mount, also designed in Fusion 360 and 3D printed, to hold the components together in a single package.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth, clip, trim=0.5cm 7cm 0.5cm 2cm]{TestHardwareFrameMount.pdf}
+    \caption[Test harness hardware frame mount design]
+    {Test harness hardware frame mount design}
+    \label{fig:TestHardwareFrameMount}
+\end{figure}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{ c|ccc } 
+        \hline
+        Name & Manufacturer & Quantity & Task \\ 
+        \hline
+        \href{https://www.raspberrypi.com/products/compute-module-4/}{Compute Module 4} & Raspberry Pi & 1 & Development Card \\ 
+
+        HDMI Male-Male & & 1 & \\ 
+        USB Micro B - A Cable & & 3 & \\ 
+        Dupont Jumper & & X & \\ 
+        \hline
+    \end{tabular}
+    \caption[Development hardware bill-of-materials]
+    {Development hardware bill-of-materials}
+    \label{tbl:TestHarnessHardwareBOM}
+\end{table}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=10cm, clip]{TestHarnessHardware}
+    \caption[Test harness hardware assembled]
+    {Test harness hardware assembled}
+    \label{fig:TestHarnessHardware}
+\end{figure}
+
+Open source logic analyser
+
+Logic analyser  
+https://github.com/dotcypress/ula
+
+Capture the status of the 16 input channels on the Pi Pico at specified frequencies.
+When integrated with teh Pulseview analysis software we can idenitify the latencies  
 
 \begin{figure}[ht]
     \centering
@@ -67,22 +113,3 @@ The signal generator and receiver output their current state over discrete digit
     {Test Harness PluseView Capture}
     \label{fig:testHarnessPluseViewCapture}
 \end{figure}
-
-The generator, receiver and logic analyser were all implemented using the RP2040 microprocessor from Raspberry Pi for hardware simplification. 
-
-The two controllers that performed packet communication used the W5500 chip to send UDP packets over ethernet, this integrates nicely with Elafry messages. This co-processor offloads the complex ethernet drivers and communicates to the main processor over
-
-% DIAGRAM - SPI block diagram
-
-This communicates over SPI and offload sthe compelx ethernet stuff onto this co-processor. SPI signals confiure the IP address of the taregt device and allow the user to send data.
-
-The intention for this software was to also use Rust, however we could not get the Rust libaries for the W5500 working quickly, sure with extra time with sould have been possible.
-To simplify this software the arduino development environment was used. This as all the drivers for the w5500 are integrated in arduino libraries.
-
-% DIAGRAM - ethernet diagram (with switch)
-
-Logic analyser  
-https://github.com/dotcypress/ula
-
-Capture the status of the 16 input channels on the Pi Pico at specified frequencies.
-When integrated with teh Pulseview analysis software we can idenitify the latencies  
