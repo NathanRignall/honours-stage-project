@@ -1,13 +1,23 @@
-\subsection{Walkthrough}
+\subsection{Demonstration Walkthrough}
 
-First the software infrastructure loads configuration 0
+The following configuration walkthrough displays how dynamic software updates are applied to a running system, with example applications.
+
+\lstset{basicstyle=\scriptsize}
+
+\subsubsection{Demonstration Step Zero}
+
+First the initial configuration is loaded which contains a single component $Agent$ with comminations channels to the middleware management fragment.
+
+Agent is an example component that is designed to change the configuration of the system over time. In a real deployment this would be replaced with an application manager that interfaces with a user-facing application.
+
+Channel 1 is used to stop the middleware's operation and shutdown the system and channel 2 is to send the configuration identifiers that the manager should load.
 
 \begin{figure}[ht]
     \centering
     \begin{tikzpicture}  
         \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
 
-        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {Agent}; 
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {$Agent$}; 
         \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
         \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
 
@@ -36,19 +46,23 @@ First the software infrastructure loads configuration 0
         \draw[<-,thick] (edge2.north) -- ([yshift=2cm]edge2.north) -- node[midway,fill=white] {$2$} ([yshift=-1cm,xshift=-1.5cm]core.south)  -- ([xshift=-1.5cm]core.south);
         
     \end{tikzpicture}  
-    \caption[Configuration 0]
-    {Configuration 0}
-    \label{fig:configDemo0}
+    \caption[Demonstration Configuration 0]
+    {Demonstration Configuration 0}
+    \label{fig:configDemonstration0}
 \end{figure}
 
 \clearpage
+
+\subsubsection{Demonstration Step One}
+
+When requested by the agent, configuration 1 loads. This configuration starts the demonstration components and subsequently adds communication channels to the edges. It is expected this configuration would be active for a long period of time, until a software update is available.
 
 \begin{figure}[ht]
     \centering
     \begin{tikzpicture}  
         \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
 
-        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {Agent}; 
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] ($agent$) {Agent}; 
         \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
         \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
 
@@ -57,37 +71,35 @@ First the software infrastructure loads configuration 0
         \draw[<-,thick] ([xshift=0.5cm]manager.north) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.south);
 
         \node[block, minimum height=1cm, above=1.5cm of core, xshift=-2cm, dashed] (comp1) {{$Controller$}}; 
-        % \draw[<-,thick] (comp1.south) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.north);
-        % \draw[->,thick] ([xshift=0.5cm]comp1.south) -- node[midway,fill=white] {$2$} ([xshift=-1.5cm]core.north);
-
-        % \node[block, minimum height=1cm, above=1.5cm of core, xshift=2cm] (comp2) {{$Controller^{\prime}$}}; 
-        % \draw[<-,thick] ([xshift=-0.5cm]comp2.south) -- node[midway,fill=white] {$1$} ([xshift=1.5cm]core.north);
-        % \draw[->,thick] (comp2.south) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.north);
 
         \node[draw,inner xsep=4mm,inner ysep=4mm,fit=(agent)(manager)(comp1)(core),label={[anchor=north east, inner sep=10pt]north east:Node}]{};
         \node[draw,inner xsep=2mm,inner ysep=2mm,fit=(manager)(core),label={[shift={(-2.5,0)}]north east: Middleware}, dashed]{}; 
 
         \node[block, minimum height=1cm, below=3cm of core, xshift=-2cm] (edge1) {Edge 1};
         \node[block, minimum height=1cm, below=3cm of core, xshift=2cm] (edge2) {Edge 2};
-
-        % \draw[<-,thick] (edge2.north) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.south);
-        % \draw[->,thick] (edge1.north) -- ([yshift=2cm]edge1.north) -- node[midway,fill=white] {$1$} ([yshift=-1cm,xshift=1.5cm]core.south)  -- ([xshift=1.5cm]core.south);
         
         \draw[->,thick] (edge1.north) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.south);
         \draw[<-,thick] (edge2.north) -- ([yshift=2cm]edge2.north) -- node[midway,fill=white] {$2$} ([yshift=-1cm,xshift=-1.5cm]core.south)  -- ([xshift=-1.5cm]core.south);
         
     \end{tikzpicture}  
-    \caption[Configuration 1a]
-    {Configuration 1a}
-    \label{fig:configDemo1a}
+    \caption[Demonstration Configuration 1 Task A]
+    {Demonstration Configuration 1 Task A}
+    \label{fig:configDemonstration1a}
 \end{figure}
+
+\textbf{Task A - Actions} (\autoref{lst:configDemonstration1a})
+ \begin{enumerate}
+    \item \textbf{Non-Blocking} - Create Component - In the background management thread create the new $Controller$ component.
+\end{enumerate}
+
+\clearpage
 
 \begin{figure}[ht]
     \centering
     \begin{tikzpicture}  
         \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
 
-        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {Agent}; 
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] ($agent$) {Agent}; 
         \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
         \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
 
@@ -99,36 +111,41 @@ First the software infrastructure loads configuration 0
         \draw[<-,thick] (comp1.south) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.north);
         \draw[->,thick] ([xshift=0.5cm]comp1.south) -- node[midway,fill=white] {$2$} ([xshift=-1.5cm]core.north);
 
-        % \node[block, minimum height=1cm, above=1.5cm of core, xshift=2cm] (comp2) {{$Controller^{\prime}$}}; 
-        % \draw[<-,thick] ([xshift=-0.5cm]comp2.south) -- node[midway,fill=white] {$1$} ([xshift=1.5cm]core.north);
-        % \draw[->,thick] (comp2.south) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.north);
-
         \node[draw,inner xsep=4mm,inner ysep=4mm,fit=(agent)(manager)(comp1)(core),label={[anchor=north east, inner sep=10pt]north east:Node}]{};
         \node[draw,inner xsep=2mm,inner ysep=2mm,fit=(manager)(core),label={[shift={(-2.5,0)}]north east: Middleware}, dashed]{}; 
 
         \node[block, minimum height=1cm, below=3cm of core, xshift=-2cm] (edge1) {Edge 1};
         \node[block, minimum height=1cm, below=3cm of core, xshift=2cm] (edge2) {Edge 2};
-
-        % \draw[<-,thick] (edge2.north) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.south);
-        % \draw[->,thick] (edge1.north) -- ([yshift=2cm]edge1.north) -- node[midway,fill=white] {$1$} ([yshift=-1cm,xshift=1.5cm]core.south)  -- ([xshift=1.5cm]core.south);
         
         \draw[->,thick] (edge1.north) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.south);
         \draw[<-,thick] (edge2.north) -- ([yshift=2cm]edge2.north) -- node[midway,fill=white] {$2$} ([yshift=-1cm,xshift=-1.5cm]core.south)  -- ([xshift=-1.5cm]core.south);
         
     \end{tikzpicture}  
-    \caption[Configuration 1b]
-    {Configuration 1b}
-    \label{fig:configDemo1b}
+    \caption[Demonstration Configuration 1 Task B]
+    {Demonstration Configuration 1 Task B}
+    \label{fig:configDemonstration1b}
 \end{figure}
 
+\textbf{Task B - Actions} (\autoref{lst:configDemonstration1b})
+ \begin{enumerate}
+    \item \textbf{Blocking} - Start Component - Mark the $Controller$ component as safe to execute in the global state.
+    \item \textbf{Blocking} - Add Route - Create the communication pathway between Edge 1 and $Controller$ (Inbound).
+    \item \textbf{Blocking} - Add Route - Create the communication pathway between Edge 2 and $Controller$ (Outbound).
+    \item \textbf{Blocking} - Modify the schedule so that both $Agent$ and $Controller$ have a time-slice to execute in.
+\end{enumerate}
+
 \clearpage
+
+\subsubsection{Demonstration Step Two}
+
+Configuration 2 is the configuration that completes the dynamic software update. A new component first is loaded, its state is synchronised with the old component. When ready, in a single atomic operation all control is passed from the old component to the new component. Finally the old component is cleaned up.
 
 \begin{figure}[ht]
     \centering
     \begin{tikzpicture}  
         \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
 
-        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {Agent}; 
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] ($agent$) {Agent}; 
         \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
         \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
 
@@ -141,33 +158,45 @@ First the software infrastructure loads configuration 0
         \draw[->,thick] ([xshift=0.5cm]comp1.south) -- node[midway,fill=white] {$2$} ([xshift=-1.5cm]core.north);
 
         \node[block, minimum height=1cm, above=1.5cm of core, xshift=2cm, dashed] (comp2) {{$Controller^{\prime}$}}; 
-        % \draw[<-,thick] ([xshift=-0.5cm]comp2.south) -- node[midway,fill=white] {$1$} ([xshift=1.5cm]core.north);
-        % \draw[->,thick] (comp2.south) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.north);
 
         \node[draw,inner xsep=4mm,inner ysep=4mm,fit=(agent)(manager)(comp1)(comp2)(core),label={[anchor=north east, inner sep=10pt]north east:Node}]{};
         \node[draw,inner xsep=2mm,inner ysep=2mm,fit=(manager)(core),label={[shift={(-2.5,0)}]north east: Middleware}, dashed]{}; 
 
         \node[block, minimum height=1cm, below=3cm of core, xshift=-2cm] (edge1) {Edge 1};
         \node[block, minimum height=1cm, below=3cm of core, xshift=2cm] (edge2) {Edge 2};
-
-        % \draw[<-,thick] (edge2.north) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.south);
-        % \draw[->,thick] (edge1.north) -- ([yshift=2cm]edge1.north) -- node[midway,fill=white] {$1$} ([yshift=-1cm,xshift=1.5cm]core.south)  -- ([xshift=1.5cm]core.south);
         
         \draw[->,thick] (edge1.north) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.south);
         \draw[<-,thick] (edge2.north) -- ([yshift=2cm]edge2.north) -- node[midway,fill=white] {$2$} ([yshift=-1cm,xshift=-1.5cm]core.south)  -- ([xshift=-1.5cm]core.south);
         
     \end{tikzpicture}  
-    \caption[Configuration 2a]
-    {Configuration 2a}
-    \label{fig:configDemo2a}
+    \caption[Demonstration Configuration 2 Task A]
+    {Demonstration Configuration 2 Task A}
+    \label{fig:configDemonstration2a}
 \end{figure}
+
+\textbf{Task A - Actions} (\autoref{lst:configDemonstration2a})
+ \begin{enumerate}
+    \item \textbf{Non-Blocking} - Create Component - In the background management thread create the new $Controller^{\prime}$ component.
+\end{enumerate}
+
+\textbf{Task B - Actions} (\autoref{lst:configDemonstration2b})
+ \begin{enumerate}
+    \item \textbf{Blocking} - Add State Sync - Add a state synchronisation between $Controller$ and $Controller^{\prime}$ in the global state.
+\end{enumerate}
+
+\textbf{Task C - Actions} (\autoref{lst:configDemonstration2c})
+ \begin{enumerate}
+    \item \textbf{Non-Blocking} - Wait State Sync - Over a number of execution cycles, wait until the state synchronisation is marked as ready.
+\end{enumerate}
+
+\clearpage
 
 \begin{figure}[ht]
     \centering
     \begin{tikzpicture}  
         \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
 
-        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {Agent}; 
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] ($agent$) {Agent}; 
         \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
         \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
 
@@ -175,9 +204,7 @@ First the software infrastructure loads configuration 0
         \draw[->,thick] (manager.north) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.south);
         \draw[<-,thick] ([xshift=0.5cm]manager.north) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.south);
 
-        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-2cm, dashed] (comp1) {{$Controller$}}; 
-        % \draw[<-,thick] (comp1.south) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.north);
-        % \draw[->,thick] ([xshift=0.5cm]comp1.south) -- node[midway,fill=white] {$2$} ([xshift=-1.5cm]core.north);
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-2cm, dashed] (comp1) {{$Controller$}};
 
         \node[block, minimum height=1cm, above=1.5cm of core, xshift=2cm] (comp2) {{$Controller^{\prime}$}}; 
         \draw[<-,thick] ([xshift=-0.5cm]comp2.south) -- node[midway,fill=white] {$1$} ([xshift=1.5cm]core.north);
@@ -191,32 +218,38 @@ First the software infrastructure loads configuration 0
 
         \draw[<-,thick] (edge2.north) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.south);
         \draw[->,thick] (edge1.north) -- ([yshift=2cm]edge1.north) -- node[midway,fill=white] {$1$} ([yshift=-1cm,xshift=1.5cm]core.south)  -- ([xshift=1.5cm]core.south);
-        
-        % \draw[->,thick] (edge1.north) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.south);
-        % \draw[<-,thick] (edge2.north) -- ([yshift=2cm]edge2.north) -- node[midway,fill=white] {$2$} ([yshift=-1cm,xshift=-1.5cm]core.south)  -- ([xshift=-1.5cm]core.south);
-        
     \end{tikzpicture}  
-    \caption[Configuration 2b]
-    {Configuration 2b}
-    \label{fig:configDemo2b}
+    \caption[Demonstration Configuration 2 Task D]
+    {Demonstration Configuration 2 Task D}
+    \label{fig:configDemonstration2d}
 \end{figure}
+
+\textbf{Task D - Actions} (\autoref{lst:configDemonstration2d})
+ \begin{enumerate}
+    \item \textbf{Blocking} - Remove State Sync - Remove the state synchronisation between $Controller$ and $Controller^{\prime}$ in the global state.
+    \item \textbf{Blocking} - Stop Component - Mark the $Controller$ component as not safe to execute in the global state.
+    \item \textbf{Blocking} - Remove Route - Remove the communication pathway between Edge 1 and $Controller$ (Inbound).
+    \item \textbf{Blocking} - Remove Route - Remove the communication pathway between Edge 2 and $Controller$ (Outbound).
+    \item \textbf{Blocking} - Start Component - Mark the $Controller^{\prime}$ component as safe to execute in the global state.
+    \item \textbf{Blocking} - Add Route - Create the communication pathway between Edge 1 and $Controller^{\prime}$ (Inbound).
+    \item \textbf{Blocking} - Add Route - Create the communication pathway between Edge 2 and $Controller^{\prime}$ (Outbound).
+    \item \textbf{Blocking} - Set Schedule - Modify the schedule so that both $Agent$ and $Controller^{\prime}$ have a time-slice to execute in. (Effectively removing $Controller$)
+\end{enumerate}
+
+\clearpage
 
 \begin{figure}[ht]
     \centering
     \begin{tikzpicture}  
         \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
 
-        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {Agent}; 
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] ($agent$) {Agent}; 
         \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
         \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
 
         \node[block, minimum height=1cm, below=0.8cm of core, xshift=-6.5cm] (manager) {Manager}; 
         \draw[->,thick] (manager.north) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.south);
         \draw[<-,thick] ([xshift=0.5cm]manager.north) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.south);
-
-        % \node[block, minimum height=1cm, above=1.5cm of core, xshift=-2cm, dashed] (comp1) {{$Controller$}}; 
-        % \draw[<-,thick] (comp1.south) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.north);
-        % \draw[->,thick] ([xshift=0.5cm]comp1.south) -- node[midway,fill=white] {$2$} ([xshift=-1.5cm]core.north);
 
         \node[block, minimum height=1cm, above=1.5cm of core, xshift=2cm] (comp2) {{$Controller^{\prime}$}}; 
         \draw[<-,thick] ([xshift=-0.5cm]comp2.south) -- node[midway,fill=white] {$1$} ([xshift=1.5cm]core.north);
@@ -230,24 +263,29 @@ First the software infrastructure loads configuration 0
 
         \draw[<-,thick] (edge2.north) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.south);
         \draw[->,thick] (edge1.north) -- ([yshift=2cm]edge1.north) -- node[midway,fill=white] {$1$} ([yshift=-1cm,xshift=1.5cm]core.south)  -- ([xshift=1.5cm]core.south);
-        
-        % \draw[->,thick] (edge1.north) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.south);
-        % \draw[<-,thick] (edge2.north) -- ([yshift=2cm]edge2.north) -- node[midway,fill=white] {$2$} ([yshift=-1cm,xshift=-1.5cm]core.south)  -- ([xshift=-1.5cm]core.south);
-        
     \end{tikzpicture}  
-    \caption[Configuration 2c]
-    {Configuration 2c}
-    \label{fig:configDemo2c}
+    \caption[Demonstration Configuration 2 Task E]
+    {Demonstration Configuration 2 Task E}
+    \label{fig:configDemonstration2e}
 \end{figure}
 
+\textbf{Task E - Actions} (\autoref{lst:configDemonstration2e})
+ \begin{enumerate}
+    \item \textbf{Non-Blocking} - Remove Component - In the background management thread remove the old $Controller$ component.
+\end{enumerate}
+
 \clearpage
+
+\subsubsection{Demonstration Step Three}
+
+The final configuration is designed to shutdown the system, removing the application components and relevant routes for a controlled stop.
 
 \begin{figure}[ht]
     \centering
     \begin{tikzpicture}  
         \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
 
-        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {Agent}; 
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] ($agent$) {Agent}; 
         \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
         \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
 
@@ -255,13 +293,7 @@ First the software infrastructure loads configuration 0
         \draw[->,thick] (manager.north) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.south);
         \draw[<-,thick] ([xshift=0.5cm]manager.north) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.south);
 
-        % \node[block, minimum height=1cm, above=1.5cm of core, xshift=-2cm, dashed] (comp1) {{$Controller$}}; 
-        % \draw[<-,thick] (comp1.south) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.north);
-        % \draw[->,thick] ([xshift=0.5cm]comp1.south) -- node[midway,fill=white] {$2$} ([xshift=-1.5cm]core.north);
-
         \node[block, minimum height=1cm, above=1.5cm of core, xshift=2cm, dashed] (comp2) {{$Controller^{\prime}$}}; 
-        % \draw[<-,thick] ([xshift=-0.5cm]comp2.south) -- node[midway,fill=white] {$1$} ([xshift=1.5cm]core.north);
-        % \draw[->,thick] (comp2.south) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.north);
 
         \node[draw,inner xsep=4mm,inner ysep=4mm,fit=(agent)(manager)(comp2)(core),label={[anchor=north east, inner sep=10pt]north east:Node}]{};
         \node[draw,inner xsep=2mm,inner ysep=2mm,fit=(manager)(core),label={[shift={(-2.5,0)}]north east: Middleware}, dashed]{}; 
@@ -272,35 +304,34 @@ First the software infrastructure loads configuration 0
         \draw[<-,thick] (edge2.north) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.south);
         \draw[->,thick] (edge1.north) -- ([yshift=2cm]edge1.north) -- node[midway,fill=white] {$1$} ([yshift=-1cm,xshift=1.5cm]core.south)  -- ([xshift=1.5cm]core.south);
         
-        % \draw[->,thick] (edge1.north) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.south);
-        % \draw[<-,thick] (edge2.north) -- ([yshift=2cm]edge2.north) -- node[midway,fill=white] {$2$} ([yshift=-1cm,xshift=-1.5cm]core.south)  -- ([xshift=-1.5cm]core.south);
-        
     \end{tikzpicture}  
-    \caption[Configuration 3a]
-    {Configuration 3a}
-    \label{fig:configDemo3a}
+    \caption[Demonstration Configuration 3 Task A]
+    {Demonstration Configuration 3 Task A}
+    \label{fig:configDemonstration3a}
 \end{figure}
+
+\textbf{Task A - Actions} (\autoref{lst:configDemonstration3a})
+ \begin{enumerate}
+    \item \textbf{Blocking} - Stop Component - Mark the $Controller^{\prime}$ component as not safe to execute in the global state.
+    \item \textbf{Blocking} - Remove Route - Remove the communication pathway between Edge 1 and $Controller^{\prime}$ (Inbound).
+    \item \textbf{Blocking} - Remove Route - Remove the communication pathway between Edge 2 and $Controller^{\prime}$ (Outbound).
+    \item \textbf{Blocking} - Set Schedule - Modify the schedule so only $Agent$ has a time-slice to execute in.
+\end{enumerate}
+
+\clearpage
 
 \begin{figure}[ht]
     \centering
     \begin{tikzpicture}  
         \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
 
-        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {Agent}; 
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] ($agent$) {Agent}; 
         \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
         \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
 
         \node[block, minimum height=1cm, below=0.8cm of core, xshift=-6.5cm, dashed] (manager) {Manager}; 
         \draw[->,thick] (manager.north) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.south);
         \draw[<-,thick] ([xshift=0.5cm]manager.north) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.south);
-
-        % \node[block, minimum height=1cm, above=1.5cm of core, xshift=-2cm, dashed] (comp1) {{$Controller$}}; 
-        % \draw[<-,thick] (comp1.south) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.north);
-        % \draw[->,thick] ([xshift=0.5cm]comp1.south) -- node[midway,fill=white] {$2$} ([xshift=-1.5cm]core.north);
-
-        % \node[block, minimum height=1cm, above=1.5cm of core, xshift=2cm] (comp2) {{$Controller^{\prime}$}}; 
-        % \draw[<-,thick] ([xshift=-0.5cm]comp2.south) -- node[midway,fill=white] {$1$} ([xshift=1.5cm]core.north);
-        % \draw[->,thick] (comp2.south) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.north);
 
         \node[draw,inner xsep=4mm,inner ysep=4mm,fit=(agent)(manager)(core),label={[anchor=north east, inner sep=10pt]north east:Node}]{};
         \node[draw,inner xsep=2mm,inner ysep=2mm,fit=(manager)(core),label={[shift={(-2.5,0)}]north east: Middleware}, dashed]{}; 
@@ -311,13 +342,15 @@ First the software infrastructure loads configuration 0
         \draw[<-,thick] (edge2.north) -- node[midway,fill=white] {$2$} ([xshift=2cm]core.south);
         \draw[->,thick] (edge1.north) -- ([yshift=2cm]edge1.north) -- node[midway,fill=white] {$1$} ([yshift=-1cm,xshift=1.5cm]core.south)  -- ([xshift=1.5cm]core.south);
         
-        % \draw[->,thick] (edge1.north) -- node[midway,fill=white] {$1$} ([xshift=-2cm]core.south);
-        % \draw[<-,thick] (edge2.north) -- ([yshift=2cm]edge2.north) -- node[midway,fill=white] {$2$} ([yshift=-1cm,xshift=-1.5cm]core.south)  -- ([xshift=-1.5cm]core.south);
-        
     \end{tikzpicture}  
-    \caption[Configuration 3b]
-    {Configuration 3b}
-    \label{fig:configDemo3b}
+    \caption[Demonstration Configuration 3 Task B]
+    {Demonstration Configuration 3 Task B}
+    \label{fig:configDemonstration3b}
 \end{figure}
+
+\textbf{Task B - Actions} (\autoref{lst:configDemonstration3b})
+ \begin{enumerate}
+    \item \textbf{Non-Blocking} - Remove Component - In the background management thread remove the old $Controller^{\prime}$ component.
+\end{enumerate}
 
 \clearpage
