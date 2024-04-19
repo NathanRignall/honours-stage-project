@@ -18,24 +18,24 @@ Another requirement for the hardware was remote debugging support, with full pow
           \node[block, text width=1.75cm, right=0.1cm of m] (l) {Flash\\Lock};
           \node[block, text width=1.75cm, right=0.1cm of l] (f) {USB};
 
-          \node[block, text width=11.75cm, above=1cm of p] (d) {Development Card};  
-          \node[block, text width=11.75cm, below=1cm of p] (k) {Remote KVM};  
+          \node[block, minimum height=1cm, text width=11.75cm, above=1cm of p] (d) {Development Card};  
+          \node[block, minimum height=1cm, text width=11.75cm, below=1cm of p] (k) {Remote KVM};  
 
-          \draw[<->,thick] ([xshift=-4.5cm]d.south) to node [midway,fill=white] {HDMI} (h.north);
-          \draw[<->,thick] ([xshift=-3cm]d.south) to node [midway,fill=white] {UART} (u.north);
-          \draw[<->,thick] ([xshift=-1.5cm]d.south) to node [midway,fill=white] {JTAG} (j.north);
-          \draw[<->,thick] ([xshift=-0cm]d.south) to node [midway,fill=white] {12V} (p.north);
-          \draw[<->,thick] ([xshift=1.5cm]d.south) edge (m.north);
-          \draw[<->,thick] ([xshift=3cm]d.south) edge (l.north);
-          \draw[<->,thick] ([xshift=4.5cm]d.south) edge (f.north);
+          \draw[<->,thick] ([xshift=-4.5cm]d.south) -- node [midway,fill=white] {HDMI} (h.north);
+          \draw[<->,thick] ([xshift=-3cm]d.south) -- node [midway,fill=white] {UART} (u.north);
+          \draw[<->,thick] ([xshift=-1.5cm]d.south) -- node [midway,fill=white] {JTAG} (j.north);
+          \draw[<->,thick] ([xshift=-0cm]d.south) -- node [midway,fill=white] {12V} (p.north);
+          \draw[<->,thick] ([xshift=1.5cm]d.south) -- (m.north);
+          \draw[<->,thick] ([xshift=3cm]d.south) -- (l.north);
+          \draw[<->,thick] ([xshift=4.5cm]d.south) -- (f.north);
 
-          \draw[<->,thick] (h.south) to node [midway,fill=white] {CSI} ([xshift=-4.5cm]k.north);
-          \draw[<->,thick] (u.south) to node [midway,fill=white] {USB} ([xshift=-3cm]k.north);
-          \draw[<->,thick] (j.south) to node [midway,fill=white] {USB} ([xshift=-1.5cm]k.north);
-          \draw[<->,thick] (p.south) to node [midway,fill=white] {GPIO} ([xshift=0cm]k.north);
-          \draw[<->,thick] (m.south) to node [midway,fill=white] {GPIO} ([xshift=1.5cm]k.north);
-          \draw[<->,thick] (l.south) to node [midway,fill=white] {GPIO} ([xshift=3cm]k.north);
-          \draw[<->,thick] (f.south) to node [midway,fill=white] {USB} ([xshift=4.5cm]k.north);
+          \draw[<->,thick] (h.south) -- node [midway,fill=white] {CSI} ([xshift=-4.5cm]k.north);
+          \draw[<->,thick] (u.south) -- node [midway,fill=white] {USB} ([xshift=-3cm]k.north);
+          \draw[<->,thick] (j.south) -- node [midway,fill=white] {USB} ([xshift=-1.5cm]k.north);
+          \draw[<->,thick] (p.south) -- node [midway,fill=white] {GPIO} ([xshift=0cm]k.north);
+          \draw[<->,thick] (m.south) -- node [midway,fill=white] {GPIO} ([xshift=1.5cm]k.north);
+          \draw[<->,thick] (l.south) -- node [midway,fill=white] {GPIO} ([xshift=3cm]k.north);
+          \draw[<->,thick] (f.south) -- node [midway,fill=white] {USB} ([xshift=4.5cm]k.north);
       \end{tikzpicture}  
   \caption[Development hardware block diagram]
   {Development hardware block diagram}
