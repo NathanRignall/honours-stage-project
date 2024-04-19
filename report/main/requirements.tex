@@ -18,7 +18,13 @@
 
 % Design Constraints
 
-Some intro here.
+There are two main components of a DIMA system, the processing nodes and the edges. The nodes run the main application software while the edges collect/send data from a variety of sensors/actuators. To apply dynamic software updates to a DIMA system, the focus should be within the processing nodes as that is where the majority of compute takes place.
+
+A component-based software infrastructure solution was selected for the central processing nodes. This was to enable multiple inter-connected applications to run on a single system. There were also many mature designs, such as FASA, that implement such dynamic software updates in a component system that a new design could be based off. A message-based approach was selected to connect different components with other components and edges. This was a simple technique that enables atomic control of data flow within the system, important for firmware upgrades. This design choice is analysed in more detail in the design section.
+
+While little processing occurs within the edge data collectors, dynamic software updates could also be implemented here through pointer-swap update techniques. However, the focus of this project was on the main functionality of the system, hence this was left for a future implementation.
+
+This chapter outlines the requirements for all parts of the dynamic software update solution, including the software, hardware, and test harness.
 
 \clearpage
 
@@ -61,7 +67,7 @@ rightmargin=15pt}
 
 \section{Software Infrastructure}
 
-To facilitate real-time software updates this project will develop an embedded middleware framework that shall be known as the software infrastructure. This framework's should run software components which can be dynamically updated. The high-level requirements are first defined, followed by the more in-depth low-level requirement that shall be used to implement test-cases.
+To facilitate real-time software updates this project will develop an embedded middleware framework that shall be known as the software infrastructure. This framework's should run software components which can be dynamically updated. To connect the different components together a message based approach shall be used. The high-level requirements are first defined, followed by the more in-depth low-level requirement that shall be used to implement test-cases.
 
 \subsection{Functional Requirements}
 
@@ -128,7 +134,7 @@ To facilitate real-time software updates this project will develop an embedded m
     \item The software infrastructure must implement the create component non-blocking action.
     \begin{srsitems}
         \item The create component action must first load the software component binary from storage.
-        \item The create component action must then start the software component binary as a separate process
+        \item The create component action must then start the software component binary in an isolated processing environment.
         \item The create component action must take the path of the software component binary and whether state syc should be enabled as parameters.
     \end{srsitems}
 
@@ -187,10 +193,7 @@ To facilitate real-time software updates this project will develop an embedded m
 \suspend{srsitems}
 
 \subsection{Non-Functional Requirements}
-
-% \newpage
-
-% \noindent In this paragraph, I talk a bit about the Useful/Important Information and then reference the item number~(\ref{item:reqSICompStartStop}).
+Latency, real-time stuff
 
 \newpage
 
@@ -234,13 +237,13 @@ While the test harness is designed to evaluate the real-time behaviour of the sy
 % demo apps
 Example application that uses one differential equation and requires its state to be maintained with a plant for the example application to test it's functionality
 
-    % demo fcs
-    The example application must 
-    maintained
+% demo fcs
+The example application must 
+maintain 
 
-    % demo plant model
-    The plant must
-    model a mass falling due to gravity
+% demo plant model
+The plant must
+model a mass falling due to gravity
 
 \newpage
 
