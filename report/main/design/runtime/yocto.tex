@@ -11,6 +11,15 @@ Zephyr
 
 \subsection{Hypervisors}
 
+Why xen? 
+
+This is because KVM is implemented on top of the Linux kernel.
+
+To reap the benefits of dynamic updates it is preferred that the hypervisor is independent of the operating system (explain why).
+Also, in a true real-time system it is unusual to use linux. Rather a more preferable OS such as Zephyr or FreeRTOS (Free and open source solutions used.)
+
+Comparing straight linux and linux +  Xen should give us a good method to estimate the specific latencies brough about by Xen.
+
 \autocite{ayresVirtualisationMeansDynamic2019} completed a short study into the different available virtualisation technologies for embedded safety critical systems.
 
 VxWorks, Jailhouse, KVM, Xen, Sel 4

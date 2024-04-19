@@ -1,18 +1,14 @@
 \section{Software}
 
+% first thing a high level system diagram
 
 \subsection{Architecture}
-% don't like this comment at all
-The following designs elaborate upon the defined software infrastructure requirements. 
+The following designs elaborate upon the defined software infrastructure requirements, explaining how the components, messages and task lists will integrate together.
 
-\subsubsection{Components and Scheduling}
-Each component shall operate in its own process to enable proper separation between components. Hence, the software infrastructure must be able to start and stop processes and keep track of them in the system.
+\subsubsection{Components}
+Each component shall operate in its own isolated processing environment to enable proper separation between components (\ref{item:reqSIComp}). Hence, the software infrastructure must be able to start and stop these environments and keep track of them in the node.
 
-Explain the scheduler
-
-% maybe a digram too to shown the offload
-
-To ensure each component implements a consistent interface for the software infrastructure to use, all components will implement a common abstract class (trait). This class is shown in \autoref{fig:umlComponentAbstractClass}.
+To ensure each component implements a consistent interface for the software infrastructure to use, all components will implement a common abstract class. This class is shown in \autoref{fig:umlComponentAbstractClass}.
 
 \begin{figure}[ht]
     \centering
@@ -30,17 +26,78 @@ To ensure each component implements a consistent interface for the software infr
     \label{fig:umlComponentAbstractClass}
 \end{figure}
 
-Explain the new and run
+First \verb|new| shall execute when the component is first initialised and \verb|run| shall execute whenever specified in the cyclic schedule. The run procedure is passed \verb|services| as a parameter, this contains all the classes for the component to interface with the software infrastructure.
 
-Explain Services
+The state operations (\verb|loadState|, \verb|saveState|, \verb|resetState|) can be used to control the persistent state of the component. Load and save both use byte arrays as interfaces, this is so that the software infrastructure does not need to be aware of the data being stored. Hence, each component can implement their own custom functions, so transformations as described by \autocite{wahlerDisruptionfreeSoftwareUpdates2014} could theoretically be implemented.
 
-Explain the state operations
+\newpage
 
+\subsubsection{Scheduling}
+To run the component at the correct times, the software infrastructure will implement a cyclic schedule (\ref{item:reqSIComp}). This schedule will use an arrangement of major and minor frames to alternate different sub-schedules. 
+
+All major frames have the same configured deadline, this determines the main control frequency. Major frames alternate so that different components can execute at different frequencies. For example if a schedule contained three major frames, and a component was present only in one major frame, it would run x3 the frequency of the main schedule.
+
+Within a major frame, there are several minor frames. Each minor frame contains a single component execution and a configured deadline. If a component exceeds its deadline, its execution shall be paused and resumed in the next iteration. This is to maintain soft real time guarantees.
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}
+        \node[align=center] at (0.83,0.5) {Comp $a$};
+        \draw [thick] (1.66,1.0) -- (1.66,0.0);
+        \node[align=center] at (2.5,0.5) {Comp $b$};
+        \draw [thick] (3.32,1.0) -- (3.32,0.0);
+        \node[align=center] at (4.16,0.5) {};
+        \draw [thick, <->] (3.66,0.5) -- (4.66,0.5);
+        \draw [thick] (5.0,1.0) -- (5.0,0.0);
+        \node[align=center] at (5.83,0.5) {Comp $a$};
+        \draw [thick] (6.66,1.0) -- (6.66,0.0);
+        \node[align=center] at (7.9,0.5) {Comp $c$};
+        \draw [thick] (9.15,1.0) -- (9.15,0.0);
+        \node[align=center] at (9.16,0.5) {};
+        \draw [thick, <->] (9.45,0.5) -- (9.66,0.5);
+        \draw [thick] (10.0,1.0) -- (10.0,0.0);
+        \node[align=center] at (10.83,0.5) {Comp $a$};
+        \draw [thick] (11.66,1.0) -- (11.66,0.0);
+        \node[align=center] at (12.5,0.5) {};
+        % \draw [thick] (13.32,1.0) -- (13.32,0.0);
+        \node[align=center] at (14.16,0.5) {};
+        \draw [thick, <->] (12.0,0.5) -- (14.66,0.5);
+
+        \draw [thick,decorate,decoration={brace,amplitude=6pt,raise=0pt,mirror}] (0.0,-0.15) -- (5.0,-0.15);
+        \node[align=center] at (2.5,-0.85) {$1000\mu s$};
+
+        \draw [thick,decorate,decoration={brace,amplitude=6pt,raise=0pt,mirror}] (5.0,-0.15) -- (10.0,-0.15);
+        \node[align=center] at (7.5,-0.85) {$1000\mu s$};
+
+        \draw [thick,decorate,decoration={brace,amplitude=6pt,raise=0pt,mirror}] (10.0,-0.15) -- (15.0,-0.15);
+        \node[align=center] at (12.5,-0.85) {$1000\mu s$};
+
+        \draw [thick,decorate,decoration={brace,amplitude=6pt,raise=0pt}] (0.0,1.15) -- (1.66,1.15);
+        \node[align=center] at (0.83,1.75) {$100\mu s$};
+        \draw [thick,decorate,decoration={brace,amplitude=6pt,raise=0pt}] (1.66,1.15) -- (3.32,1.15);
+        \node[align=center] at (2.5,1.75) {$100\mu s$};
+
+        \draw [thick,decorate,decoration={brace,amplitude=6pt,raise=0pt}] (5.0,1.15) -- (6.66,1.15);
+        \node[align=center] at (5.83,1.75) {$100\mu s$};
+        \draw [thick,decorate,decoration={brace,amplitude=6pt,raise=0pt}] (6.66,1.15) -- (9.15,1.15);
+        \node[align=center] at (7.9,1.75) {$150\mu s$};
+
+        \draw [thick,decorate,decoration={brace,amplitude=6pt,raise=0pt}] (10.0,1.15) -- (11.66,1.15);
+        \node[align=center] at (10.83,1.75) {$100\mu s$};
+
+        \draw [thick,->] (0,0) -- (15,0);
+    \end{tikzpicture}
+    \caption[Scheduling frame collection]
+    {Scheduling frame collection (not to scale)}
+    \label{fig:schedFrameCollection}
+\end{figure}
+
+The configuration shown in \autoref{fig:schedFrameCollection} displays an example major-minor frame schedule. The main cyclic schedule runs at 1000Hz because of the $1000\mu s$ major frame deadline. Component $a$ operates at 1000Hz as it is present in every major frame. Component $b$ and $c$ both execute at 333.3Hz as they are present in $1/3$ of the frames. The arrow at the end of the frame represents the slack time available at the end of each cycle.
+    
 \subsubsection{Communications}
-To implement \autoref{item:reqSIMessRoute} the software infrastructure shall implement a message router within the software infrastructure.
+To implement \autoref{item:reqSIMessRoute} the software infrastructure shall implement a message router within the software infrastructure. Every communication pathway will be statically defined in configurations to facilitate the dynamic software update process. When components are upgraded, their communications shall be modified in software to handover control. This design choice directly resolves the hardware handover issue with live software updates.
 
-This shall use channels, 
-
+\autoref{fig:communicationSoftwareArchietcture} displays how a communication configuration may look with the message router. Two components are connected together with two separate routes and channels for bidirectional communication. One component is connected directly to an edge device with a single channel and another component is connected to an external message router.
 
 \begin{figure}[ht]
     \centering
@@ -70,10 +127,12 @@ This shall use channels,
         \draw[->,thick,dashed] ([xshift=-2.5cm]core.south) -- ([xshift=-2.5cm,yshift=-0.5cm]core.south) -- ([xshift=2.5cm,yshift=-0.5cm]core.south) -- ([xshift=2.5cm]core.south);
 
     \end{tikzpicture}  
-    \caption[Development network block diagram]
-    {Development network block diagram}
-    \label{fig:developmentNetworkBlockDiagram}
+    \caption[Communication software architecture]
+    {Communication software architecture}
+    \label{fig:communicationSoftwareArchietcture}
 \end{figure}
+
+Every component/device shall establish a single communication pathway (socket) with the software infrastructure, rather than one per channel. This is to simplify the implementation and enable dynamic reconfiguration of channels, without modifying sockets. This model displayed in \autoref{fig:communicationSoftwareArchietctureImp} with file-based addresses for components and ip-based addresses for edges.
 
 \begin{figure}[ht]
     \centering
@@ -83,10 +142,10 @@ This shall use channels,
         \node[block, text width=7cm, minimum height=1cm, above=2cm of switch, xshift=-4.5cm] (router1) {Message Router};
         \node[block, text width=7cm, minimum height=1cm, above=2cm of switch, xshift=4.5cm] (router2) {Message Router};
 
-        \node[block, minimum height=1cm, above=2cm of router1, xshift=-2cm] (comp1) {Component $a$}; 
-        \node[block, minimum height=1cm, above=2cm of router1, xshift=2cm] (comp2) {Component $b$}; 
-        \node[block, minimum height=1cm, above=2cm of router2, xshift=-2cm] (comp3) {Component $c$}; 
-        \node[block, minimum height=1cm, above=2cm of router2, xshift=2cm] (comp4) {Component $d$};  
+        \node[block, minimum height=1cm, above=1.5cm of router1, xshift=-2cm] (comp1) {Component $a$}; 
+        \node[block, minimum height=1cm, above=1.5cm of router1, xshift=2cm] (comp2) {Component $b$}; 
+        \node[block, minimum height=1cm, above=1.5cm of router2, xshift=-2cm] (comp3) {Component $c$}; 
+        \node[block, minimum height=1cm, above=1.5cm of router2, xshift=2cm] (comp4) {Component $d$};  
 
         \node[block, minimum height=1cm, below=1.5cm of switch, xshift=-5cm] (edge1) {Edge 1};
         \node[block, minimum height=1cm, below=1.5cm of switch, xshift=0cm] (edge2) {Edge 2};
@@ -110,55 +169,62 @@ This shall use channels,
         \draw[->,thick] (edge3.north) -- node[midway,fill=white] {172.31.0.5} ([xshift=5cm]core.south);
 
     \end{tikzpicture}  
-    \caption[Development network block diagram]
-    {Development network block diagram}
-    \label{fig:developmentNetworkBlockDiagram}
+    \caption[Communication software architecture implementation]
+    {Communication software architecture implementation}
+    \label{fig:communicationSoftwareArchietctureImp}
 \end{figure}
 
 \clearpage
 
-\subsubsection{Manager}
+\subsection{Management}
 Control state and configurations 
 
 Task lists
 
+\subsubsection{Background Thread}
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}
+        \node[state, initial] (q1) {Started};
+        \node[state, right=1cm of q1] (q2) {Running};
+        \node[state, right=1cm of q2] (q3) {Stopped};
+        \node[state,  right=1cm of q3] (q4) {Completed};
+        
+        \draw[->]  (q1) -- (q2);
+        \draw[->]  (q2) -- (q3);
+        \draw[->]  (q3) -- (q4);
+    \end{tikzpicture}
+    \caption[State machine for action state]
+    {State machine for action state}
+    \label{fig:actionStateStateMachine}
+\end{figure}
+
+\textbf{Create Component}
+
+\textbf{Remove Component}
+
+\textbf{Wait State Sync Component}
+
 \clearpage
 \input{main/design/software/walkthrough}
+
+\clearpage
+\input{main/design/software/plant}
 
 % \clearpage
 % \input{main/design/software/uml.tex}
 
+% \clearpage
+% \input{main/design/software/drone.tex}
+
+
 \clearpage
-\input{main/design/software/drone.tex}
-
-
-
 The intention for this software was to also use Rust, however we could not get the Rust libaries for the W5500 working quickly, sure with extra time with sould have been possible.
 To simplify this software the arduino development environment was used. This as all the drivers for the w5500 are integrated in arduino libraries.
 
 
 % Extra info at the end about how would work in drone
-
-% \tikzset{
-%     ->,
-%     >=stealth,
-%     node distance=3cm,
-%     every state/.style={thick, fill=gray!10},
-%     initial text=$ $,
-% }
-
-% \begin{tikzpicture} 
-%     \node[state, initial, accepting] (1) {$1$};
-%     \node[state, below left of=1] (2) {$2$};
-%     \node[state, right of=2] (3) {$3$};
-%     \draw   (1) edge[above] node{$b$} (2)
-%                 (1) edge[below, bend right, left=0.3] node{$\epsilon$} (3)
-%                 (2) edge[loop left] node{$a$} (2)
-%                 (2) edge[below] node{$a, b$} (3)
-%                 (3) edge[above, bend right, right=0.3] node{$a$} (1);
-% \end{tikzpicture}
-
-% why rust ferrocene, ada
 
 % \begin{itemize}
 %     \item Create Component \textbf{Non-Blocking}
