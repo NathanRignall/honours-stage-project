@@ -62,7 +62,7 @@ When requested by the agent, configuration 1 loads. This configuration starts th
     \begin{tikzpicture}  
         \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
 
-        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] ($agent$) {Agent}; 
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {$Agent$}; 
         \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
         \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
 
@@ -89,7 +89,7 @@ When requested by the agent, configuration 1 loads. This configuration starts th
 
 \textbf{Task A - Actions} (\autoref{lst:configDemonstration1a})
  \begin{enumerate}
-    \item \textbf{Non-Blocking} - Create Component - In the background management thread create the new $Controller$ component.
+    \item \textbf{Create Component} - \textit{Non-Blocking} - In the background management thread create the new $Controller$ component.
 \end{enumerate}
 
 \clearpage
@@ -99,7 +99,7 @@ When requested by the agent, configuration 1 loads. This configuration starts th
     \begin{tikzpicture}  
         \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
 
-        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] ($agent$) {Agent}; 
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {$Agent$}; 
         \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
         \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
 
@@ -128,10 +128,10 @@ When requested by the agent, configuration 1 loads. This configuration starts th
 
 \textbf{Task B - Actions} (\autoref{lst:configDemonstration1b})
  \begin{enumerate}
-    \item \textbf{Blocking} - Start Component - Mark the $Controller$ component as safe to execute in the global state.
-    \item \textbf{Blocking} - Add Route - Create the communication pathway between Edge 1 and $Controller$ (Inbound).
-    \item \textbf{Blocking} - Add Route - Create the communication pathway between Edge 2 and $Controller$ (Outbound).
-    \item \textbf{Blocking} - Modify the schedule so that both $Agent$ and $Controller$ have a time-slice to execute in.
+    \item \textbf{Start Component} - \textit{Blocking} - Mark the $Controller$ component as safe to execute in the global state.
+    \item \textbf{Add Route} - \textit{Blocking} - Create the communication pathway between Edge 1 and $Controller$ (Inbound).
+    \item \textbf{Add Route} - \textit{Blocking} - Create the communication pathway between Edge 2 and $Controller$ (Outbound).
+    \item \textbf{Set Schedule} - \textit{Blocking} - Modify the schedule so that both $Agent$ and $Controller$ have a time-slice to execute in.
 \end{enumerate}
 
 \clearpage
@@ -145,7 +145,7 @@ Configuration 2 is the configuration that completes the dynamic software update.
     \begin{tikzpicture}  
         \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
 
-        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] ($agent$) {Agent}; 
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {$Agent$}; 
         \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
         \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
 
@@ -176,17 +176,17 @@ Configuration 2 is the configuration that completes the dynamic software update.
 
 \textbf{Task A - Actions} (\autoref{lst:configDemonstration2a})
  \begin{enumerate}
-    \item \textbf{Non-Blocking} - Create Component - In the background management thread create the new $Controller^{\prime}$ component.
+    \item \textbf{Create Component} - \textit{Non-Blocking} - In the background management thread create the new $Controller^{\prime}$ component.
 \end{enumerate}
 
 \textbf{Task B - Actions} (\autoref{lst:configDemonstration2b})
  \begin{enumerate}
-    \item \textbf{Blocking} - Add State Sync - Add a state synchronisation between $Controller$ and $Controller^{\prime}$ in the global state.
+    \item \textbf{Add State Sync} - \textit{Blocking} - Add a state synchronisation between $Controller$ and $Controller^{\prime}$ in the global state.
 \end{enumerate}
 
 \textbf{Task C - Actions} (\autoref{lst:configDemonstration2c})
  \begin{enumerate}
-    \item \textbf{Non-Blocking} - Wait State Sync - Over a number of execution cycles, wait until the state synchronisation is marked as ready.
+    \item \textbf{Wait State Sync} - \textit{Non-Blocking} - Over a number of execution cycles, wait until the state synchronisation is marked as ready.
 \end{enumerate}
 
 \clearpage
@@ -196,7 +196,7 @@ Configuration 2 is the configuration that completes the dynamic software update.
     \begin{tikzpicture}  
         \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
 
-        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] ($agent$) {Agent}; 
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {$Agent$}; 
         \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
         \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
 
@@ -226,14 +226,14 @@ Configuration 2 is the configuration that completes the dynamic software update.
 
 \textbf{Task D - Actions} (\autoref{lst:configDemonstration2d})
  \begin{enumerate}
-    \item \textbf{Blocking} - Remove State Sync - Remove the state synchronisation between $Controller$ and $Controller^{\prime}$ in the global state.
-    \item \textbf{Blocking} - Stop Component - Mark the $Controller$ component as not safe to execute in the global state.
-    \item \textbf{Blocking} - Remove Route - Remove the communication pathway between Edge 1 and $Controller$ (Inbound).
-    \item \textbf{Blocking} - Remove Route - Remove the communication pathway between Edge 2 and $Controller$ (Outbound).
-    \item \textbf{Blocking} - Start Component - Mark the $Controller^{\prime}$ component as safe to execute in the global state.
-    \item \textbf{Blocking} - Add Route - Create the communication pathway between Edge 1 and $Controller^{\prime}$ (Inbound).
-    \item \textbf{Blocking} - Add Route - Create the communication pathway between Edge 2 and $Controller^{\prime}$ (Outbound).
-    \item \textbf{Blocking} - Set Schedule - Modify the schedule so that both $Agent$ and $Controller^{\prime}$ have a time-slice to execute in. (Effectively removing $Controller$)
+    \item \textbf{Remove State Sync} - \textit{Blocking} - Remove the state synchronisation between $Controller$ and $Controller^{\prime}$ in the global state.
+    \item \textbf{Stop Component} - \textit{Blocking} - Mark the $Controller$ component as not safe to execute in the global state.
+    \item \textbf{Remove Route} - \textit{Blocking} - Remove the communication pathway between Edge 1 and $Controller$ (Inbound).
+    \item \textbf{Remove Route} - \textit{Blocking} - Remove the communication pathway between Edge 2 and $Controller$ (Outbound).
+    \item \textbf{Start Component} - \textit{Blocking} - Mark the $Controller^{\prime}$ component as safe to execute in the global state.
+    \item \textbf{Add Route} - \textit{Blocking} - Create the communication pathway between Edge 1 and $Controller^{\prime}$ (Inbound).
+    \item \textbf{Add Route} - \textit{Blocking} - Create the communication pathway between Edge 2 and $Controller^{\prime}$ (Outbound).
+    \item \textbf{Set Schedule} - \textit{Blocking} - Modify the schedule so that both $Agent$ and $Controller^{\prime}$ have a time-slice to execute in. (Effectively removing $Controller$)
 \end{enumerate}
 
 \clearpage
@@ -243,7 +243,7 @@ Configuration 2 is the configuration that completes the dynamic software update.
     \begin{tikzpicture}  
         \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
 
-        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] ($agent$) {Agent}; 
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {$Agent$}; 
         \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
         \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
 
@@ -271,7 +271,7 @@ Configuration 2 is the configuration that completes the dynamic software update.
 
 \textbf{Task E - Actions} (\autoref{lst:configDemonstration2e})
  \begin{enumerate}
-    \item \textbf{Non-Blocking} - Remove Component - In the background management thread remove the old $Controller$ component.
+    \item \textbf{Remove Component} - \textit{Non-Blocking} - In the background management thread remove the old $Controller$ component.
 \end{enumerate}
 
 \clearpage
@@ -285,7 +285,7 @@ The final configuration is designed to shutdown the system, removing the applica
     \begin{tikzpicture}  
         \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
 
-        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] ($agent$) {Agent}; 
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {$Agent$}; 
         \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
         \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
 
@@ -312,10 +312,10 @@ The final configuration is designed to shutdown the system, removing the applica
 
 \textbf{Task A - Actions} (\autoref{lst:configDemonstration3a})
  \begin{enumerate}
-    \item \textbf{Blocking} - Stop Component - Mark the $Controller^{\prime}$ component as not safe to execute in the global state.
-    \item \textbf{Blocking} - Remove Route - Remove the communication pathway between Edge 1 and $Controller^{\prime}$ (Inbound).
-    \item \textbf{Blocking} - Remove Route - Remove the communication pathway between Edge 2 and $Controller^{\prime}$ (Outbound).
-    \item \textbf{Blocking} - Set Schedule - Modify the schedule so only $Agent$ has a time-slice to execute in.
+    \item \textbf{Stop Component} - \textit{Blocking} - Mark the $Controller^{\prime}$ component as not safe to execute in the global state.
+    \item \textbf{Remove Route} - \textit{Blocking} - Remove the communication pathway between Edge 1 and $Controller^{\prime}$ (Inbound).
+    \item \textbf{Remove Route} - \textit{Blocking} - Remove the communication pathway between Edge 2 and $Controller^{\prime}$ (Outbound).
+    \item \textbf{Set Schedule} - \textit{Blocking} - Modify the schedule so only $Agent$ has a time-slice to execute in.
 \end{enumerate}
 
 \clearpage
@@ -325,7 +325,7 @@ The final configuration is designed to shutdown the system, removing the applica
     \begin{tikzpicture}  
         \node[block, text width=16cm, minimum height=1cm] (core) {Message Router}; 
 
-        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] ($agent$) {Agent}; 
+        \node[block, minimum height=1cm, above=1.5cm of core, xshift=-6.5cm] (agent) {$Agent$}; 
         \draw[<-,thick] (agent.south) -- node[midway,fill=white] {$1$} ([xshift=-6.5cm]core.north);
         \draw[->,thick] ([xshift=0.5cm]agent.south) -- node[midway,fill=white] {$2$} ([xshift=-6cm]core.north);
 
@@ -350,7 +350,7 @@ The final configuration is designed to shutdown the system, removing the applica
 
 \textbf{Task B - Actions} (\autoref{lst:configDemonstration3b})
  \begin{enumerate}
-    \item \textbf{Non-Blocking} - Remove Component - In the background management thread remove the old $Controller^{\prime}$ component.
+    \item \textbf{Remove Component} - \textit{Non-Blocking} - In the background management thread remove the old $Controller^{\prime}$ component.
 \end{enumerate}
 
 \clearpage
