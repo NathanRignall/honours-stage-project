@@ -183,3 +183,105 @@
       data: !remove-component
         component-id: 1f9c6264-5487-41c8-9b4a-e92d2edb2b31
 \end{lstlisting}
+
+% Software infrastructure low level requirements.
+
+% \subsubsection{Low-Level}
+
+% \resume{srsitems}
+%     \item A software component must be defined as a software template that developers can implement, for example a Rust trait.
+%     \begin{srsitems}
+%         \item There must be sufficient separation between components, such that if one fails, other components are unaffected, for example containers.
+%     \end{srsitems}
+
+%     % what is a channel, not auto discovery. External input
+
+%     \item The software infrastructure must execute components using a defined soft real-time schedule.
+%     \begin{srsitems}
+%         \item The schedule must execute cyclically, with a defined deadline.
+%         \item The schedule must execute alternating major frames.
+%         \item The schedule must execute all minor frames within a major frame.
+%         \item A major frame must execute a single component until a defined deadline. If the component exceeds its deadline, its operation must be suspended.
+%     \end{srsitems}
+
+%     \item The software infrastructure must route messages between component using channels.
+%     \begin{srsitems}
+%         \item The message router must be configured using a routing table.
+%         \item The routing table must contain source and destination channels.
+%         \item The message router must pass messages between components when executed.
+%     \end{srsitems}
+
+%     % state sync 
+
+%     % management thread
+    
+%     % task lists
+%     \item The software infrastructure must be configured using task lists.
+%     \begin{srsitems}
+%         \item A task list must contain a series of actions with relevant data and is either non-blocking or blocking.
+%         \item A blocking action must complete in one execution cycle.
+%         \item All blocking actions in a task must complete in the same execution cycle.
+%         \item A non-blocking action can take multiple execution cycles to complete.
+%     \end{srsitems}
+
+%     % create component
+%     \item The software infrastructure must implement the create component non-blocking action.
+%     \begin{srsitems}
+%         \item The create component action must first load the software component binary from storage.
+%         \item The create component action must then start the software component binary in an isolated processing environment.
+%         \item The create component action must take the path of the software component binary and whether state syc should be enabled as parameters.
+%     \end{srsitems}
+
+%     % start component
+%     \item The software infrastructure must implement the start component blocking action.
+%     \begin{srsitems}
+%         \item The start component action must mark the software component as ready to run.
+%     \end{srsitems}
+
+%     % stop component
+%     \item The software infrastructure must implement the stop component blocking action.
+%     \begin{srsitems}
+%         \item The start component action must mark the software component as not ready to run.
+%     \end{srsitems}
+
+%     % add route
+%     \item The software infrastructure must implement the add route blocking action.
+%     \begin{srsitems}
+%         \item The add route action must add the relevant source and destination to the routing table.
+%         \item The add route action must take source component plus channel and target component plus channel as parameters.
+%     \end{srsitems}
+
+%     % remove route
+%     \item The software infrastructure must implement the remove route blocking action.
+%     \begin{srsitems}
+%         \item The remove route action must remove the relevant source and destination from the routing table.
+%     \end{srsitems}
+
+%     % set schedule
+%     \item The software infrastructure must implement the set schedule blocking action.
+%     \begin{srsitems}
+%         \item The set schedule action must first check if the schedule is valid.
+%         \item Only components that are created can be added to the schedule.
+%         \item The schedule must define a execution frequency.
+%         \item The schedule must define which order components execute.
+%     \end{srsitems}
+
+%     % add state sync
+%     \item The software infrastructure must implement the add state synchronise blocking action.
+%     \begin{srsitems}
+%         \item stuff
+%     \end{srsitems}
+
+%     % remove state sync
+%     \item The software infrastructure must implement the remove state synchronise blocking action.
+%     \begin{srsitems}
+%         \item stuff
+%     \end{srsitems}
+
+%     % wait state sync
+%     \item The software infrastructure must implement the wait state synchronise non-blocking action.
+%     \begin{srsitems}
+%         \item stuff
+%     \end{srsitems}
+
+% \suspend{srsitems}
