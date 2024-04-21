@@ -1,0 +1,377 @@
+\section{Case Studies}
+
+mention two different 'types' of updates vector swap and component
+% There are two 
+
+While the source code for these implementations was not public, the respective papers were used to summarise the different techniques that could be used.
+
+\subsection{Review Criteria}
+To evaluate existing implementations of dynamic software updates in a real-time control system the following categories were selected. These specifically targeted the problems associated with implementing 'live' updates in real-time system. 
+
+\subsubsection{Hardware Handover} \label{sec:hardware}
+
+Most hardware devices do not understand the concept of real-time software updates where new software rapidly starts and stops during operation. This is especially the case with software drivers for hardware. The process of handling this shall be known as hardware handover. Solutions can either implement hardware and/or software to compensate for this issue. 
+
+Software is also not usually designed to cope with this. \autoref{fig:problemHardwareHandover} shows how the hardware connections are changed to the $Controller$ software during an update. At points in time, the software is neither connected to sensors or actuator. Developed software must be designed to either never execute in this scenario or understand that it does not have control.
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture} [block/.style = {draw, rectangle, minimum height=2em,minimum width=4em}, controller/.style = {draw, rectangle, minimum height=2em,minimum width=6em}]
+
+        \node[block] (input1) [label=left: $t_0$] {Sensor}; 
+        \node[controller, right=1cm of input1] (control1) {{$Controller$}};
+        \node[block, right=1cm of control1] (output1) {Actuator}; 
+
+        \draw [->] (input1) -- (control1);
+        \draw [->] (control1) -- (output1);
+
+        \node[block, below=1cm of input1] (input2) [label=left: $t_1$] {Sensor}; 
+        \node[controller, right=1cm of input2] (control2) {{$Controller$}};
+        \node[block, right=1cm of control2] (output2) {Actuator}; 
+
+        \draw [->] (input2) -- (control2);
+        \draw [->] (control2) -- (output2);
+
+        \path (control1.south) -- coordinate (aux1) (control1.south|-control2.north);
+        \draw[dashed] ([xshift=-4cm]control2.north west|-aux1) -- ([xshift=9cm]control2.north east|-aux1);  
+
+        \node[block, below=1cm of input2] (input3) [label=left: $t_2$]  {Sensor}; 
+        \node[controller, right=1cm of input3] (control3) {{$Controller^{\prime}$}};    
+        \node[block, right=1cm of control3] (output3) {Actuator}; 
+
+        \draw [->] (input3) -- (control3);
+        \draw [->] (control3) -- (output3);
+
+        \path (control2.south) -- coordinate (aux2) (control2.south|-control3.north);
+        \draw[dashed, blue] ([xshift=-4cm]control3.north west|-aux2) -- ([xshift=9cm]control3.north east|-aux2);  
+
+        \node[block, below=1cm of input3] (input4) [label=left: $t_3$]  {Sensor}; 
+        \node[controller, right=1cm of input4] (control4) {{$Controller^{\prime}$}};  
+        \node[block, right=1cm of control4] (output4) {Actuator}; 
+
+        \draw [->] (input4) -- (control4);
+        \draw [->] (control4) -- (output4);
+
+        \path (control3.south) -- coordinate (aux3) (control3.south|-control4.north);
+        \draw[dashed] ([xshift=-4cm]control4.north west|-aux3) -- ([xshift=9cm]control4.north east|-aux3);  
+
+        \node[controller, right=2cm of output2] (control5) {{$Controller^{\prime}$}};
+        \coordinate[left=1cm of control5] (input5);
+        \coordinate[right=1cm of control5] (output5);
+        
+        \draw [dashed, red, ->] (input5) -- (control5);
+        \draw [dashed, red, ->] (control5) -- (output5);
+
+        \node[controller, right=2cm of output3] (control6) {{$Controller$}};
+        \coordinate[left=1cm of control6] (input6);
+        \coordinate[right=1cm of control6] (output6);
+
+        \draw [dashed, red, ->] (input6) -- (control6);
+        \draw [dashed, red, ->] (control6) -- (output6);
+
+    \end{tikzpicture}  
+    \caption[Software component hardware handover]
+    {Software component hardware handover}
+    \label{fig:problemHardwareHandover}
+\end{figure}
+
+\clearpage
+
+\subsubsection{Synchronisation} \label{sec:synchronisation}
+The next challenge with real-time software updates is clock synchronisation. During the update process it is important that new software continues in the same execution cycle as the previous software. \autoref{fig:problemSynchronisation} displays how an incorrectly synchronised application can be detrimental to the real-time performance of a system.
+
+The new software component ({$Controller^{\prime}$}) starts out of sync relative to the sensor and and actuator that both operate at a fixed schedule. This results in the end-to-end latency of the system effectively doubling.
+
+Solutions can either synchronise new software components with old software components \textbf{internally} or synchronise using an \textbf{external} scheduler.
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture} [block/.style = {draw, rectangle, minimum height=2em,minimum width=4em}, controller/.style = {draw, rectangle, minimum height=2em,minimum width=6em}]
+
+        \node[block] (input1) [label=left: $t_0$] {Sensor}; 
+        \node[controller, right=1cm of input1, yshift=-0.5cm] (control1) {{$Controller$}};
+        \node[controller, right=1cm of control1, yshift=0.5cm, dashed] (control1p) {{$Controller^{\prime}$}};
+        \node[block, right=1cm of control1p, yshift=-1cm] (output1) {Actuator}; 
+
+
+        \node[block, below=1.5cm of input1] (input2) [label=left: $t_1$] {Sensor}; 
+        \node[controller, right=1cm of input2, yshift=-0.5cm, dashed] (control2) {{$Controller$}};
+        \node[controller, right=1cm of control2, yshift=0.5cm] (control2p) {{$Controller^{\prime}$}};
+        \node[block, right=1cm of control2p, yshift=-1cm] (output2) {Actuator}; 
+
+        \path (control1.south) -- coordinate (aux1) (control1.south|-control2.north);
+        \draw[dashed, blue] ([xshift=-4cm]control2.north west|-aux1) -- ([xshift=9cm]control2.north east|-aux1);  
+
+        \node[block, below=1.5cm of input2] (input3) [label=left: $t_2$]  {Sensor}; 
+        \node[controller, right=1cm of input3, yshift=-0.5cm, dashed] (control3) {{$Controller$}};
+        \node[controller, right=1cm of control3, yshift=0.5cm] (control3p) {{$Controller^{\prime}$}};
+        \node[block, right=1cm of control3p, yshift=-1cm] (output3) {Actuator}; 
+
+
+        \path (control2.south) -- coordinate (aux2) (control2.south|-control3.north);
+        \draw[dashed] ([xshift=-4cm]control3.north west|-aux2) -- ([xshift=9cm]control3.north east|-aux2);  
+
+        \node[block, below=1.5cm of input3] (input4) [label=left: $t_3$]  {Sensor}; 
+        \node[controller, right=1cm of input4, yshift=-0.5cm, dashed] (control4) {{$Controller$}};
+        \node[controller, right=1cm of control4, yshift=0.5cm] (control4p) {{$Controller^{\prime}$}};
+        \node[block, right=1cm of control4p, yshift=-1cm] (output4) {Actuator}; 
+
+        \path (control3.south) -- coordinate (aux3) (control3.south|-control4.north);
+        \draw[dashed] ([xshift=-4cm]control4.north west|-aux3) -- ([xshift=9cm]control4.north east|-aux3);  
+
+        \draw [->] (input1) -- (control1);
+        \draw [->] (control1) -- (output1);
+
+        \draw [->] (input2) -- (control3p);
+        \draw [->] (control3p) -- (output3);
+
+        \draw [->] (input3) -- (control4p);
+        \draw [->] (control4p) -- (output4);
+
+    \end{tikzpicture}  
+    \caption[Software component synchronisation]
+    {Software component synchronisation}
+    \label{fig:problemSynchronisation}
+\end{figure}
+
+\clearpage
+
+\subsubsection{State Continuity \& Transformation} \label{sec:state}
+
+State continuity is another challenge with dynamic software updates. Applications usually contain state, that is vital to operation. For example a drone flight computer might complete dead reckoning to calculate its position over time using an accelerometer and gyroscope. After software update the position cannot be simply reset to zero, as the drone would effectively be lost without GPS.
+
+Another problem is state transformation. Different versions of the software may use different data types to store the same information, for example old versions might use metres, new kilometres. Entirely new persistent data fields may also be added in the new updates to support additional functionality.
+
+Example persistent data types between two software versions are displayed in \autoref{fig:problemStateContinuity}. State transformation are shown for both \verb|Mode| and \verb|Position|. 
+
+Dynamic software update systems can implement state \textbf{synchronisation} and/or \textbf{transformation} either on the update \textbf{infrastructure} or \textbf{internally} the specific applications.
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}  
+
+        \node[block, minimum height=1cm ] (comp1) {Mode: 1}; 
+        \node[block, minimum height=1cm, below=0.25cm of comp1] (comp2) {Position: 1km}; 
+        \node[block, minimum height=1cm, below=0.25cm of comp2] (comp3) {Velocity: 10m/s}; 
+
+        \node[draw,inner xsep=4mm,inner ysep=4mm,fit=(comp1)(comp2)(comp3),label={{$State$}}, dashed] (state1) {};
+
+        \node[block, minimum height=1cm, right=4cm of comp1 ] (comp4) {Mode: A}; 
+        \node[block, minimum height=1cm, below=0.25cm of comp4] (comp5) {Position: 1000m}; 
+        \node[block, minimum height=1cm, below=0.25cm of comp5] (comp6) {Velocity: 10m/s}; 
+
+        \node[draw,inner xsep=4mm,inner ysep=4mm,fit=(comp4)(comp5)(comp6),label={{$State^{\prime}$}}, dashed] (state2) {};  
+
+        \draw [->] (comp1) -- (comp4);
+        \draw [->] (comp2) -- (comp5);
+        \draw [->] (comp3) -- (comp6);
+
+    \end{tikzpicture}  
+    \caption[Software component state continuity]
+    {Software component state continuity}
+    \label{fig:problemStateContinuity}
+\end{figure}
+
+\subsubsection{Optimal Time} \label{sec:optimal}
+
+The final challenge for live software updates in a real-time system is determining the optimal time to complete the update. Completing management functionality to perform update tasks takes time out of the application schedule. This could delay the real-time schedule and impact external tasks.
+
+A software solution can either ensure the dynamic update has no impact on the running task or determine the optimal time relative to an applications tasks (\textbf{fast} or \textbf{optimal}).
+
+\newpage
+
+% ----- CASE STUDY 1 -----
+
+\subsection{Live \& Seamless Firmware Upgrade in Real Time Control Systems} \label{caseStudy1}
+\textcite{raoLiveSeamlessFirmware2023} implements live firmware upgrades on a single microcontroller, without using any additional hardware or operating system. They describe the techniques used in both hardware and software to achieve such updates without reset (seamless).
+
+\subsubsection*{Implementation}
+The key innovations for this pap
+Function and vector pointer swapping
+
+Hardware support for vector and function pointer swapping
+Compiler support for live updates and optimal switchover point
+Talk about the compiler
+
+This process uses multiple hardware features to implement the live software update processes. The first is multi-bank non volatile memory to store multiple different versions of the firmware image (usually two). Next interrupt vector swap enables hardware support for quickly swapping multiple interrupt vectors in a simple cpu cycle, rather than multiple. Ram block swap is similar and allows blocks of memory to be swapped during execution e.g. function points. Finally, a hardware upgrade flag is used to indicates whether a live upgrade is in progress. \autocite{raoLiveSeamlessFirmware2023}
+
+First the controller boots into the latest firmware image on the appropriate flash bank. Upon update, the user generated request is processed in a background task and the new firmware is loaded onto the opposite flash bank. The main function the branches to the new main where the compiler generated initialisation routine is executed. This initializes any new variables and sets the hardware update register flag to indicate the update is in progress. Now the new firmware's main routine is executed, performing any variable transformations and initialisation. During this process all the previous control loop functions can still run. \autocite{raoLiveSeamlessFirmware2023}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[height=10cm]{raoLiveSeamlessFirmware2023_LfuFlow}
+    \caption[Application live firmware upgrade flow \autocite{raoLiveSeamlessFirmware2023}]
+    {Application live firmware upgrade flow \autocite{raoLiveSeamlessFirmware2023}}
+    \label{fig:raoLiveSeamlessFirmware2023_LfuFlow}
+\end{figure}
+
+The controller waits for the most optimal switchover point, between control interrupts. When ready interrupts are disabled, the hardware interrupt vector table and ram blocks swap and global interrupts are re-enabled finishing the upgrade process. \ref{fig:raoLiveSeamlessFirmware2023_LfuFlow} displays this process flow during software upgrade.
+
+\subsubsection*{Test Case}
+To validate the updates \textcite{raoLiveSeamlessFirmware2023}, implemented a DC-DC buck converter with a tightly regulated output voltage, typically used in server power supplies. These converters are often controlled using a digital power controller implemented on an microcontroller. A live update must complete within the  idle time between interrupts on the PSU, with less than 1us of switch time.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=12cm]{raoLiveSeamlessFirmware2023_Logic}
+    \caption[Live firmware upgrade switchover steps \autocite{raoLiveSeamlessFirmware2023}]
+    {Live firmware upgrade switchover steps \autocite{raoLiveSeamlessFirmware2023}}
+    \label{fig:raoLiveSeamlessFirmware2023_Logic}
+\end{figure}
+
+\subsubsection*{Evaluation}
+Some text
+Persistence of state
+Keeping static and global variable addresses consistent between firmware versions
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{lll}
+    Category & Score & Comments \\ \hline
+             &       &          \\
+             &       &         
+    \end{tabular}
+    \caption[Live \& Seamless Firmware Upgrade in Real Time Control Systems Evaluation]
+    {Live \& Seamless Firmware Upgrade in Real Time Control Systems Evaluation}
+    \label{tbl:raoLiveSeamlessFirmware2023Evaluation}
+\end{table}
+
+\clearpage
+
+% ----- CASE STUDY 2 -----
+
+\subsection{Dynamic Software Updates for Real-Time Systems} \label{caseStudy2}
+\autocite{wahlerDynamicSoftwareUpdates2009} defines a solution for updating component-based cyclic embedded systems, without violating real-time constraints. This implementation focused on using COTS operating systems rather than a bare-metal approach, specifically Integrity.
+
+\subsubsection*{Implementation}
+They used a custom component-based framework infrastructure on top of the operating system to execute software components, effectively an embedded middleware. Each component had its own address space with script separation and defined inputs and outputs. These components communicated using using message passing (channel buffers). A manager program (which was also an upgradable component) created and maintained the channels.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=8cm]{wahlerDynamicSoftwareUpdates2009_Function}
+    \caption[Updating component 'History' \autocite{wahlerDynamicSoftwareUpdates2009}]
+    {Updating component 'History' \autocite{wahlerDynamicSoftwareUpdates2009}}
+    \label{fig:wahlerDynamicSoftwareUpdates2009_Function}
+\end{figure}
+
+How to identify points in time when an update can occur
+System performs the checks at the end of every execution cycle
+
+The updated component is sent to the target machine using OS functionality in a low priority thread and this upload is detected by the component manager. When ready, the old component is told to exit and the channels are handed back to the manager. The new component then starts its operation with the correct channels attached. Once the upgrade begins in the main thread, it must complete before the end of the execution cycle.
+
+To enable state transfer, the component manager creates an area of shared memory that is passed to the components. Before a component terminates it writes its state to the area and adds appropriate version information. When a component is started, it reads the memory, assess if a state transformation must occur (that is present within the new components) and begins. To state transfer and execution must complete in one execution cycle.
+
+\subsubsection*{Test Case}
+The example application used to validate the dynamic software updates was an entirely virtual application. A test program known as \verb|Sensor| periodically sent the system clock value to the \verb|History| component. This component then stored a buffer of the previous 1000 values to test the state transfer.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=14cm]{wahlerDynamicSoftwareUpdates2009_History}
+    \caption[Updating component 'History' \autocite{wahlerDynamicSoftwareUpdates2009}]
+    {Updating component 'History' \autocite{wahlerDynamicSoftwareUpdates2009}}
+    \label{fig:wahlerDynamicSoftwareUpdates2009_History}
+\end{figure}
+
+\subsubsection*{Evaluation}
+Successful, maximum cycle frequency of about 300hz. sX
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{lll}
+    Category & Score & Comments \\ \hline
+             &       &          \\
+             &       &         
+    \end{tabular}
+    \caption[Dynamic Software Updates for Real-Time Systems Evaluation]
+    {Dynamic Software Updates for Real-Time Systems Evaluation}
+    \label{tbl:wahlerDynamicSoftwareUpdates2009Evaluation}
+\end{table}
+
+\clearpage
+
+% ----- CASE STUDY 3 -----
+
+\subsection{Disruption-free Software Updates in Automation Systems} \label{caseStudy3}
+Another approach to updating software at runtime without disruption was developed by \autocite{wahlerDisruptionfreeSoftwareUpdates2014}. This uses a component based architecture developed by ABB Corporate Research (FASA), shown in \autoref{fig:wahlerDisruptionfreeSoftwareUpdates2014_FASA}.
+
+\subsubsection*{Implementation}
+FASA defines function blocks that can be aggregated together to form a component, only compute components are stateful. These function blocks are executed cyclically at a desired frequency and connected by communication channels. A background thread with low priority performs the management actions. Multiple FASA systems are synchronised over the network using precision time protocol (PTP.) While no specific real-time operating systems are mentioned, it is assumed that this component infrastructure is compatible with POSIX.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=6cm]{wahlerDisruptionfreeSoftwareUpdates2014_FASA}
+    \caption[FASA system architecture \autocite{wahlerDisruptionfreeSoftwareUpdates2014}]
+    {FASA system architecture \autocite{wahlerDisruptionfreeSoftwareUpdates2014}}
+    \label{fig:wahlerDisruptionfreeSoftwareUpdates2014_FASA}
+\end{figure}
+
+First the component binaries are loaded using shared libraries (DLLs), it is assumed the components are already present in the system. Next, the system is configured using configurations that define the layout of the components and channels. State is transferred between components using Teach and Learn blocks, optional type conversions occurs in these Learn blocks. Multi-cycle state transfers are possible as the. Once all the controllers in the FASA network are ready to transfer to the new configuration, the switch command is issued by broadcasting an update request with a timestamp in the future.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=8cm]{wahlerDisruptionfreeSoftwareUpdates2014_State}
+    \caption[FASA state transformation \autocite{wahlerDisruptionfreeSoftwareUpdates2014}]
+    {FASA state transformation \autocite{wahlerDisruptionfreeSoftwareUpdates2014}}
+    \label{fig:wahlerDisruptionfreeSoftwareUpdates2014_State}
+\end{figure}
+
+\subsubsection*{Test Case}
+This software update component architecture was testing using a magnetic levitation experiment test case, which is an unstable physical process. Consisting of an electromagnet, position sensor and iron ball, the system operated at a frequency of 1kHz and used a simple PID controller to maintain a defined height for the ball.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=14cm]{wahlerDisruptionfreeSoftwareUpdates2014_Graph}
+    \caption[Measurements before/during/after software update \autocite{wahlerDisruptionfreeSoftwareUpdates2014}]
+    {Measurements before/during/after software update \autocite{wahlerDisruptionfreeSoftwareUpdates2014}}
+    \label{fig:wahlerDisruptionfreeSoftwareUpdates2014_Graph}
+\end{figure}
+
+\subsubsection*{Evaluation}
+Most through implementation
+Cyclic application execution
+State transfer mechanisms
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{lll}
+    Category & Score & Comments \\ \hline
+             &       &          \\
+             &       &         
+    \end{tabular}
+    \caption[Disruption-free Software Updates in Automation Systems Evaluation]
+    {Disruption-free Software Updates in Automation Systems Evaluation}
+    \label{tbl:wahlerDisruptionfreeSoftwareUpdates2014Evaluation}
+\end{table}
+
+\clearpage
+
+% ----- CASE STUDY 4 -----
+\subsection{A Model for Updating Real-Time Applications} \label{caseStudy4}
+Similar to the first \hyperref[caseStudy1]{case study} \autocite{montgomeryModelUpdatingRealTime2004} performs dynamic updates using function pointer swaps. However instead of using bare metal hardware support they use features of a UNIX like operating system (RT-Match) to load and swap the new modules.
+
+\subsubsection*{Implementation}
+The first step of an upgrade is producing a replacement module. This follows the typical edit, compile, link process of developing a binary but uses a pseudo-linker instead of a traditional UNIX linker. This special linker produces loadable executable modules (significant smaller), in contrast to a traditional linker which produces a new binary of an entire application. The custom linker takes the previous binary as an input in order to calculate the differences in the symbol table.
+
+The new module is loaded into the previous program's heap memory section, rather than the text section because the heap is dynamic. The previous application must have support for loading this module into memory. Transfer of execution occurs using pointer-function variables, whereby pointers pointing to functions in memory space are dereferenced. These pointers simply need to be updated to switch execution to a new function. This method of transfer can also be applied to upgrading a multi-threaded application.
+
+This process relies upon the old program implementing the module load function, and using pointer-function variables.
+
+\subsubsection*{Test Case}
+Before testing this application, Montgomery performed offline timing analysis of the entire software upgrade system. Specifically they used the generalized fault-tolerant rate monotonic scheduling algorithm (GFTRMS) \autocite{ghoshFaultTolerantRateMonotonicScheduling1998} to perform the analysis. Next Montgomery created a simple application 
+
+\subsubsection*{Evaluation}
+Heap is not write protected, security risk
+5.6 microseconds on a moderately equipped
+Not an external testing method.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{lll}
+    Category & Score & Comments \\ \hline
+             &       &          \\
+             &       &         
+    \end{tabular}
+    \caption[A Model for Updating Real-Time Applications Evaluation]
+    {A Model for Updating Real-Time Applications Evaluation}
+    \label{tbl:montgomeryModelUpdatingRealTime2004}
+\end{table}
+
+\clearpage
