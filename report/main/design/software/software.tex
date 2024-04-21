@@ -3,7 +3,7 @@
 % first thing a high level system diagram
 
 \subsection{Architecture}
-The following designs elaborate upon the defined software infrastructure requirements, explaining how the components, messages and task lists will integrate together to enable dynamic updates.
+The following designs elaborate upon the defined software infrastructure requirements, explaining how the components, messages and task lists will integrate together to enable dynamic software updates.
 
 % overall concepts
 
@@ -34,7 +34,7 @@ The state operations (\verb|loadState|, \verb|saveState|, \verb|resetState|) can
 
 In addition, a static function \verb|run| shall be provided by the component package, outside the abstract class. This contains the functionality to complete processing with the services/scheduler and creates the component executable.
 
-\newpage
+\clearpage
 
 \subsubsection{Scheduling}
 To run the component at the correct times, the software infrastructure will implement a cyclic schedule (\ref{item:reqSIComp}). This schedule will use an arrangement of major and minor frames to alternate different sub-schedules. 
@@ -99,9 +99,39 @@ Within a major frame, there are several minor frames. Each minor frame contains 
 The configuration shown in \autoref{fig:schedFrameCollection} displays an example major-minor frame schedule. The main cyclic schedule runs at 1000Hz because of the $1000\mu s$ major frame deadline. Component $a$ operates at 1000Hz as it is present in every major frame. Component $b$ and $c$ both execute at 333.3Hz as they are present in $1/3$ of the frames. The arrow at the end of the frame represents the slack time available at the end of each cycle.
 
 As the low-level runtime environment is not yet determined, the scheduler shall use an event based cyclic scheduler. This is a simple scheduler that sends 'request' along a communication medium for a component to execute. When requested, the component immediately executes.
+
+The scheduler concepts resolves dynamic software synchronisation issues from section \ref{sec:synchronisation}. The software infrastructure has fine grain control of when components execute so even during updates, all components can be synchronised.
     
+\clearpage
+
+\subsubsection{State Synchronisation}
+State synchronisation shall take state from one component (in the form of a byte array) and copy it to another component. This design solves state transformation issues highlighted in section \ref{sec:state}.
+
+By default all components shall send their current state to the synchronisation software, which stores all states. Only when a synchronisation map is added plus activated, describing the source and destination components, will the state buffers be copied. \autoref{fig:stateSyncSoftwareArchietcture} shows an example state synchronisation between an old component ($Component$) and its new version ($Component^{\prime}$).
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}  
+        \node[block, text width=10cm, minimum height=1cm] (core) {State Synchronisation}; 
+
+        \node[block, minimum height=1cm, above=1cm of core, xshift=-3cm] (comp1) {$Component$}; 
+
+        \node[block, minimum height=1cm, above=1cm of core, xshift=3cm] (comp2) {$Component^{\prime}$};  
+
+        \draw[->,thick] (comp1.south) -- ([xshift=-3cm]core.north);
+
+        \draw[<-,thick] (comp2.south) -- ([xshift=3cm]core.north);
+
+        \draw[->,thick,dashed] ([xshift=-3cm]core.south) -- ([xshift=-3cm,yshift=-1cm]core.south) -- ([xshift=3cm,yshift=-1cm]core.south) -- ([xshift=3cm]core.south);
+
+    \end{tikzpicture}  
+    \caption[State synchronisation software architecture]
+    {State synchronisation software architecture}
+    \label{fig:stateSyncSoftwareArchietcture}
+\end{figure}
+
 \subsubsection{Communications}
-To implement \autoref{item:reqSIMessRoute} the software infrastructure shall implement a message router within the software infrastructure. Every communication pathway will be statically defined in configurations to facilitate the dynamic software update process. When components are upgraded, their communications shall be modified in software to handover control. This design choice directly resolves the hardware handover issue with live software updates.
+To implement \autoref{item:reqSIMessRoute} the software infrastructure shall implement a message router within the software infrastructure. Every communication pathway will be statically defined in configurations to facilitate the dynamic software update process. When components are upgraded, their communications shall be modified in software to handover control. Hence, this design choice directly resolves the hardware handover issue with live software updates in section \ref{sec:hardware}.
 
 \autoref{fig:communicationSoftwareArchietcture} displays how a communication configuration may look with the message router. Two components are connected together with two separate routes and channels for bidirectional communication. One component is connected directly to an edge device with a single channel and another component is connected to an external message router.
 
@@ -223,7 +253,9 @@ The \verb|run| procedure should be called by the runner automatically, this take
 \clearpage
 
 \subsection{Management}
-The principals described in the software architecture are realised by the management program. This implements the scheduler, message router, state synchronisation utilities and an interface to configure the system.
+The concepts described in the software architecture are realised by the management program. This implements the scheduler, message router, state synchronisation utilities and an interface to configure the system.
+
+This program runs a cyclic control loop at a configured frequency executing the various components and services in the order, scheduler, router, state synchronisation, management.
 
 \subsubsection{Global State}
 The global state maintains a view of the entire system so that all services can use this data. \autoref{fig:umlGlobalStateClass} shows this state class with the associated methods to modify the data.
@@ -272,12 +304,12 @@ The global state maintains a view of the entire system so that all services can 
 
 Explanation of what all that actually does\dots
 
-\clearpage
-
 \subsubsection{Task Lists}
 The software infrastructure shall be configured using task lists, with each task representing a number of actions that should be performed on the system.
 
-As some actions may be long running and take multiple execution cycles to complete there shall be two classes of action, blocking and non-blocking. A blocking action must complete in a single execution and a non-blocking action can take multiple execution cycles to finish. This ensures that the system can maintain application real-time guarantees while performing complex management tasks.
+As some actions may be long running and take multiple execution cycles to complete. Therefore there shall be two classes of action, blocking and non-blocking. A blocking action must complete in a single execution cycle and a non-blocking action can take multiple execution cycles to finish.
+
+All blocking actions within a task should complete in a single execution cycle. This is so that when the system begins the next execution cycle, the configuration is always in a defined (valid) state. Blocking actions are designed to be practically instant and simply modify the in-memory configuration. This enables the real-time dynamic software updates as switching configurations should not a significant amount of time out of the main schedule (section \ref{sec:optimal}).
 
 The following actions configure components, the schedule, message routes and state synchronisation.
 
@@ -314,20 +346,18 @@ The following actions configure components, the schedule, message routes and sta
     \item [Wait State Synchronisation] - \textit{Non-Blocking} - Start synchronising state, wait until complete before finishing.
 \end{description}
 
-Blocking, actions quick so that can be sued to update
-Never in an undefined state.
+
 
 An alternative approach to task-lists could implement scheduler-like functionality into the management. Rather than providing fine-grained actions/tasks, high level actions such as 'update component' could be provided. The management could then calculate the steps required to perform such actions. This design decision was not taken to reduce the complexity of the management software and to reduce the amount of software developed. As no low-level action generation was required to take place automatically, these configurations could be hand-made by the developer. This is suitable for a small system with limited applications.
 
 \clearpage
 
 \subsubsection{Background Thread}
+Some non-blocking actions cannot be simply subdivided across a number of execution cycles as they interface with external software. For example, calls to modify an operating systems schedule priorities may take a 'long' period of time to return.
 
-Non-blocking actions
+Therefore a background thread is required to perform these long running tasks in the background. The main management thread shall communicate with the background thread using a queue, whereby new tasks are placed in a queue and finished tasks are placed in another. To keep track of the state of the non-blocking actions in the management the state machine in \autoref{fig:actionStateStateMachine} is used. Every non-blocking task must implement these states.
 
-When executed use a finite state machine.
-
-Each task implements these states
+All actions start in the \verb|Started| state and move through the states one at a time until completed. At this point the task is removed off the buffer and the next non-blocking task can start.
 
 \begin{figure}[ht]
     \centering
@@ -375,11 +405,7 @@ The three non-blocking actions implement the state machine. Not all the states a
 \end{description}
 
 \subsubsection{Control}
-How the management is controlled with components
-
-The two extra classes
-
-\clearpage
+To configure which task list is loaded the management program must accept communications from component or external devices. Adding 'management' as an alternative endpoint type to component and edge is a simple way to integrate this into the message router.
 
 \subsection{Structure}
 
@@ -390,8 +416,8 @@ Separate core library with management
 \clearpage
 \input{main/design/software/walkthrough}
 
-\clearpage
-\input{main/design/software/plant}
+% \clearpage
+% \input{main/design/software/plant}
 
 % \clearpage
 % \input{main/design/software/uml.tex}
@@ -400,68 +426,12 @@ Separate core library with management
 % \input{main/design/software/drone.tex}
 
 
-\clearpage
+% \clearpage
 
-\subsection{Test Harness}
+% \subsection{Test Harness}
 
-The intention for this software was to also use Rust, however we could not get the Rust libaries for the W5500 working quickly, sure with extra time with sould have been possible.
-To simplify this software the arduino development environment was used. This as all the drivers for the w5500 are integrated in arduino libraries.
+% The intention for this software was to also use Rust, however we could not get the Rust libaries for the W5500 working quickly, sure with extra time with sould have been possible.
+% To simplify this software the arduino development environment was used. This as all the drivers for the w5500 are integrated in arduino libraries.
 
 
 % Extra info at the end about how would work in drone
-
-% \begin{itemize}
-%     \item Create Component \textbf{Non-Blocking}
-%     \begin{itemize}
-%         \item Component Identifier
-%     \end{itemize}
-%     \item Start Component \textbf{Blocking}
-%     \begin{itemize}
-%         \item Component Identifier
-%     \end{itemize}
-
-%     \item Stop Component \textbf{Blocking}
-%     \begin{itemize}
-%         \item Component Identifier
-%     \end{itemize}
-
-%     \item Remove Component \textbf{Non-Blocking}
-%     \begin{itemize}
-%         \item Component Identifier
-%     \end{itemize}
-    
-%     \item Add Route \textbf{Blocking}
-%     \begin{itemize}
-%         \item Component Identifier
-%     \end{itemize}
-
-%     \item Remove Route \textbf{Blocking}
-%     \begin{itemize}
-%         \item Component Identifier
-%     \end{itemize}
-
-%     \item Set Schedule \textbf{Blocking}
-%     \begin{itemize}
-%         \item Component Identifier
-%     \end{itemize}
-
-%     \item Add State Synchronisation \textbf{Blocking}
-%     \begin{itemize}
-%         \item Component Identifier
-%     \end{itemize}
-
-%     \item Remove State Synchronisation \textbf{Blocking}
-%     \begin{itemize}
-%         \item Component Identifier
-%     \end{itemize}
-    
-%   \end{itemize}
-
-
-% middleware
-    % message passing
-    % scheduler
-    % state sync
-    % configuration
-        % background thread
-        % state machines
