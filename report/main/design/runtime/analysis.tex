@@ -9,16 +9,19 @@
 
 To select the most optimal environment to develop the software infrastructure upon, a series of benchmarking activities were carried out. These focused on evaluating the operating systems and hypervisors which could operate in a real time environment. The search was restricted to free and open source software which supported the CM4.
 
+% Comparing straight linux and linux +  Xen should give us a good method to estimate the specific latencies brough about by Xen.
+
 \subsubsection{Test Suite}
 There are several tools that can be used to analyse the real-time performance of an operating system. RT-Tests is a test suite that contains programs to test the various real-time linux features.
 
 The RT-Tests suite includes a cyclictest program. This is a simple yet effective program that can be used to estimate the real time latencies in a system. It measures real time jitter by creating a interrupt event at a specific time in the future and measuring the time delay between the requested wake-up and actual wake-up time. While this provides a good method for identifying operating system induced latency and jitter it does not isolate latencies induced by hardware or low-level firmware. At this stage it can be assumed that the selected development targets do not induce significant latencies.
 
 % histogram
-
 % 100us is "good"
 
 % Stress-ng
+Another tool that can be used during real-time testing is stress-ng (stress next generation) from \textcite{kingColinIanKingStressng2024}. 
+
 Under load rt-characterisics change
 
 \subsubsection{Previous Work}
@@ -28,12 +31,15 @@ Under load rt-characterisics change
 
 The study found that the KVM hypervisor would be suitable for serving real-time workloads with worst-case latencies under 100 $\mu$s. This is applicable only when using RT kernels on both the guest and host. Likewise when using the Xen hypervisor the RT kernels on both the guest and host must also be used. Para-virtualised (PV) guests performed well but fully virtualised (HVM) guests 
 
+% EXPAND THIS
+
 % How it applies and differs from our tests
 For the purpose of this project the real-time performance on an Arm64 target, the chosen development target, must be specifically analysed. It was reasonable to expect that the performance characteristics may be different between the processor architectures due to the implementation of virtualisation extensions. This analysis compared the behaviour of 'bare metal' Linux and the Xen hypervisor, not including KVM.
 
-
-
 \clearpage
+
+\subsubsection{Linux}
+
 To set a baseline the real-time behaviour of Linux with the standard PREEMPT kernel was tested with different artificial loads in the system. Each test ran for exactly 1 hour collecting latency information at an interval of $100{\mu}s$.
 
 Figure \autoref{fig:linux-i100-1h-allcores} displays that when not under load, the standard Linux kernel performs well in a real-time environment. However as soon as load was introduced into the system \autoref{fig:linux-i100-1h-allcores-sc4} and \autoref{fig:linux-i100-1h-allcores-sm4} the real time performance was significantly worse.
@@ -80,7 +86,7 @@ The following tests in \autoref{fig:linux-rt-i100-1h-allcores}, \autoref{fig:lin
 
 \clearpage
 
-\textbf{Compare}
+\textbf{Evaluation}
 
 However when the system was under load the differences between the kernel's schedulers became apparent.
 
@@ -105,6 +111,8 @@ Especially so for memory stress versus cpu stress.
 \end{figure}
 
 \clearpage
+
+\subsubsection{Xen Hypervisor}
 
 After validating the Linux kernel's real-time response  
 
@@ -135,3 +143,7 @@ The first experiments were performed on the linux kernel running without a hyper
 % \end{figure}
 
 % Xen Scheduler (Credit vs )
+
+\textbf{Evaluation}
+
+Some text

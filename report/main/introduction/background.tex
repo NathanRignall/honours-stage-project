@@ -100,6 +100,9 @@ Rather type 2 hypervisors negotiate resource allocation with the operating syste
 % types
 A fully virtualized hypervisor emulates privileged instructions and I/O operations, abstracting the hardware resources from the virtual machine. The guest operating system therefore requires no modifications as it is unaware of the virtualisation. In contrast, with para-virtualization the guest operating system requires significant modifications and is aware of the underlying hardware. Hardware assisted virtualisation uses additional CPU instructions to isolate virtual machines in a hypervisor, for example AMD-V \autocite{liSurveyVirtualMachine2010}.
 
+% TODO
+Maybe add a word about containerization here too....
+
 \subsection{Mixed Criticality}
 Mixed criticality refers to heterogeneous software with mixed software integrities running on a shared hardware platform. Virtualisation technology is often used to isolate this software, even in a real-time environment. \autocite{guStateoftheArtSurveyRealTime2012}.
 
