@@ -20,7 +20,7 @@
 
 There are two main components of a DIMA system, the processing nodes and the edges. The nodes run the main application software while the edges collect/send data from a variety of sensors/actuators. To apply dynamic software updates to a DIMA system, the focus should be within the processing nodes as that is where the majority of compute takes place.
 
-A component-based software infrastructure solution was selected for the central processing nodes. This was to enable multiple inter-connected applications to run on a single system. There were also many mature designs, such as FASA, that implement such dynamic software updates in a component system that a new design could be based off. A message-based approach was selected to connect different components with other components and edges. This was a simple technique that enables atomic control of data flow within the system, important for firmware upgrades. This design choice is analysed in more detail in the design section.
+A component-based software infrastructure solution was selected for the central processing nodes. This was to enable multiple inter-connected applications to run on a single system. There were also many mature designs, such as FASA, that implement such dynamic software updates in a component system that a new design could be based off. A message-based approach was selected to connect different components with other components and edges. This was a simple technique that enables atomic control of data flow within the system, important for firmware upgrades. This design choice is analysed in more detail in section \ref{sec:designArch}.
 
 % Why channels, what static 
 
@@ -126,14 +126,7 @@ While the test harness is designed to evaluate the real-time behaviour of the sy
 
 \resume{srsitems}
     \item The demonstration application 
-    \item 
-    \begin{srsitems} 
-        \item The test harness must use independent software and hardware from the core infrastructure to verify the results.
-        \item The test harness must use a hard real-time platform to measure timings, for example a microprocessor.
-        \item The test harness must be paired with an analysis tool to visualize and analyze the measured data.
-    \end{srsitems}
-
-    \item An example software component, that is executed on the software infrastructure must interface with the test harness.
+    \item Something more here...
 \end{srsitems}
 
 % demo apps
@@ -155,5 +148,5 @@ model a mass falling due to gravity
     \item The development hardware must use dedicated hardware and not be virtualized.
     \item The development hardware must have hardware support for ethernet networking.
     \item The development hardware must support Linux and at least one open source hypervisor.
-    \item The development hardware 
+    \item The development hardware...
 \end{hrsitems}

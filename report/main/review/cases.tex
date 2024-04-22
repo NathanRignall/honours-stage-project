@@ -1,16 +1,13 @@
 \section{Case Studies}
 
-mention two different 'types' of updates vector swap and component
-% There are two 
+\subsection{Review Criteria}
+To evaluate existing implementations of dynamic software updates in a real-time control system the following categories were selected. These specifically targeted the problems associated with implementing 'live' updates in real-time system.
 
 While the source code for these implementations was not public, the respective papers were used to summarise the different techniques that could be used.
 
-\subsection{Review Criteria}
-To evaluate existing implementations of dynamic software updates in a real-time control system the following categories were selected. These specifically targeted the problems associated with implementing 'live' updates in real-time system. 
-
 \subsubsection{Hardware Handover} \label{sec:hardware}
 
-Most hardware devices do not understand the concept of real-time software updates where new software rapidly starts and stops during operation. This is especially the case with software drivers for hardware. The process of handling this shall be known as hardware handover. Solutions can either implement hardware and/or software to compensate for this issue. 
+Most hardware devices do not understand the concept of real-time software updates where new software rapidly starts and stops during operation. This is especially the case with software drivers for hardware. The process of handling this shall be known as hardware handover. Solutions can either implement \textbf{hardware} and/or \textbf{software} to compensate for this issue. 
 
 Software is also not usually designed to cope with this. \autoref{fig:problemHardwareHandover} shows how the hardware connections are changed to the $Controller$ software during an update. At points in time, the software is neither connected to sensors or actuator. Developed software must be designed to either never execute in this scenario or understand that it does not have control.
 
@@ -77,7 +74,7 @@ Software is also not usually designed to cope with this. \autoref{fig:problemHar
 
 \clearpage
 
-\subsubsection{Synchronisation} \label{sec:synchronisation}
+\subsubsection{Clock Synchronisation} \label{sec:synchronisation}
 The next challenge with real-time software updates is clock synchronisation. During the update process it is important that new software continues in the same execution cycle as the previous software. \autoref{fig:problemSynchronisation} displays how an incorrectly synchronised application can be detrimental to the real-time performance of a system.
 
 The new software component ({$Controller^{\prime}$}) starts out of sync relative to the sensor and and actuator that both operate at a fixed schedule. This results in the end-to-end latency of the system effectively doubling.
@@ -129,8 +126,8 @@ Solutions can either synchronise new software components with old software compo
         \draw [->] (control4p) -- (output4);
 
     \end{tikzpicture}  
-    \caption[Software component synchronisation]
-    {Software component synchronisation}
+    \caption[Software component clock synchronisation]
+    {Software component clock synchronisation}
     \label{fig:problemSynchronisation}
 \end{figure}
 
@@ -199,7 +196,7 @@ First the controller boots into the latest firmware image on the appropriate fla
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[height=10cm]{raoLiveSeamlessFirmware2023_LfuFlow}
+    \includegraphics[height=7cm]{raoLiveSeamlessFirmware2023_LfuFlow}
     \caption[Application live firmware upgrade flow \autocite{raoLiveSeamlessFirmware2023}]
     {Application live firmware upgrade flow \autocite{raoLiveSeamlessFirmware2023}}
     \label{fig:raoLiveSeamlessFirmware2023_LfuFlow}
@@ -225,10 +222,12 @@ Keeping static and global variable addresses consistent between firmware version
 
 \begin{table}[ht]
     \centering
-    \begin{tabular}{lll}
-    Category & Score & Comments \\ \hline
-             &       &          \\
-             &       &         
+    \begin{tabular}{l|l}
+    Category & Rating  \\ \hline
+    Hardware Handover & \textbf{n/a} \\
+    Clock Synchronisation & \textbf{n/a} \\
+    State Continuity & \textbf{synchronisation}, \textbf{transformation}, \textbf{internal} \\
+    Optimal Time & \textbf{optimal} 
     \end{tabular}
     \caption[Live \& Seamless Firmware Upgrade in Real Time Control Systems Evaluation]
     {Live \& Seamless Firmware Upgrade in Real Time Control Systems Evaluation}
@@ -240,7 +239,7 @@ Keeping static and global variable addresses consistent between firmware version
 % ----- CASE STUDY 2 -----
 
 \subsection{Dynamic Software Updates for Real-Time Systems} \label{caseStudy2}
-\autocite{wahlerDynamicSoftwareUpdates2009} defines a solution for updating component-based cyclic embedded systems, without violating real-time constraints. This implementation focused on using COTS operating systems rather than a bare-metal approach, specifically Integrity.
+\textcite{wahlerDynamicSoftwareUpdates2009} defines a solution for updating component-based cyclic embedded systems, without violating real-time constraints. This implementation focused on using COTS operating systems rather than a bare-metal approach, specifically Integrity.
 
 \subsubsection*{Implementation}
 They used a custom component-based framework infrastructure on top of the operating system to execute software components, effectively an embedded middleware. Each component had its own address space with script separation and defined inputs and outputs. These components communicated using using message passing (channel buffers). A manager program (which was also an upgradable component) created and maintained the channels.
@@ -265,20 +264,22 @@ The example application used to validate the dynamic software updates was an ent
 \begin{figure}[ht]
     \centering
     \includegraphics[width=14cm]{wahlerDynamicSoftwareUpdates2009_History}
-    \caption[Updating component 'History' \autocite{wahlerDynamicSoftwareUpdates2009}]
-    {Updating component 'History' \autocite{wahlerDynamicSoftwareUpdates2009}}
+    \caption[Testing update of component 'History' \autocite{wahlerDynamicSoftwareUpdates2009}]
+    {Testing update of component 'History' \autocite{wahlerDynamicSoftwareUpdates2009}}
     \label{fig:wahlerDynamicSoftwareUpdates2009_History}
 \end{figure}
 
 \subsubsection*{Evaluation}
-Successful, maximum cycle frequency of about 300hz. sX
+Successful, maximum cycle frequency of about 300hz.
 
 \begin{table}[ht]
     \centering
     \begin{tabular}{lll}
-    Category & Score & Comments \\ \hline
-             &       &          \\
-             &       &         
+        Category & Rating  \\ \hline
+        Hardware Handover & \textbf{n/a} \\
+        Clock Synchronisation & \textbf{n/a} \\
+        State Continuity & \textbf{synchronisation}, \textbf{transformation}, \textbf{internal} \\
+        Optimal Time & \textbf{fast}     
     \end{tabular}
     \caption[Dynamic Software Updates for Real-Time Systems Evaluation]
     {Dynamic Software Updates for Real-Time Systems Evaluation}
@@ -290,7 +291,7 @@ Successful, maximum cycle frequency of about 300hz. sX
 % ----- CASE STUDY 3 -----
 
 \subsection{Disruption-free Software Updates in Automation Systems} \label{caseStudy3}
-Another approach to updating software at runtime without disruption was developed by \autocite{wahlerDisruptionfreeSoftwareUpdates2014}. This uses a component based architecture developed by ABB Corporate Research (FASA), shown in \autoref{fig:wahlerDisruptionfreeSoftwareUpdates2014_FASA}.
+Another approach to updating software at runtime without disruption was developed by \textcite{wahlerDisruptionfreeSoftwareUpdates2014}. This uses a component based architecture developed by ABB Corporate Research (FASA), shown in \autoref{fig:wahlerDisruptionfreeSoftwareUpdates2014_FASA}.
 
 \subsubsection*{Implementation}
 FASA defines function blocks that can be aggregated together to form a component, only compute components are stateful. These function blocks are executed cyclically at a desired frequency and connected by communication channels. A background thread with low priority performs the management actions. Multiple FASA systems are synchronised over the network using precision time protocol (PTP.) While no specific real-time operating systems are mentioned, it is assumed that this component infrastructure is compatible with POSIX.
@@ -345,7 +346,7 @@ State transfer mechanisms
 
 % ----- CASE STUDY 4 -----
 \subsection{A Model for Updating Real-Time Applications} \label{caseStudy4}
-Similar to the first \hyperref[caseStudy1]{case study} \autocite{montgomeryModelUpdatingRealTime2004} performs dynamic updates using function pointer swaps. However instead of using bare metal hardware support they use features of a UNIX like operating system (RT-Match) to load and swap the new modules.
+Similar to the first \hyperref[caseStudy1]{case study}, \textcite{montgomeryModelUpdatingRealTime2004} performs dynamic updates using function pointer swaps. However instead of using bare metal hardware support they use features of a UNIX like operating system (RT-Match) to load and swap the new modules.
 
 \subsubsection*{Implementation}
 The first step of an upgrade is producing a replacement module. This follows the typical edit, compile, link process of developing a binary but uses a pseudo-linker instead of a traditional UNIX linker. This special linker produces loadable executable modules (significant smaller), in contrast to a traditional linker which produces a new binary of an entire application. The custom linker takes the previous binary as an input in order to calculate the differences in the symbol table.
