@@ -20,9 +20,7 @@ The RT-Tests suite includes a cyclictest program. This is a simple yet effective
 % 100us is "good"
 
 % Stress-ng
-Another tool that can be used during real-time testing is stress-ng (stress next generation) from \textcite{kingColinIanKingStressng2024}. 
-
-Under load rt-characterisics change
+Another tool that can be used during real-time testing is stress-ng (stress next generation) from \textcite{kingColinIanKingStressng2024}. This program can put artificial loads onto a Linux system. While stained memory and cpu pressures are unlikely in a real application scenario it is important to ensure that the real-time characteristics of an OS don't significantly change.
 
 \subsubsection{Previous Work}
 
@@ -132,6 +130,8 @@ Multi core interference
 
 The first experiments were performed on the linux kernel running without a hypervisor.
 
+(HAVE DATA FOR ALL THIS JUST NEED TO WRITE UP)
+
 % The next experiments used a real-time linux kernel.
 
 % \begin{figure}[ht]
@@ -146,4 +146,6 @@ The first experiments were performed on the linux kernel running without a hyper
 
 \textbf{Evaluation}
 
-Some text
+Bare linux was best.
+
+Xen added some latency but was not terrible.

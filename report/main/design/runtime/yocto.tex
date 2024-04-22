@@ -1,13 +1,22 @@
 \graphicspath{{main/design/software/graphics/}}
 
-
 \subsection{Operating Systems}
-RT Linux Kernel
 
-Linux
-VxWorks
-FreeRTOS
-Zephyr
+\textcite{serinoSurveyRealTimeOperating2019} compiled a comparison of the differences between VxWorks, RTLinux and FreeRTOS. 
+
+RTLinux - General perpous 
+
+VxWorks - commerical hard real time operating system
+
+FreeRTOS - open source hard real time
+
+
+Alternatively the PREEMPT\_RT patch is available for mainline Linux, that aims to minimise the amount of kernel code that is non-preemptible  \autocite{RealtimeDocumentationStart}. The patch prefers deterministic behaviour over throughout and makes a number of changes to the kernel including replacing kernel locks with rtmutexes. However some resource management functions (memory management) have indeterminate maximum latencies. This patch results in a soft real-time operating system as the kernel is not designed to guarantee deadlines. \autocite{maddenChallengesUsingLinux2019}
+
+Although Linux with the RT patch was not strictly suitable for real-time applications it was chosen as the operating system for developing the software infrastructure. This was because Linux has a wide support for software libraries, build environments and has many user guides for development.
+Linux also supports containerization through cgroups and namespaces, which could be useful for creating the isolated processing environments \autocite{huynhKubernetesStoryLinux2023}. In case of a real deployment, the software should use a more suitable operating system such as VxWorks. Both OS's are Unix-like so should porting the software should be fairly trivial.
+
+% If required real-time not certified a certified operating system
 
 \subsection{Hypervisors}
 
@@ -18,7 +27,6 @@ This is because KVM is implemented on top of the Linux kernel.
 To reap the benefits of dynamic updates it is preferred that the hypervisor is independent of the operating system (explain why).
 Also, in a true real-time system it is unusual to use linux. Rather a more preferable OS such as Zephyr or FreeRTOS (Free and open source solutions used.)
 
-Comparing straight linux and linux +  Xen should give us a good method to estimate the specific latencies brough about by Xen.
 
 \autocite{ayresVirtualisationMeansDynamic2019} completed a short study into the different available virtualisation technologies for embedded safety critical systems.
 
@@ -36,22 +44,25 @@ EXPLAIN RT LINUX
 % virtual switch, arrangement of dom0 with hardware control
 
 \subsection{Build Process}
-
-
-% getting the software working
 All software images for the development cards were created using the Yocto Project build environment because of it's support for both Linux and Xen. Although some images for Linux were initially created manually, this process was exceptionally slow and an inefficient use of time.
 
 Yocto is an open source project that uses various layers to build an image using scripts.
 
-poky
-meta-openembedded
-meta-raspberrypi
-meta-virtualization
+\begin{itemize}
+    \item poky
+    \item meta-openembedded
+    \item meta-raspberrypi
+    \item meta-virtualization
+\end{itemize}
 
-meta-cm4-uboot-fix
-meta-rpi4-kernel
+\begin{itemize}
+    \item meta-cm4-uboot-fix
+    \item meta-rpi4-kernel
+\end{itemize}
 
-meta-rust-bin
-meta-app
+
+
+
+
 
 Use the uBoot boot loader.
