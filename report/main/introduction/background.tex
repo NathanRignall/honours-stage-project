@@ -49,7 +49,7 @@ A control system is a system that is designed to manage, regulate and stabilize 
     \label{fig:realTimeSystem}
 \end{figure}
 
-Sensors measure signals from the environment such as speed or pressure. Controllers take an input from a sensor a completes processing to determine the appropriate action. An example control algorithm is a Proportion-Integral-Derivative (PID) controller. Actuators are devices that receive an input and perform an action in an environment for example motors or values. \autocite{pazDesignPIDController2001}
+Sensors measure signals from the environment such as speed or pressure. Controllers take an input from a sensor and completes processing to determine the appropriate action. An example control algorithm is a Proportion-Integral-Derivative (PID) controller. Actuators are devices that receive an input and perform an action in an environment for example motors or values. \autocite{pazDesignPIDController2001}
 
 \begin{figure}[ht]
     \centering
@@ -60,24 +60,24 @@ Sensors measure signals from the environment such as speed or pressure. Controll
 \end{figure}
 
 % FIX THIS
-What actually is a PID controller?
+\textcolor{red}{What actually is a PID controller used for?}
 
 \newpage
 
 \subsection{Operating Systems}
-An Operating System (OS) is a piece of software that controls the execution of application programs on a system. Usually this involves managing resource allocations, such as a processor execution time, memory usage and generic inputs/outputs. \autocite{stallings2018operating}
+An Operating System (OS) is a piece of software that controls the execution of application programs on a hardware system. Usually this involves managing resource allocations, such as a processor execution time, memory usage and generic inputs/outputs. \autocite{stallings2018operating}
 
 % REFERENCE THIS
-In order to develop a real-time applications with an OS, a RTOS (Real-Time Operating System) is usually required. This is to ensure the time deadlines of an application are enforced.
-Hard real time operating system are designed to run applications with absolute timing
-Worst-Case Execution Time
+In order to develop a real-time applications with an OS, a RTOS (Real-Time Operating System) is usually required. This is to ensure the time deadlines for an application are enforced.
+Hard real time operating system are designed to run applications with absolute timing.
+\textcolor{red}{Worst-Case Execution Time
 Assigned a relative deadline, all tasks must complete in their deadline.
 Modelled mathematically to ensure that all tasks run to completion
-Define the maximum delay after a deadline
+Define the maximum delay after a deadline}
 
 % FIX THIS
-The Portable Operating System Interface (POSIX) is a set of standards that define the interface between Unix-like operating systems and applications. Unix is an operating system 
-Collection of tools that are also present on linux
+The Portable Operating System Interface (POSIX) is a set of standards that define the interface between Unix-like operating systems and applications. \textcolor{red}{Unix is an operating system 
+Collection of tools that are also present on linux}
 
 \subsection{Virtualization}
 % intro
@@ -101,7 +101,7 @@ Rather type 2 hypervisors negotiate resource allocation with the operating syste
 A fully virtualized hypervisor emulates privileged instructions and I/O operations, abstracting the hardware resources from the virtual machine. The guest operating system therefore requires no modifications as it is unaware of the virtualisation. In contrast, with para-virtualization the guest operating system requires significant modifications and is aware of the underlying hardware. Hardware assisted virtualisation uses additional CPU instructions to isolate virtual machines in a hypervisor, for example AMD-V \autocite{liSurveyVirtualMachine2010}.
 
 % TODO
-Maybe add a word about containerization here too....
+\textcolor{red}{Maybe add a word about containerization here too...}.
 
 \subsection{Mixed Criticality}
 Mixed criticality refers to heterogeneous software with mixed software integrities running on a shared hardware platform. Virtualisation technology is often used to isolate this software, even in a real-time environment. \autocite{guStateoftheArtSurveyRealTime2012}.
@@ -114,7 +114,7 @@ There is no one definition for middleware used in embedded systems. It is usuall
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=12cm]{middleware}
+    \includegraphics[width=8cm]{middleware}
     \caption[Embedded systems middleware models \autocite{ednEmbeddedOperatingSystems2013}]
     {Embedded systems middleware models \autocite{ednEmbeddedOperatingSystems2013}}
     \label{fig:embeddedSystemsMiddleware}
@@ -127,7 +127,7 @@ The goal of middleware is to make software components more portable and flexible
 
 \subsection{Integrated Modular Avionics (IMA)}
 % intro
-Avionics are a category of electronic systems that are specifically design for use in aircraft. 
+Avionics are a category of electronic systems that are specifically designed for use in aircraft. 
 There are several architectures that are used in avionics. Middleware solutions are often used in this scenario for the benefits of software portability. \autocite{darweshDemonstratorVerificationSelective2018}
 
 % federated

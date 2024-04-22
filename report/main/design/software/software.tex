@@ -3,7 +3,7 @@
 % first thing a high level system diagram
 
 \subsection{Architecture} \label{sec:designArch}
-The following designs elaborate upon the defined software infrastructure requirements, explaining how the components, messages and task lists will integrate together to enable dynamic software updates.
+The following designs elaborate upon the defined software infrastructure requirements, explaining how components, messages and task lists will integrate together to enable dynamic software updates.
 
 % overall concepts
 
@@ -39,7 +39,7 @@ In addition, a static function \verb|run| shall be provided by the component pac
 \subsubsection{Scheduling}
 To run the component at the correct times, the software infrastructure will implement a cyclic schedule (\ref{item:reqSIComp}). This schedule will use an arrangement of major and minor frames to alternate different sub-schedules. 
 
-All major frames have the same configured deadline, this determines the main control frequency. Major frames alternate so that different components can execute at different frequencies. For example if a schedule contained three major frames, and a component was present only in one major frame, it would run x3 the frequency of the main schedule.
+All major frames have the same configured deadline, this determines the main control frequency. Major frames alternate so that different components can execute at different frequencies. For example if a schedule contained four major frames, and a component was present only in one major frame, it would run $1/4$ the frequency of the main schedule.
 
 Within a major frame, there are several minor frames. Each minor frame contains a single component execution and a configured deadline. If a component exceeds its deadline, its execution shall be paused and resumed in the next iteration. This is to maintain soft real time guarantees.
 
@@ -302,14 +302,14 @@ The global state maintains a view of the entire system so that all services can 
     \label{fig:umlGlobalStateClass}
 \end{figure}
 
-Explanation of what all that actually does?
+\textcolor{red}{Explanation of what all that actually does?}
 
 \subsubsection{Task Lists}
 The software infrastructure shall be configured using task lists, with each task representing a number of actions that should be performed on the system.
 
-As some actions may be long running and take multiple execution cycles to complete. Therefore there shall be two classes of action, blocking and non-blocking. A blocking action must complete in a single execution cycle and a non-blocking action can take multiple execution cycles to finish.
+Some actions may be long running and take multiple execution cycles to complete. Therefore there shall be two classes of action, blocking and non-blocking. A blocking action must complete in a single execution cycle and a non-blocking action can take multiple execution cycles to finish.
 
-All blocking actions within a task should complete in a single execution cycle. This is so that when the system begins the next execution cycle, the configuration is always in a defined (valid) state. Blocking actions are designed to be practically instant and simply modify the in-memory configuration. This enables the real-time dynamic software updates as switching configurations should not a significant amount of time out of the main schedule (section \ref{sec:optimal}).
+All blocking actions within a task should complete in a single execution cycle. This is so that when the system begins the next execution cycle, the configuration is always in a defined (valid) state. Blocking actions are designed to be practically instant and simply modify the in-memory configuration. This enables the real-time dynamic software updates as switching configurations should not take a significant amount of time out of the main schedule (section \ref{sec:optimal}).
 
 The following actions configure components, the schedule, message routes and state synchronisation.
 
@@ -355,7 +355,7 @@ An alternative approach to task-lists could implement scheduler-like functionali
 \subsubsection{Background Thread}
 Some non-blocking actions cannot be simply subdivided across a number of execution cycles as they interface with external software. For example, calls to modify an operating systems schedule priorities may take a 'long' period of time to return.
 
-Therefore a background thread is required to perform these long running tasks in the background. The main management thread shall communicate with the background thread using a queue, whereby new tasks are placed in a queue and finished tasks are placed in another. To keep track of the state of the non-blocking actions in the management the state machine in \autoref{fig:actionStateStateMachine} is used. Every non-blocking task must implement these states.
+Therefore a background thread is required to perform these long running tasks in the background. The main management thread shall communicate with the background thread using a queue, whereby new tasks are placed in a queue and finished tasks are placed in another. To keep track of the state of the non-blocking actions in the management thread the state machine in \autoref{fig:actionStateStateMachine} is used. Every non-blocking task must implement these states.
 
 All actions start in the \verb|Started| state and move through the states one at a time until completed. At this point the task is removed off the buffer and the next non-blocking task can start.
 
@@ -407,7 +407,7 @@ The three non-blocking actions implement the state machine. Not all the states a
 \subsubsection{Control}
 To configure which task list is loaded the management program must accept communications from component or external devices. Adding 'management' as an alternative endpoint type to component and edge is a simple way to integrate this into the message router.
 
-Explain channel 1 and 2 inputs?
+\textcolor{red}{Explain channel 1 and 2 inputs? Some example?}
 
 \clearpage
 \input{main/design/software/walkthrough}

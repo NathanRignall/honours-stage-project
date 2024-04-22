@@ -2,7 +2,7 @@
 
 \subsection{Development Cards}
 
-To build and test the real-time software dedicated development hardware was required to ensure an isolated testing environment. The Raspberry Pi 4 Compute Module 4 was selected as the development card of choice for its comprehensive software support for operating systems and hypervisors. The Compute Module 4 contains the same overall hardware as the standard Raspberry Pi 4 but is more suited to industrial environments, with the option for custom carrier boards. Exception being the ethernet IC and EMMC flash, which both caused issued when compiling the custom operating system and bootloader images.
+To build and test the real-time software dedicated development hardware was required to ensure an isolated testing environment. The Raspberry Pi 4 Compute Module 4 (CM4) was selected as the development card of choice for its comprehensive software support for operating systems and hypervisors. The Compute Module 4 contains the same overall hardware as the standard Raspberry Pi 4 but is more suited to industrial environments, with the option for custom carrier boards. \textcolor{red}{Exception being the ethernet IC and EMMC flash, which both caused issued when compiling the custom operating system and bootloader images.}
 
 Another requirement for the hardware was remote debugging support, with full power and data control. This was to ensure that development could take place away from the physical cards, remotely. To cater for the remote development the Pi KVM project was selected to control the cards. This was because it supported customisation of GPIO switches and could run on Raspberry Pi 4s that were also available.
 
@@ -113,11 +113,11 @@ To securely mount the development hardware together, a mounting bracket was desi
         \hline
     \end{tabular}
     \caption[Development hardware bill-of-materials]
-    {Development hardware bill-of-materials}
+    {Development hardware bill-of-materials \textcolor{red}{NOT DONE}}
     \label{tbl:DevelopmentHardwareBOM}
 \end{table}
 
-Two sets of hardware and frames were assembled and attached to a 1u rack shelf so that the hardware could be mounted inside a standard rack. The final shelf is displayed in \autoref{fig:DevelopmentHardwareRack} with two assembled cards.
+Two sets of hardware and frames were assembled and attached to a 1U rack shelf so that the hardware could be mounted inside a standard rack. The final shelf is displayed in \autoref{fig:DevelopmentHardwareRack} with two assembled cards.
 
 \begin{figure}[ht]
   \centering
@@ -126,6 +126,11 @@ Two sets of hardware and frames were assembled and attached to a 1u rack shelf s
   {Development hardware assembled}
   \label{fig:DevelopmentHardwareRack}
 \end{figure}
+
+
+\clearpage
+
+\textcolor{red}{Some info about KVM here...}
 
 \begin{figure}[ht]
     \centering

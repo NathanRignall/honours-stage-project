@@ -48,7 +48,7 @@ Test programs were executed on the target development hardware (CM4) with Linux 
 \subsection{Shared Memory}
 
 % present tense
-On a UNIX system each process has its own virtual memory space, so no process can normally access the memory of another process. This is to ensure proper isolation between processes. Shared memory can be used to allow multiple processes to access the same memory segment, though synchronisation methods such as mutexes must be used to ensure data and program integrity. \autocite{SharedMemory}
+On a Unix system each process has its own virtual memory space, so no process can normally access the memory of another process. This is to ensure proper isolation between processes. Shared memory can be used to allow multiple processes to access the same memory segment, though synchronisation methods such as mutexes must be used to ensure data and program integrity. \autocite{kentstateuniversitySharedMemory}
 
 To allocate \verb|shmget()| returns an identifier \verb|shm_id| that can later be used to access the memory segment. \autocite{ShmgetLinuxManual}. To add the memory segment to the current processes the \verb|shmat()| function is used, when provided with the \verb|shm_id| \autocite{ShmopLinuxManual}. Conditional variables, a synchronisation method, can then be waited on using \verb|pthread_cond_wait| \autocite{Pthread_cond_timedwait3pLinux}.
 
@@ -70,7 +70,7 @@ Shown in \autoref{fig:rtPi4MemTimes}, the average latency from parent request to
 \subsection{Sockets}
 
 % present tense
-Unix domain sockets are a useful tool for implementing interprocess communication (IPC). They are a special type of socket that behave similarly to local network sockets but bypass the network stack for efficiency. These sockets can either be unnamed or bound to a filesystem path. \autocite{UnixLinuxManualc}. 
+Unix domain sockets are a useful tool for implementing interprocess communication (IPC). They are a special type of socket that behave similarly to local network sockets but bypass the network stack for efficiency. These sockets can either be unnamed or bound to a filesystem path. \autocite{UnixLinuxManual}. 
 
 % past tense
 The second test implemented a simple unnamed socket pair between a parent and child process. The child socket was shared with the child process using file descriptors with the \verb|command_fds| crate \autocite{GoogleCommandfds2024}.
@@ -103,7 +103,7 @@ To prove this is due to the process taking time to move out of the blocked state
 
 The non-blocking socket performed much better than both the blocking socket and events in shared memory with an average latency of $13{\mu}s$ ($462{\mu}s$ including overruns).
 
-However, approximately 100 cycles (1 second) significant latencies were introduced at over 40ms, making this solution completely unviable for a real-time system. It is assumed that these latencies are introduced periodically due to the kernel itself being moved onto the CPU. As the program is busy waiting it never enters the blocked state. Therefore it consumes 100\% of the CPU resources with no opportunity for the kernel to perform management functions.
+However, approximately every 100 cycles (1 second) significant latencies were introduced at over 40ms, making this solution completely unviable for a real-time system. It is assumed that these latencies are introduced periodically due to the kernel itself being moved onto the CPU. As the program is busy waiting it never enters the blocked state. Therefore it consumes 100\% of the CPU resources with no opportunity for the kernel to perform management functions.
 
 To resolve this, the scheduler could use a combination of both the blocking and non blocking sockets. The scheduler could first wakeup a component process using a blocking socket, once on the processor the component can now busy wait for a short period of time on the non blocking socket. Then the scheduler can send the execute command. This reduces the uncertainty of when the process will execute, but overall takes much longer to execute a component as two sequential messages are sent each cycle. An expected latency could be around $13{\mu}s + 19{\mu}s = 32{\mu}s$.
 
@@ -178,7 +178,7 @@ In linux you can send signals to processes, these are commonly used to kill proc
 There are additional signals that you can send
 \autoref{tbl:linuxSignalsSample}
 
-Explain SIGCONT and SIGSTOP...
+\textcolor{red}{Explain SIGCONT and SIGSTOP...}
 
 \begin{table}[ht]
     \centering
@@ -194,14 +194,7 @@ Explain SIGCONT and SIGSTOP...
     \label{tbl:linuxSignalsSample}
 \end{table}
 
-Hence the final scheduling method investigated was Linux process signalling. No additional Rust crates were required as \verb|libc| implements the signalling functionalities. 
-
-However, the signal based programs were implemented slightly different.
-Rather than acknowledging a response to the parent process the child simply executed.
-
-This was because the signals tested were unidirectional, unlike the sockets and memory.
-
-This simply removes the overrun detection in the parent for the child process and should not impact the test results. 
+Hence the final scheduling method investigated was Linux process signalling. No additional Rust crates were required as \verb|libc| implements the signalling functionalities.  However, the signal based programs were implemented slightly different. Rather than acknowledging a response to the parent process the child simply executed. This was because the signals tested were unidirectional, unlike the sockets and memory. This simply removes the overrun detection in the parent for the child process and should not impact the test results. 
 
 \begin{figure}[ht]
     \centering
@@ -216,9 +209,9 @@ Shown in \autoref{fig:rtPi4SignalTimes} the signal-based scheduler approach resu
 \newpage
 
 \subsection{Evaluation}
-Signals worked best, memory second...
+\textcolor{red}{Signals worked best, memory second...}
 
-Non blocking sockets were technically better on a single iteration but impractical...
+\textcolor{red}{Non blocking sockets were technically better on a single iteration but impractical...}
 
 \begin{figure}[ht]
     \centering

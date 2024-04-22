@@ -7,7 +7,7 @@ While the source code for these implementations was not public, the respective p
 
 \subsubsection{Hardware Handover} \label{sec:hardware}
 
-Most hardware devices do not understand the concept of real-time software updates where new software rapidly starts and stops during operation. This is especially the case with software drivers for hardware. The process of handling this shall be known as hardware handover. Solutions can either implement \textbf{hardware} and/or \textbf{software} to compensate for this issue. 
+Most hardware devices do not understand the concept of real-time software updates where new software rapidly starts and stops during operation. This is especially the case with software drivers for hardware. The process shall be known as hardware handover. Solutions can either implement \textbf{hardware} and/or \textbf{software} techniques to compensate for this issue. 
 
 Software is also not usually designed to cope with this. \autoref{fig:problemHardwareHandover} shows how the hardware connections are changed to the $Controller$ software during an update. At points in time, the software is neither connected to sensors or actuator. Developed software must be designed to either never execute in this scenario or understand that it does not have control.
 
@@ -183,16 +183,15 @@ A software solution can either ensure the dynamic update has no impact on the ru
 \textcite{raoLiveSeamlessFirmware2023} implements live firmware upgrades on a single microcontroller, without using any additional hardware or operating system. They describe the techniques used in both hardware and software to achieve such updates without reset (seamless).
 
 \subsubsection*{Implementation}
-The key innovations for this pap
-Function and vector pointer swapping
 
-Hardware support for vector and function pointer swapping
-Compiler support for live updates and optimal switchover point
-Talk about the compiler
+% \textcolor{red}{The key innovations for this paper function and vector pointer swapping}
+% \textcolor{red}{Hardware support for vector and function pointer swapping}
 
-This process uses multiple hardware features to implement the live software update processes. The first is multi-bank non volatile memory to store multiple different versions of the firmware image (usually two). Next interrupt vector swap enables hardware support for quickly swapping multiple interrupt vectors in a simple cpu cycle, rather than multiple. Ram block swap is similar and allows blocks of memory to be swapped during execution e.g. function points. Finally, a hardware upgrade flag is used to indicates whether a live upgrade is in progress. \autocite{raoLiveSeamlessFirmware2023}
+\textcolor{red}{Compiler support for live updates and optimal switchover point...}
 
-First the controller boots into the latest firmware image on the appropriate flash bank. Upon update, the user generated request is processed in a background task and the new firmware is loaded onto the opposite flash bank. The main function the branches to the new main where the compiler generated initialisation routine is executed. This initializes any new variables and sets the hardware update register flag to indicate the update is in progress. Now the new firmware's main routine is executed, performing any variable transformations and initialisation. During this process all the previous control loop functions can still run. \autocite{raoLiveSeamlessFirmware2023}
+This process uses multiple hardware features to implement the live software update processes. The first is multi-bank non volatile memory to store multiple different versions of the firmware image (usually two). Next interrupt vector swap enables hardware support for quickly swapping multiple interrupt vectors in a simple cpu cycle, rather than multiple. Ram block swap is similar and allows blocks of memory to be swapped during execution e.g. function pointers. Finally, a hardware upgrade flag is used to indicates whether a live upgrade is in progress. \autocite{raoLiveSeamlessFirmware2023}
+
+First the controller boots into the latest firmware image on the appropriate flash bank. Upon update, the user generated request is processed in a background task and the new firmware is loaded onto the opposite flash bank. The main function branches to the new main where the compiler generated initialisation routine is executed. This initializes any new variables and sets the hardware update register flag to indicate the update is in progress. Now the new firmware's main routine is executed, performing any variable transformations and initialisation. During this process all the previous control loop functions can still run. \autocite{raoLiveSeamlessFirmware2023}
 
 \begin{figure}[ht]
     \centering
@@ -216,9 +215,7 @@ To validate the updates \textcite{raoLiveSeamlessFirmware2023}, implemented a DC
 \end{figure}
 
 \subsubsection*{Evaluation}
-Some text
-Persistence of state
-Keeping static and global variable addresses consistent between firmware versions
+\textcolor{red}{Keeping static and global variable addresses consistent between firmware versions}
 
 \begin{table}[ht]
     \centering
@@ -242,7 +239,7 @@ Keeping static and global variable addresses consistent between firmware version
 \textcite{wahlerDynamicSoftwareUpdates2009} defines a solution for updating component-based cyclic embedded systems, without violating real-time constraints. This implementation focused on using COTS operating systems rather than a bare-metal approach, specifically Integrity.
 
 \subsubsection*{Implementation}
-They used a custom component-based framework infrastructure on top of the operating system to execute software components, effectively an embedded middleware. Each component had its own address space with script separation and defined inputs and outputs. These components communicated using using message passing (channel buffers). A manager program (which was also an upgradable component) created and maintained the channels.
+They used a custom component-based framework infrastructure on top of the operating system to execute software components, effectively an embedded middleware. Each component had its own address space with strict separation and defined inputs and outputs. These components communicated using using message passing (channel buffers). A manager program (which was also an upgradable component) created and maintained the channels.
 \begin{figure}[ht]
     \centering
     \includegraphics[width=8cm]{wahlerDynamicSoftwareUpdates2009_Function}
@@ -251,10 +248,7 @@ They used a custom component-based framework infrastructure on top of the operat
     \label{fig:wahlerDynamicSoftwareUpdates2009_Function}
 \end{figure}
 
-How to identify points in time when an update can occur
-System performs the checks at the end of every execution cycle
-
-The updated component is sent to the target machine using OS functionality in a low priority thread and this upload is detected by the component manager. When ready, the old component is told to exit and the channels are handed back to the manager. The new component then starts its operation with the correct channels attached. Once the upgrade begins in the main thread, it must complete before the end of the execution cycle.
+The system identifies when an update can occur by performing checks at the end of every execution cycle. The updated component is sent to the target machine using OS functionality in a low priority thread and this upload is detected by the component manager. When ready, the old component is told to exit and the channels are handed back to the manager. The new component then starts its operation with the correct channels attached. Once the upgrade begins in the main thread, it must complete before the end of the execution cycle.
 
 To enable state transfer, the component manager creates an area of shared memory that is passed to the components. Before a component terminates it writes its state to the area and adds appropriate version information. When a component is started, it reads the memory, assess if a state transformation must occur (that is present within the new components) and begins. To state transfer and execution must complete in one execution cycle.
 
@@ -270,7 +264,7 @@ The example application used to validate the dynamic software updates was an ent
 \end{figure}
 
 \subsubsection*{Evaluation}
-Successful, maximum cycle frequency of about 300hz.
+\textcolor{red}{Successful, maximum cycle frequency of about 300hz.}
 
 \begin{table}[ht]
     \centering
@@ -294,7 +288,7 @@ Successful, maximum cycle frequency of about 300hz.
 Another approach to updating software at runtime without disruption was developed by \textcite{wahlerDisruptionfreeSoftwareUpdates2014}. This uses a component based architecture developed by ABB Corporate Research (FASA), shown in \autoref{fig:wahlerDisruptionfreeSoftwareUpdates2014_FASA}.
 
 \subsubsection*{Implementation}
-FASA defines function blocks that can be aggregated together to form a component, only compute components are stateful. These function blocks are executed cyclically at a desired frequency and connected by communication channels. A background thread with low priority performs the management actions. Multiple FASA systems are synchronised over the network using precision time protocol (PTP.) While no specific real-time operating systems are mentioned, it is assumed that this component infrastructure is compatible with POSIX.
+FASA defines function blocks that can be aggregated together to form a component, only compute components are stateful. These function blocks are executed cyclically at a desired frequency and connected by communication channels. A background thread with low priority performs the management actions. Multiple FASA systems are synchronised over the network using precision time protocol (PTP). While no specific real-time operating systems are mentioned, it is assumed that this component infrastructure is compatible with POSIX.
 
 \begin{figure}[ht]
     \centering
@@ -304,7 +298,9 @@ FASA defines function blocks that can be aggregated together to form a component
     \label{fig:wahlerDisruptionfreeSoftwareUpdates2014_FASA}
 \end{figure}
 
-First the component binaries are loaded using shared libraries (DLLs), it is assumed the components are already present in the system. Next, the system is configured using configurations that define the layout of the components and channels. State is transferred between components using Teach and Learn blocks, optional type conversions occurs in these Learn blocks. Multi-cycle state transfers are possible as the. Once all the controllers in the FASA network are ready to transfer to the new configuration, the switch command is issued by broadcasting an update request with a timestamp in the future.
+First the component binaries are loaded using shared libraries (DLLs), it is assumed the components are already present in the system. Next, the system is configured using configurations that define the layout of the components and channels. State is transferred between components using \textit{Teach} and \textit{Learn} blocks, optional type conversion occurs in these \textit{Learn} blocks. 
+% Multi-cycle state transfers are possible as the. 
+Once all the controllers in the FASA network are ready to transfer to the new configuration, the switch command is issued by broadcasting an update request with a timestamp in the future.
 
 \begin{figure}[ht]
     \centering
@@ -326,9 +322,7 @@ This software update component architecture was testing using a magnetic levitat
 \end{figure}
 
 \subsubsection*{Evaluation}
-Most through implementation
-Cyclic application execution
-State transfer mechanisms
+\textcolor{red}{Most through implementation, Cyclic application execution, State transfer mechanisms}
 
 \begin{table}[ht]
     \centering
@@ -346,22 +340,20 @@ State transfer mechanisms
 
 % ----- CASE STUDY 4 -----
 \subsection{A Model for Updating Real-Time Applications} \label{caseStudy4}
-Similar to the first \hyperref[caseStudy1]{case study}, \textcite{montgomeryModelUpdatingRealTime2004} performs dynamic updates using function pointer swaps. However instead of using bare metal hardware support they use features of a UNIX like operating system (RT-Match) to load and swap the new modules.
+Similar to the first \hyperref[caseStudy1]{case study}, \textcite{montgomeryModelUpdatingRealTime2004} performs dynamic updates using function pointer swaps. However instead of using bare metal hardware support they use features of a Unix-like operating system (RT-Match) to load and swap the new modules.
 
 \subsubsection*{Implementation}
-The first step of an upgrade is producing a replacement module. This follows the typical edit, compile, link process of developing a binary but uses a pseudo-linker instead of a traditional UNIX linker. This special linker produces loadable executable modules (significant smaller), in contrast to a traditional linker which produces a new binary of an entire application. The custom linker takes the previous binary as an input in order to calculate the differences in the symbol table.
+The first step of an upgrade is producing a replacement module. This follows the typical edit, compile, link process of developing a binary but uses a pseudo-linker instead of a traditional Unix linker. This special linker produces loadable executable modules (significantly smaller), in contrast to a traditional linker which produces a new binary of an entire application. The custom linker takes the previous binary as an input in order to calculate the differences in the symbol table.
 
 The new module is loaded into the previous program's heap memory section, rather than the text section because the heap is dynamic. The previous application must have support for loading this module into memory. Transfer of execution occurs using pointer-function variables, whereby pointers pointing to functions in memory space are dereferenced. These pointers simply need to be updated to switch execution to a new function. This method of transfer can also be applied to upgrading a multi-threaded application.
 
-This process relies upon the old program implementing the module load function, and using pointer-function variables.
+The process relies upon the old program implementing the module load function, and using pointer-function variables.
 
 \subsubsection*{Test Case}
-Before testing this application, Montgomery performed offline timing analysis of the entire software upgrade system. Specifically they used the generalized fault-tolerant rate monotonic scheduling algorithm (GFTRMS) \autocite{ghoshFaultTolerantRateMonotonicScheduling1998} to perform the analysis. Next Montgomery created a simple application 
+Before testing this application, Montgomery performed offline timing analysis of the entire software upgrade system. Specifically they used the generalized fault-tolerant rate monotonic scheduling algorithm (GFTRMS) \autocite{ghoshFaultTolerantRateMonotonicScheduling1998} to perform the analysis. \textcolor{red}{Next Montgomery created a simple application}
 
 \subsubsection*{Evaluation}
-Heap is not write protected, security risk
-5.6 microseconds on a moderately equipped
-Not an external testing method.
+\textcolor{red}{Heap is not write protected, security risk... 5.6 microseconds on a moderately equipped... Not an external testing method.}
 
 \begin{table}[ht]
     \centering
