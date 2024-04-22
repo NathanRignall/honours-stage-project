@@ -62,7 +62,7 @@ The theoretical logic analyser output is displayed in \autoref{fig:testHarnessCa
 
 The generator, receiver and logic analyser were all implemented using the RP2040 microprocessor from Raspberry Pi for hardware simplification. The two controllers that performed message communication used the W5500 chip to send UDP packets over ethernet, this integrated nicely with software infrastructure. The co-processor offloads the complex ethernet drivers and communicates to the main processor over SPI. The embedded network switch selected to connect the different elements of the test harness with the development cards was the SwitchBlox "Small Ethernet Switch".
 
-\autoref{fig:TestHardwareFrameMount} displays the frame mount, also designed in Fusion 360 and 3D printed, to hold the components together in a single package.
+\autoref{fig:TestHardwareFrameMount} displays the frame mount designed in Fusion 360 and 3D printed, to hold the components together in a single package. Harness is shown assembled in \autoref{fig:TestHarnessHardware}.
 
 \begin{figure}[ht]
     \centering
@@ -71,6 +71,17 @@ The generator, receiver and logic analyser were all implemented using the RP2040
     {Test harness hardware frame mount design}
     \label{fig:TestHardwareFrameMount}
 \end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=10cm, clip]{TestHarnessHardware}
+    \caption[Test harness hardware assembled]
+    {Test harness hardware assembled}
+    \label{fig:TestHarnessHardware}
+\end{figure}
+
+\clearpage
+
 
 \begin{table}[ht]
     \centering
@@ -90,21 +101,11 @@ The generator, receiver and logic analyser were all implemented using the RP2040
     \label{tbl:TestHarnessHardwareBOM}
 \end{table}
 
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=10cm, clip]{TestHarnessHardware}
-    \caption[Test harness hardware assembled]
-    {Test harness hardware assembled}
-    \label{fig:TestHarnessHardware}
-\end{figure}
 
-Open source logic analyser
 
-Logic analyser  
-https://github.com/dotcypress/ula
+The chosen logic analyser software was PulseView as it is open-source and supports many different logic analyser devices \autocite{PulseViewSigrok}. Boards which use the RP2040 microprocessor (Pi Pico) can use the ULA logic analyser firmware \autocite{domnikovDotcypressUla2024}.
 
-Capture the status of the 16 input channels on the Pi Pico at specified frequencies.
-When integrated with teh Pulseview analysis software we can idenitify the latencies  
+When flashed, the Pi Pico can capture the status of 16 input channels at specified frequencies. An example capture is shown in \autoref{fig:testHarnessPluseViewCapture}.
 
 \begin{figure}[ht]
     \centering
