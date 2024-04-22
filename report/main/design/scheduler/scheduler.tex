@@ -178,6 +178,8 @@ In linux you can send signals to processes, these are commonly used to kill proc
 There are additional signals that you can send
 \autoref{tbl:linuxSignalsSample}
 
+Explain SIGCONT and SIGSTOP...
+
 \begin{table}[ht]
     \centering
     \begin{tabular}{l|ll}
@@ -214,9 +216,9 @@ Shown in \autoref{fig:rtPi4SignalTimes} the signal-based scheduler approach resu
 \newpage
 
 \subsection{Evaluation}
-Signals worked best, memory second
+Signals worked best, memory second...
 
-Non blocking sockets were technically better on a single iteration but impractical 
+Non blocking sockets were technically better on a single iteration but impractical...
 
 \begin{figure}[ht]
     \centering
@@ -226,7 +228,7 @@ Non blocking sockets were technically better on a single iteration but impractic
     \label{fig:rtPi4CompareTimes}
 \end{figure}
 
-\subsubsection*{Processor Differences}
+\subsubsection{Processor Differences}
 
 While all formal tests were carried out on the CM4, some quick tests were also performed on the Raspberry Pi 5. Displayed in \autoref{fig:rtPi4vsPi5CompareTimes} the Pi 5 performed much better than the CM4. This was ilkley due to the different processors and implementations of interrupts. The Pi 5 would be a good choice to implement a real-time system in a future project.
 

@@ -2,7 +2,7 @@
 
 % first thing a high level system diagram
 
-\subsection{Architecture}
+\subsection{Architecture} \label{sec:designArch}
 The following designs elaborate upon the defined software infrastructure requirements, explaining how the components, messages and task lists will integrate together to enable dynamic software updates.
 
 % overall concepts
@@ -302,7 +302,7 @@ The global state maintains a view of the entire system so that all services can 
     \label{fig:umlGlobalStateClass}
 \end{figure}
 
-Explanation of what all that actually does\dots
+Explanation of what all that actually does?
 
 \subsubsection{Task Lists}
 The software infrastructure shall be configured using task lists, with each task representing a number of actions that should be performed on the system.
@@ -407,11 +407,7 @@ The three non-blocking actions implement the state machine. Not all the states a
 \subsubsection{Control}
 To configure which task list is loaded the management program must accept communications from component or external devices. Adding 'management' as an alternative endpoint type to component and edge is a simple way to integrate this into the message router.
 
-\subsection{Structure}
-
-How do the classes fit together (maybe should be in implementation)
-
-Separate core library with management
+Explain channel 1 and 2 inputs?
 
 \clearpage
 \input{main/design/software/walkthrough}
