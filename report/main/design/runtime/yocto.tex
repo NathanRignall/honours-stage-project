@@ -1,8 +1,11 @@
 \graphicspath{{main/design/software/graphics/}}
 
-\subsection{Operating Systems}
+\subsection{Operating Systems} \label{sec:operatingSystems}
 
-\textcite{serinoSurveyRealTimeOperating2019} compiled a comparison of the differences between VxWorks, RTLinux and FreeRTOS. 
+\textcite{serinoSurveyRealTimeOperating2019} compiled a comparison of the differences between 
+\textcolor{red}{NOT DONE!}
+
+VxWorks, RTLinux and FreeRTOS. 
 
 RTLinux - General perpous 
 
@@ -20,6 +23,8 @@ Linux also supports containerization through cgroups and namespaces, which could
 
 \subsection{Hypervisors}
 
+\textcolor{red}{NOT DONE!!}
+
 Why xen? 
 
 This is because KVM is implemented on top of the Linux kernel.
@@ -35,6 +40,8 @@ All have public support for the raspberry pi 4
 
 Xen was selected for te hypervisor for its independence from linux and open source nature
 
+
+
 HVM, PV, PVH
 Xen uses para-virtualization and a modified version of the Linux kernel can run as a guest OS.
 
@@ -44,6 +51,9 @@ EXPLAIN RT LINUX
 % virtual switch, arrangement of dom0 with hardware control
 
 \subsection{Build Process}
+
+\textcolor{red}{NOT DONE!!!}
+
 All software images for the development cards were created using the Yocto Project build environment because of it's support for both Linux and Xen. Although some images for Linux were initially created manually, this process was exceptionally slow and an inefficient use of time.
 
 Yocto is an open source project that uses various layers to build an image using scripts.
@@ -60,9 +70,10 @@ Yocto is an open source project that uses various layers to build an image using
     \item meta-rpi4-kernel
 \end{itemize}
 
+xen version 
 
+linux version
 
-
-
+uboot version
 
 Use the uBoot boot loader.

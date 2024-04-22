@@ -1,23 +1,13 @@
 \graphicspath{{main/design/runtime/graphics/}}
 
-% What is Linux
-% Unix process model
-% How containers work
-% What is Xen
-
 \subsection{Analysis}
 
-To select the most optimal environment to develop the software infrastructure upon, a series of benchmarking activities were carried out. These focused on evaluating the operating systems and hypervisors which could operate in a real time environment. The search was restricted to free and open source software which supported the CM4.
-
-% Comparing straight linux and linux +  Xen should give us a good method to estimate the specific latencies brough about by Xen.
+To select the most optimal environment to develop the software infrastructure upon, a series of benchmarking activities were carried out. These focused on evaluating the operating systems and hypervisors which could operate in a real time environment. Comparing bare-metal Linux and Xen with Linux guests should give a good method to estimate the specific latencies brough about by Xen.
 
 \subsubsection{Test Suite}
 There are several tools that can be used to analyse the real-time performance of an operating system. RT-Tests is a test suite that contains programs to test the various real-time linux features.
 
 The RT-Tests suite includes a cyclictest program. This is a simple yet effective program that can be used to estimate the real time latencies in a system. It measures real time jitter by creating a interrupt event at a specific time in the future and measuring the time delay between the requested wake-up and actual wake-up time. While this provides a good method for identifying operating system induced latency and jitter it does not isolate latencies induced by hardware or low-level firmware. At this stage it can be assumed that the selected development targets do not induce significant latencies.
-
-% histogram
-% 100us is "good"
 
 % Stress-ng
 Another tool that can be used during real-time testing is stress-ng (stress next generation) from \textcite{kingColinIanKingStressng2024}. This program can put artificial loads onto a Linux system. While stained memory and cpu pressures are unlikely in a real application scenario it is important to ensure that the real-time characteristics of an OS don't significantly change.
@@ -25,14 +15,12 @@ Another tool that can be used during real-time testing is stress-ng (stress next
 \subsubsection{Previous Work}
 
 % The paper results
-\autocite{abeniUsingXenKVM2020} compiled a similar study into the real time performance of open source hypervisors. Every hypervisor introduces some latencies into a virtual machine that can affect the correctness of the existing real-time analysis. Abeni and Faggioli compared the performance of both KVM and Xen on various intel x86 processors.
+\textcite{abeniUsingXenKVM2020} compiled a similar study into the real time performance of open source hypervisors. Every hypervisor introduces some latencies into a virtual machine that can affect the correctness of the existing real-time analysis. Abeni and Faggioli compared the performance of both KVM and Xen on various intel x86 processors.
 
-The study found that the KVM hypervisor would be suitable for serving real-time workloads with worst-case latencies under 100 $\mu$s. This is applicable only when using RT kernels on both the guest and host. Likewise when using the Xen hypervisor the RT kernels on both the guest and host must also be used. Para-virtualised (PV) guests performed well but fully virtualised (HVM) guests 
-
-% EXPAND THIS
+The study found that the KVM hypervisor would be suitable for serving real-time workloads with worst-case latencies under $100\mu$s. This is applicable only when using RT kernels on both the guest and host. Likewise when using the Xen hypervisor the RT kernels on both the guest and host must also be used. Para-virtualised (PV) guests performed well but fully virtualised (HVM) guests did not, under $100\mu$s versus $1000000\mu$s.
 
 % How it applies and differs from our tests
-For the purpose of this project the real-time performance on an Arm64 target, the chosen development target, must be specifically analysed. It was reasonable to expect that the performance characteristics may be different between the processor architectures due to the implementation of virtualisation extensions. This analysis compared the behaviour of 'bare metal' Linux and the Xen hypervisor, not including KVM.
+For the purpose of this project the real-time performance on an Arm64 target, the chosen development target, must be specifically analysed. It was reasonable to expect that the performance characteristics may be different between Arm64 and x86 due to the implementation of virtualisation extensions.
 
 \clearpage
 
@@ -40,7 +28,7 @@ For the purpose of this project the real-time performance on an Arm64 target, th
 
 To set a baseline the real-time behaviour of Linux with the standard PREEMPT kernel was tested with different artificial loads in the system. Each test ran for exactly 1 hour collecting latency information at an interval of $100{\mu}s$.
 
-Figure \autoref{fig:linux-i100-1h-allcores} displays that when not under load, the standard Linux kernel performs well in a real-time environment. However as soon as load was introduced into the system \autoref{fig:linux-i100-1h-allcores-sc4} and \autoref{fig:linux-i100-1h-allcores-sm4} the real time performance was significantly worse.
+Figure \autoref{fig:linux-i100-1h-allcores} displays that when not under load, the standard Linux kernel performs well in a real-time environment. However as soon as load was introduced into the system \autoref{fig:linux-i100-1h-allcores-sc4} and \autoref{fig:linux-i100-1h-allcores-sm4} the real-time performance was significantly worse.
 
 \begin{figure}[ht]
     \centering
@@ -86,9 +74,9 @@ The following tests in \autoref{fig:linux-rt-i100-1h-allcores}, \autoref{fig:lin
 
 \textbf{Evaluation}
 
-However when the system was under load the differences between the kernel's schedulers became apparent.
+The comparison between both kernels is shown in \autoref{fig:linux-vs-rt-linux-i100-1h-sc4} and \autoref{fig:linux-vs-rt-linux-i100-1h-sm4} displays that the real-time kernel patch works as expected.
 
-Especially so for memory stress versus cpu stress.
+Memory tests particularly strained the memory resources allocation processes of the kernel and affected the real time performance more than CPU load. This is because many parts of the Linux kernel resource allocation have indeterminate maximum latencies, as found in section \ref{sec:operatingSystems}.
 
 % CPU LOAD - PREEMPT vs PREEMPT\_RT
 \begin{figure}[ht]
@@ -112,40 +100,53 @@ Especially so for memory stress versus cpu stress.
 
 \subsubsection{Xen Hypervisor}
 
-After validating the Linux kernel's real-time response  
+After validating the Linux kernel's real-time response, the Xen hypervisor can be evaluated using Linux as both Dom0 and a DomU guest. To ensure that the Xen scheduler itself did not interfere with any results, all vcpus were assigned on a one to one mapping of real cpus using the 'null' scheduler. 
 
-Now we are satisfied that linux, with the real time kernel patch performs adequately we can begin configuring Xen. 
+As shown in \autoref{fig:xen-rt-slop-i100-1h}, when Xen was evaluated using rt-tests at an interval of $100{\mu}s$ an almost even distribution of latencies is produced. This is very different to what was observed with bare metal Linux.
 
-Exceptionally poor performance at first. Assume that is due to the nature of the Xen scheduler implementation. 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{xen-rt-slop-i100-1h.pdf}
+    \caption[Xen i100 cyclictest results (idle)]
+    {Xen i100 cyclictest results (idle)}
+    \label{fig:xen-rt-slop-i100-1h}
+\end{figure}
 
-EXPLAIN THE XEN SCHEDULER OPTIONS
+In attempt to find the cause of the increased latencies, Xen was measured again at a range of intervals ($100{\mu}s$, $200{\mu}s$, $500{\mu}s$ and $1000{\mu}s$) in \autoref{fig:xen-rt-slop-i100-i1000-1h}. The even distribution affect is less noticeable on tests with larger intervals.
 
-When using the None scheduler these latencies and jitter are significantly improved
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{xen-rt-slop-i100-i1000-1h.pdf}
+    \caption[Xen i100, i200, i500, i1000 cyclictest results (idle)]
+    {Xen i100, i200, i500, i1000 cyclictest results (idle)}
+    \label{fig:xen-rt-slop-i100-i1000-1h}
+\end{figure}
 
-Multi core interference 
+This problem as connotations to the issues \textcite{abeniUsingXenKVM2020} experienced with timer resolutions negatively affecting latency evaluations. As cyclictest uses the local cpu timer to measure latencies it is important that it is at a high enough resolution.
 
+\clearpage
 
+In a PVH virtualisation environment the cpu timers are often virtualized, hence they must be virtualised at high enough resolution for cyclictest to use. By modifying the \verb|timer_slop| command line property in Xen to $1{\mu}s$ from $50{\mu}s$ the timer resolution was significantly increased. This resulted in much better performance metrics at intervals of $100{\mu}s$ in \autoref{fig:xen-rt-i100-i1000-1h}.
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{xen-rt-i100-i1000-1h.pdf}
+    \caption[Xen timer adjustment i100, i200, i500, i1000 cyclictest results (idle)]
+    {Xen timer adjustment i100, i200, i500, i1000 cyclictest results (idle)}
+    \label{fig:xen-rt-i100-i1000-1h}
+\end{figure}
 
+To confirm the real-time performance, Xen was also tested with artificial CPU loads in Dom0 and DomU. \autoref{fig:xen-rt-i100-i1000-1h-sc1} shows that there is negligible differences as compared to without load. 
 
-The first experiments were performed on the linux kernel running without a hypervisor.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{xen-rt-i100-i1000-1h-sc1.pdf}
+    \caption[Xen timer adjustment i100, i200, i500, i1000 cyclictest results (cpu load)]
+    {Xen timer adjustment i100, i200, i500, i1000 cyclictest results (cpu load)}
+    \label{fig:xen-rt-i100-i1000-1h-sc1}
+\end{figure}
 
-(HAVE DATA FOR ALL THIS JUST NEED TO WRITE UP)
-
-% The next experiments used a real-time linux kernel.
-
-% \begin{figure}[ht]
-%     \centering
-%     \includegraphics[width=\textwidth]{linux-i100-1h-sc4.pdf}
-%     \caption[Latency Graph]
-%     {Latency Graph}
-%     \label{fig:cnnArchitecture}
-% \end{figure}
-
-% Xen Scheduler (Credit vs )
 
 \textbf{Evaluation}
 
-Bare linux was best.
-
-Xen added some latency but was not terrible.
+Xen approximately doubled the interrupt latency measured as compared to bare metal Linux. This is not ideal, but Xen could still be used in a soft-real time application if the latencies were accounted for. Before deploying Xen in a real-time environment, additional test should evaluate the multi-core interference across multiple guest virtual machines.
