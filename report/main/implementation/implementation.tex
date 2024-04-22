@@ -1,3 +1,5 @@
+\graphicspath{{main/implementation/graphics}}
+
 \section{Implementation}
 
 % In this section you will describe what you did, and why you made the important decisions affecting your actions.  It's not a diary - don't write a blow-by-blow account of every little thing that happened.  Be selective and report those choices and techniques which made a difference.  Make sure you discuss what options you considered.  Explain how the criteria and methodology you used to select amongst different options (which tools are most appropriate, for example).
@@ -10,55 +12,50 @@
 
 Simplest part of the development lifecycle.
 
-% \begin{lstlisting}[language=Python]
-%     import numpy as np
-        
-%     def incmatrix(genl1,genl2):
-%         m = len(genl1)
-%         n = len(genl2)
-%         M = None #to become the incidence matrix
-%         VT = np.zeros((n*m,1), int)  #dummy variable
-        
-%         #compute the bitwise xor matrix
-%         M1 = bitxormatrix(genl1)
-%         M2 = np.triu(bitxormatrix(genl2),1) 
-    
-%         for i in range(m-1):
-%             for j in range(i+1, m):
-%                 [r,c] = np.where(M2 == M1[i,j])
-%                 for k in range(len(r)):
-%                     VT[(i)*n + r[k]] = 1;
-%                     VT[(i)*n + c[k]] = 1;
-%                     VT[(j)*n + r[k]] = 1;
-%                     VT[(j)*n + c[k]] = 1;
-                    
-%                     if M is None:
-%                         M = np.copy(VT)
-%                     else:
-%                         M = np.concatenate((M, VT), 1)
-                    
-%                     VT = np.zeros((n*m,1), int)
-        
-%         return M
-%     \end{lstlisting}
+\subsection{Development Utilities}
 
+Software Quality
+Github Jira Agile
 
+How this brings code down from github.
+
+Rust, added a layer onto the yocto to deploy application software on target
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth, clip, trim=0.1cm 5.2cm 0.1cm 2.6cm]{github.pdf}
+    \caption[Github]
+    {Github}
+    \label{fig:implementationGithub}
+\end{figure}
+
+\subsection{Software infrastructure}
 What libraries
 
-Issues
+Serde for data (yaml + bincode)
+simple\_logger
+uuid
 
+divided into apps and crates
+
+How do the classes fit together
+
+Separate core library with management
+
+
+structure of code
+
+\subsubsection{Proessing Environment}
 Did do some experimenting with unikernels and containers for the isolated processing environments
 Picked processes in linux, theoriecally can add permisions with cgroups
 
+\subsubsection{Configurations}
 Why YAML
 YAML, and how they fit into a task list
 Example YAML configuration
 
-Software Quality
-Github Jira
 
-How this brings code down from github.
+\subsection{Test Harness}
 
-
-The intention for this software was to also use Rust, however we could not get the Rust libaries for the W5500 working quickly, sure with extra time with sould have been possible.
+The intention for this software was to also use Rust, however could not get the Rust libaries for the W5500 working quickly, sure with extra time with sould have been possible.
 To simplify this software the arduino development environment was used. This as all the drivers for the w5500 are integrated in arduino libraries.
