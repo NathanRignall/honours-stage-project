@@ -1,8 +1,6 @@
 \graphicspath{{main/introduction/graphics/}}
 
-\section{Technical Background}
-
-\subsection{Real-Time}
+\section{Real-Time}
 A real-time system is defined as a system which requires correct logical operation with completion in a configured deadline. This is in contrast to a non-real-time system which correct operation is desired but lacks configured deadlines. \autocite{kaviRealTimeSystems2009}
 
 These real-time systems can be categorised into hard and soft. Hard real-time systems contain strict timing constraints, where a response must be calculated in a specified time-frame and a missed deadline could result in a catastrophic outcome. Soft real-time systems also have timing constraints, but a missed deadline should not result in a catastrophic outcome.
@@ -13,7 +11,7 @@ These real-time systems can be categorised into hard and soft. Hard real-time sy
 
 Typical hard real-time systems include aircraft or robotic control computers and soft real-time systems include media players or gaming computers. Soft real-time systems can be used in control applications, but the nature of soft timings must be considered in the system design.
 
-\subsection{Safety Critical Software}
+\section{Safety Critical Software}
 % Page 3
 The Institute of Electrical and Electronic Engineers (IEEE) defines safety-critical software as software that's use in a system can result in an unacceptable risk. Software by itself is neither safe nor unsafe but when used as part of a safety critical system it can contribute to unsafe scenarios. \autocite{riersonDevelopingSafetyCriticalSoftware2017}
 
@@ -25,7 +23,7 @@ Software Considerations in Airborne Systems and Equipment Certification or DO-17
 
 \newpage
 
-\subsection{Control Systems}
+\section{Control Systems}
 A control system is a system that is designed to manage, regulate and stabilize the behaviour of a dynamic system. Often computers are used to implement real-time control laws in applications such as aircraft fight control or chemical process controls. \autocite{hindiControlSystemsDesign1987}
 
 \begin{figure}[ht]
@@ -64,7 +62,7 @@ Sensors measure signals from the environment such as speed or pressure. Controll
 
 \newpage
 
-\subsection{Operating Systems}
+\section{Operating Systems}
 An Operating System (OS) is a piece of software that controls the execution of application programs on a hardware system. Usually this involves managing resource allocations, such as a processor execution time, memory usage and generic inputs/outputs. \autocite{stallings2018operating}
 
 % REFERENCE THIS
@@ -79,7 +77,7 @@ Define the maximum delay after a deadline}
 The Portable Operating System Interface (POSIX) is a set of standards that define the interface between Unix-like operating systems and applications. \textcolor{red}{Unix is an operating system 
 Collection of tools that are also present on linux}
 
-\subsection{Virtualization}
+\section{Virtualization}
 % intro
 Virtual machines create isolated and/or emulated computing environments by abstracting resources within a physical machine \autocite{liSurveyVirtualMachine2010}. Software known as hypervisors can provide this abstraction layer \autocite{rountreeSystemSecurity2011}. They are a useful tool for isolating software components on a single piece of hardware. 
 
@@ -103,12 +101,12 @@ A fully virtualized hypervisor emulates privileged instructions and I/O operatio
 % TODO
 \textcolor{red}{Maybe add a word about containerization here too...}.
 
-\subsection{Mixed Criticality}
+\section{Mixed Criticality}
 Mixed criticality refers to heterogeneous software with mixed software integrities running on a shared hardware platform. Virtualisation technology is often used to isolate this software, even in a real-time environment. \autocite{guStateoftheArtSurveyRealTime2012}.
 
 The ARINC 653 standard is a software standard that defines a software architecture for both spatial and temporal partitioning of virtual machines or \textit{partitions}. Spatial refers to the isolation of code and data between virtual machines while temporal aims to limit the impacts of resource consumptions across virtual machines \autocite{cinqueVirtualizingMixedcriticalitySystems2022}. Hypervisors that follow this standard or similar must be certified when used in a safety critical application.
 
-\subsection{Embedded Middleware}
+\section{Embedded Middleware}
 % intro
 There is no one definition for middleware used in embedded systems. It is usually considered the piece of software that resides between the operating system and application software. Software that sits between application software can also be classed as middleware. \autocite{gazisMiddleware101What2022}
 
@@ -125,7 +123,7 @@ The goal of middleware is to make software components more portable and flexible
 
 \newpage
 
-\subsection{Integrated Modular Avionics (IMA)}
+\section{Integrated Modular Avionics (IMA)}
 % intro
 Avionics are a category of electronic systems that are specifically designed for use in aircraft. 
 There are several architectures that are used in avionics. Middleware solutions are often used in this scenario for the benefits of software portability. \autocite{darweshDemonstratorVerificationSelective2018}
