@@ -236,7 +236,7 @@ To validate the updates \textcite{raoLiveSeamlessFirmware2023}, implemented a DC
 % ----- CASE STUDY 2 -----
 
 \subsection{Dynamic Software Updates for Real-Time Systems} \label{caseStudy2}
-\textcite{wahlerDynamicSoftwareUpdates2009} defines a solution for updating component-based cyclic embedded systems, without violating real-time constraints. This implementation focused on using COTS operating systems rather than a bare-metal approach, specifically Integrity.
+\textcite{wahlerDynamicSoftwareUpdates2009} defines a solution for updating component-based cyclic real-time embedded systems. This implementation focused on using COTS operating systems rather than a bare-metal approach, specifically Integrity.
 
 \subsubsection*{Implementation}
 They used a custom component-based framework infrastructure on top of the operating system to execute software components, effectively an embedded middleware. Each component had its own address space with strict separation and defined inputs and outputs. These components communicated using using message passing (channel buffers). A manager program (which was also an upgradable component) created and maintained the channels.

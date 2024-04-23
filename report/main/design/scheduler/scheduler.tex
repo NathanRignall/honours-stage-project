@@ -48,9 +48,9 @@ Test programs were executed on the target development hardware (CM4) with Linux 
 \subsection{Shared Memory}
 
 % present tense
-On a Unix system each process has its own virtual memory space, so no process can normally access the memory of another process. This is to ensure proper isolation between processes. Shared memory can be used to allow multiple processes to access the same memory segment, though synchronisation methods such as mutexes must be used to ensure data and program integrity. \autocite{kentstateuniversitySharedMemory}
+On a Unix system each process has its own virtual memory space, so no process can normally access the memory of another process. This is to ensure proper isolation between processes. Shared memory can be used to allow multiple processes to access the same memory segment, though synchronisation methods such as mutexes must be used to ensure data and program integrity. \autocite{kentstateSharedMemory}
 
-To allocate \verb|shmget()| returns an identifier \verb|shm_id| that can later be used to access the memory segment. \autocite{ShmgetLinuxManual}. To add the memory segment to the current processes the \verb|shmat()| function is used, when provided with the \verb|shm_id| \autocite{ShmopLinuxManual}. Conditional variables, a synchronisation method, can then be waited on using \verb|pthread_cond_wait| \autocite{Pthread_cond_timedwait3pLinux}.
+To allocate \verb|shmget()| returns an identifier \verb|shm_id| that can later be used to access the memory segment. \autocite{ShmgetLinuxManual2024}. To add the memory segment to the current processes the \verb|shmat()| function is used, when provided with the \verb|shm_id| \autocite{ShmopLinuxManual2024}. Conditional variables, a synchronisation method, can then be waited on using \verb|pthread_cond_wait| \autocite{Pthread_cond_timedwait3pLinux}.
 
 % past tense
 To access the shared memory functionality of Linux in the Rust language, this test used the \verb|shared_memory| crate  \autocite{elast0nyElast0nyShared_memory2024}. The parent process created two shared memory locations and a files containing the \verb|shm_id|. Using the shared memory, event synchronisation data structures were created using the \verb|raw_sync| crate \autocite{elast0nyElast0nyRaw_syncrs2024}. These events could then be used to signal when the child process should execute \verb|send_event| and when the task had completed \verb|recv_event|. The parent then spawned the child process which indefinitely looped and waited (blocked) for an event to execute.
@@ -70,7 +70,7 @@ Shown in \autoref{fig:rtPi4MemTimes}, the average latency from parent request to
 \subsection{Sockets}
 
 % present tense
-Unix domain sockets are a useful tool for implementing interprocess communication (IPC). They are a special type of socket that behave similarly to local network sockets but bypass the network stack for efficiency. These sockets can either be unnamed or bound to a filesystem path. \autocite{UnixLinuxManual}. 
+Unix domain sockets are a useful tool for implementing interprocess communication (IPC). They are a special type of socket that behave similarly to local network sockets but bypass the network stack for efficiency. These sockets can either be unnamed or bound to a filesystem path. \autocite{UnixLinuxManual2024}. 
 
 % past tense
 The second test implemented a simple unnamed socket pair between a parent and child process. The child socket was shared with the child process using file descriptors with the \verb|command_fds| crate \autocite{GoogleCommandfds2024}.
@@ -174,11 +174,7 @@ A better solution to this problem could use timers to wake up components at a sp
 
 \subsection{Signalling}
 
-In linux you can send signals to processes, these are commonly used to kill processes 
-There are additional signals that you can send
-\autoref{tbl:linuxSignalsSample}
-
-\textcolor{red}{Explain SIGCONT and SIGSTOP...}
+Signals can be used in Linux to notify processes of actions, they are commonly used to kill processes \autocite{SignalLinuxManual2024}. However, there are many more signals available to use, some are shown in \autoref{tbl:linuxSignalsSample}. 
 
 \begin{table}[ht]
     \centering
@@ -194,7 +190,7 @@ There are additional signals that you can send
     \label{tbl:linuxSignalsSample}
 \end{table}
 
-Hence the final scheduling method investigated was Linux process signalling. No additional Rust crates were required as \verb|libc| implements the signalling functionalities.  However, the signal based programs were implemented slightly different. Rather than acknowledging a response to the parent process, the child simply executed. This was because the signals tested were unidirectional, unlike the sockets and memory. This simply removes the overrun detection in the parent for the child process and should not impact the test results. 
+Final scheduling method investigated was Linux process signalling. No additional Rust crates were required as \verb|libc| implements the signalling functionalities.  However, the signal based programs were implemented slightly different. Rather than acknowledging a response to the parent process, the child simply executed. This was because the signals tested were unidirectional, unlike the sockets and memory. This simply removes the overrun detection in the parent for the child process and should not impact the test results. To request execution the parent triggered \verb|SIGCONT|, after execution the child put itself to sleep with \verb|SIGSTOP|.
 
 \begin{figure}[ht]
     \centering

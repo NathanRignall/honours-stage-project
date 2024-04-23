@@ -29,12 +29,22 @@ Rust, added a layer onto the yocto to deploy application software on target
     \label{fig:implementationGithub}
 \end{figure}
 
+\subsubsection{Proessing Environment}
+Did do some experimenting with unikernels and containers for the isolated processing environments
+Picked processes in linux, theoriecally can add permisions with cgroups
+
+
 \subsection{Software infrastructure}
+
+Took the analysis of signals, applied this to implement the scheduler in Linux.
+
 What libraries
 
 Serde for data (yaml + bincode)
 simple\_logger
 uuid
+
+With INFO, WARN, ERROR enabled.
 
 divided into apps and crates
 
@@ -42,12 +52,8 @@ How do the classes fit together
 
 Separate core library with management
 
-
 structure of code
 
-\subsubsection{Proessing Environment}
-Did do some experimenting with unikernels and containers for the isolated processing environments
-Picked processes in linux, theoriecally can add permisions with cgroups
 
 \subsubsection{Configurations}
 Why YAML

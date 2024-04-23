@@ -407,7 +407,7 @@ The three non-blocking actions implement the state machine. Not all the states a
 \subsubsection{Control}
 To configure which task list is loaded the management program must accept communications from component or external devices. Adding 'management' as an alternative endpoint type to component and edge is a simple way to integrate this into the message router.
 
-\textcolor{red}{Explain channel 1 and 2 inputs? Some example?}
+Channel 1 is used to stop the middleware's operation and shutdown the system and channel 2 is to send the configuration identifiers that the manager should load.
 
 \clearpage
 \input{main/design/software/walkthrough}
