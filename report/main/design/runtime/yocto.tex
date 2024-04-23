@@ -2,24 +2,22 @@
 
 \subsection{Operating Systems} \label{sec:operatingSystems}
 
-\textcite{serinoSurveyRealTimeOperating2019} compiled a comparison of the differences between 
-\textcolor{red}{NOT DONE!}
+% \textcite{serinoSurveyRealTimeOperating2019} compiled a comparison of the differences between 
 
-VxWorks, RTLinux and FreeRTOS. 
+% VxWorks, RTLinux and FreeRTOS were all analysed.
+% RTLinux - General perpous 
+% VxWorks - commerical hard real time operating system
+% FreeRTOS - open source hard real time
 
-RTLinux - General perpous 
-
-VxWorks - commerical hard real time operating system
-
-FreeRTOS - open source hard real time
-
+Zephyr is an open-source real-time operating system written in C \autocite{ZephyrprojectrtosZephyr2024}. VxWorks is a commercially available real-time operating system \autocite{hambardeSurveyRealTime2014}. These are both OS's that are specifically designed for real time applications. While they both support the Raspberry Pi 4, neither publicly support the Compute Module 4 and Zephyr lacks support for ethernet IC on the Pi 4.
 
 Alternatively the PREEMPT\_RT patch is available for mainline Linux, that aims to minimise the amount of kernel code that is non-preemptible  \autocite{RealtimeDocumentationStart}. The patch prefers deterministic behaviour over throughout and makes a number of changes to the kernel including replacing kernel locks with rtmutexes. However some resource management functions (memory management) have indeterminate maximum latencies. This patch results in a soft real-time operating system as the kernel is not designed to guarantee deadlines. \autocite{maddenChallengesUsingLinux2019}
 
-Although Linux with the RT patch was not strictly suitable for real-time applications it was chosen as the operating system for developing the software infrastructure. This was because Linux has a wide support for software libraries, build environments and has many user guides for development.
+Although Linux with the PREEMPT\_RT patch was not strictly suitable for real-time applications it was chosen as the operating system for developing the software infrastructure. This was because Linux has a wide support for software libraries, build environments and has many user guides for development.
+
 Linux also supports containerization through cgroups and namespaces, which could be useful for creating the isolated processing environments \autocite{huynhKubernetesStoryLinux2023}. In case of a real deployment, the software should use a more suitable operating system such as VxWorks. Both OS's are Unix-like so should porting the software should be fairly trivial.
 
-% If required real-time not certified a certified operating system
+\clearpage
 
 \subsection{Hypervisors}
 
@@ -52,22 +50,24 @@ EXPLAIN RT LINUX
 
 \subsection{Build Process}
 
-\textcolor{red}{NOT DONE!!!}
-
 All software images for the development cards were created using the Yocto Project build environment because of it's support for both Linux and Xen. Although some images for Linux were initially created manually, this process was exceptionally slow and an inefficient use of time.
 
 Yocto is an open source project that uses various layers to build an image using scripts.
 
 \begin{itemize}
-    \item poky
-    \item meta-openembedded
-    \item meta-raspberrypi
-    \item meta-virtualization
+    \item \verb|poky|
+    \item \verb|meta-openembedded|
+    \item \verb|meta-raspberrypi|
+    \item \verb|meta-virtualization|
 \end{itemize}
 
+\clearpage
+
+Significant issues getting the cards to boot
+
 \begin{itemize}
-    \item meta-cm4-uboot-fix
-    \item meta-rpi4-kernel
+    \item \verb|meta-cm4-uboot-fix|
+    \item \verb|meta-rpi4-kernel|
 \end{itemize}
 
 xen version 
