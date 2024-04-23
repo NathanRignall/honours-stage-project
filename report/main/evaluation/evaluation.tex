@@ -10,23 +10,13 @@
 
 % Students will be able to review, reflect and document consequences of personal decisions that impact upon their capacity to study effectively and on their general well-being. Review, reflect, plan and maintain a diverse professional portfolio of experience that fosters life-long learning.
 
+With INFO, WARN, ERROR enabled.
+
+\clearpage
+
 \section{Test Harness}
 
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=\textwidth]{elafry-harness-times.pdf}
-    \caption[Test harness execution times]
-    {Test harness execution times}
-    \label{fig:testHarnessExecutionTimes}
-\end{figure}
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=\textwidth]{logic-zoom}
-    \caption[Test harness logic analyser]
-    {Test harness logic analyser}
-    \label{fig:testHarnessLogicAnalyser}
-\end{figure}
+After executing the test harness software components on the target hardware, the output in \autoref{fig:testHarnessExecOutput} was produced. This console displays the logs of the both the management program and software components over time.
 
 \begin{figure}[ht]
     \centering
@@ -36,33 +26,57 @@
     \label{fig:testHarnessExecOutput}
 \end{figure}
 
+The default configuration was first loaded, this started the configuration agent. Warnings for 'no major frames' were produced before the schedule had any components to run. Once the $Agent$ component had initialized it was moved into the schedule.
+
+Within the $Agent$ component at $t=5$, the management program was requested to load configuration one. This contained the first application which took the signal generator's output and produced a signal for the receiver. At $t=1005$ configuration 2 was loaded, this contained the software update. Then at $t=2005$ configuration 3 was loaded, cleaning application components followed by shutdown at $t=2100$.
+
+Errors were recorded after loading configuration 1 and configuration 2. This was due to the signal generators packet loss counter being out of synchronisation with the new components and did not affect functionality.
+
+\clearpage
+
+Displayed on the logic analyser, the end-to-end latency from signal generator to receiver was approximately $2.2ms$. This latency was consistent throughout operation, even during software update as shown in \autoref{fig:testHarnessLogicAnalyser} when the update flag was moved from low to high.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{logic-zoom}
+    \caption[Test harness logic analyser]
+    {Test harness logic analyser}
+    \label{fig:testHarnessLogicAnalyser}
+\end{figure}
+
+This latency was likely due to the execution clocks being out of sync across the network. The signal generator, receiver and controller all operated at 1kHz. Hence, in a worse-case scenario the latency induced from poor synchronisation could be up to $1+1=2ms$. When measuring the execution frequency of both the generator and receiver it was visible that the control loops drifted slightly over time. This problem was not specifically related to the dynamic software updates but rather a problem with distributed systems.
+
+To solve this, more complex software within the test harness components could synchronise all cyclic execution clocks using protocols such at precision time protocol (PTP).
+
+\clearpage
+
+Shown in \autoref{fig:testHarnessExecutionTimes} the software infrastructure did not overrun its schedule and maintained its real-time behaviour at 1kHz. The small disturbances in management, state and messages (in normal operation) were likely due to the fact Linux is not a true real-time operating system. The soft-real time nature of the software infrastructure was able to compensate for these small disturbances by sleeping in the large slack time available in the 1kHz loop.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{elafry-harness-times.pdf}
+    \caption[Test harness execution times]
+    {Test harness execution times}
+    \label{fig:testHarnessExecutionTimes}
+\end{figure}
+
+Focusing on the timings exactly when an update was issued on the system, displays that the overall schedule was unaffected. There was a slight increase in the management execution time, which was expected due to the additional task list processing taking place.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{elafry-harness-times-zoom.pdf}
+    \caption[Test harness execution times (zoom)]
+    {Test harness execution times (zoom)}
+    \label{fig:testHarnessExecutionTimesZoom}
+\end{figure}
+
+The results of this experiment validate that the system is able to handover hardware control without affecting the main schedule frequency.
+
 \clearpage
 
 \section{Plant Experiment}
 
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=\textwidth]{elafry-plant-times.pdf}
-    \caption[Test plant execution times]
-    {Test plant execution times}
-    \label{fig:testPlantExecutionTimes}
-\end{figure}
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=\textwidth]{elafry-plant-data.pdf}
-    \caption[Test plant control view]
-    {Test plant control view}
-    \label{fig:testPlantControlView}
-\end{figure}
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=\textwidth]{elafry-plant-data-zoom.pdf}
-    \caption[Test plant control view (zoomed)]
-    {Test plant control view (zoomed)}
-    \label{fig:testPlantControlViewZoomed}
-\end{figure}
+The plant and controller models (\autoref{fig:testPlantExecOutput}) both outputted similar console messages to the test harness components. Differences being the communication error messages and the timing between each configuration change.To allow the plant simulation to run for longer, the configuration changes were scripted to change further apart. At $t=5000$ configuration one ($Plant$ + $Controller$), $t=15000$ configuration two ($Plant$ + $Controller^{\prime}$), $t=45000  $configuration three (empty) and $t=60000$ shutdown.
 
 \begin{figure}[ht]
     \centering
@@ -72,10 +86,59 @@
     \label{fig:testPlantExecOutput}
 \end{figure}
 
+Rather than the packet loss detection algorithms triggering due to hardware that had already started, the errors were generated due to the update process. This is because the new controller component was out of sync with the plant component. The state synchronisations between the old and new component were taking place, but message counters were excluded from this transfer, triggering the errors. Like the test harness, these errors do no impact the functionality and are purley informative.
+
 \clearpage
 
-\section{Future Research}
+The controller maintained stable flight for the entire simulation, even during software update, shown in \autoref{fig:testPlantControlView}. Additional metrics were added to the plant and controller to measure the successfulness of state transfer during update. Controller had a counter that was incremented and sent to the plant models. During update this counter should have maintained continuous increments. This metric also doubled as a method for detecting missed loop executions. 
 
-Blockchain
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{elafry-plant-data.pdf}
+    \caption[Test plant control view]
+    {Test plant control view}
+    \label{fig:testPlantControlView}
+\end{figure}
 
-Edges, DSU also
+The counter incremented by exactly one throughout the update, however at seemingly random points a count value was missed. Shown in \autoref{fig:testPlantControlViewZoomed2} the controller missed exactly one execution at $t=8192$ and subsequently caused slight deviations on the thrust output. The source of this missed execution was unknown but is again likely due to the nature of the Linux kernel's real-time behaviour.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{elafry-plant-data-zoom2.pdf}
+    \caption[Test plant control view (missed loop)]
+    {Test plant control view (missed loop)}
+    \label{fig:testPlantControlViewZoomed2}
+\end{figure}
+
+\clearpage
+
+When closely analysing the controller's thrust values during software update, the thrust appeared to fluctuate by approximately 1N the moment after update, shown in \autoref{fig:testPlantControlViewZoomed}. This is despite confirming that the state had transferred successfully between the old and new controller with the sate counter. At this time the fluctuations are unexplained.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{elafry-plant-data-zoom.pdf}
+    \caption[Test plant control view (update)]
+    {Test plant control view (update)}
+    \label{fig:testPlantControlViewZoomed}
+\end{figure}
+
+However, the system did keep to schedule during operation despite the significantly larger components running. $Agent$ was allocated $50{\mu}s$, $Plant$ and $Controller$ were both allocated $150{\mu}s$.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{elafry-plant-times.pdf}
+    \caption[Test plant execution times]
+    {Test plant execution times}
+    \label{fig:testPlantExecutionTimes}
+\end{figure}
+
+% \begin{figure}[ht]
+%     \centering
+%     \includegraphics[width=\textwidth]{elafry-plant-times-zoom.pdf}
+%     \caption[Test plant execution times (update)]
+%     {Test plant execution times (update)}
+%     \label{fig:testPlantExecutionTimesZoom}
+% \end{figure}
+
+
+
