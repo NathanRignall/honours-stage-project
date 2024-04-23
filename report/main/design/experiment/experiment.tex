@@ -1,13 +1,114 @@
 \section{Experiments}
 
-\textcolor{red}{TODO}
+The outlined experiments shall be used to validate the correctness of the software before, during and after a software update.
 
-Standard test harness test steps
+\subsection{Instrumentation}
 
-+
+To isolate specific timings within the software infrastructure the software can be instrumented to measure the time to execute specific management functions. By recording timestamps ranging from $t_0$ to $t_4$ the execution length of each section can be calculated, including slack time. This is displayed in \autoref{fig:instManagmentSchedule}.
 
-Plant - FCS demo app
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}
+        \draw [thick] (0,1.0) -- (0,0.0);
+        \draw [->,thick] (0,1.6) node[fill=white] {$t_0$} --  (0,1.2);
 
-+
+        \node[align=center] at (2.75,0.5) {Scheduler};
+        \draw [thick] (5.5,1.0) -- (5.5,0.0);
+        \draw [->,thick] (5.5,1.6) node[fill=white] {$t_1$} --  (5.5,1.2);
 
-Instrumentation of the management, test that maintaining real time
+        \node[align=center] at (6.5,0.5) {Router};
+        \draw [thick] (7.5,1.0) -- (7.5,0.0);
+        \draw [->,thick] (7.5,1.6) node[fill=white] {$t_2$} --  (7.5,1.2);
+
+        \node[align=center] at (8.5,0.5) {State};
+        \draw [thick] (9.5,1.0) -- (9.5,0.0);
+        \draw [->,thick] (9.5,1.6) node[fill=white] {$t_3$} --  (9.5,1.2);
+
+        \node[align=center] at (11.0,0.5) {Management};
+        \draw [thick] (12.5,1.0) -- (12.5,0.0);
+        \draw [->,thick] (12.5,1.6) node[fill=white] {$t_4$} --  (12.5,1.2);
+
+        % \node[align=center] at (14.0,0.5) {Slack};
+        \draw [thick, <->] (12.7,0.5) -- (14.8,0.5);
+
+        \draw [thick] (15,1.0) -- (15,0.0);
+
+        \draw [thick,decorate,decoration={brace,amplitude=6pt,raise=0pt,mirror}] (0.0,-0.15) -- (5.5,-0.15);
+        \node[align=center] at (2.5,-0.85) {$a$};
+
+        \draw [thick,decorate,decoration={brace,amplitude=6pt,raise=0pt,mirror}] (5.5,-0.15) -- (7.5,-0.15);
+        \node[align=center] at (6.5,-0.85) {$b$};
+
+        \draw [thick,decorate,decoration={brace,amplitude=6pt,raise=0pt,mirror}] (7.5,-0.15) -- (9.5,-0.15);
+        \node[align=center] at (8.5,-0.85) {$c$};
+
+        \draw [thick,decorate,decoration={brace,amplitude=6pt,raise=0pt,mirror}] (9.5,-0.15) -- (12.5,-0.15);
+        \node[align=center] at (11.0,-0.85) {$d$};
+
+        \draw [thick,decorate,decoration={brace,amplitude=6pt,raise=0pt,mirror}] (12.5,-0.15) -- (15.0,-0.15);
+        \node[align=center] at (14.0,-0.85) {$e$};
+
+        \draw [thick,->] (0,0) -- (15,0);
+    \end{tikzpicture}
+    \caption[Instrumentation management schedule]
+    {Instrumentation management schedule}
+    \label{fig:instManagmentSchedule}
+\end{figure}
+
+All experiments shall use this instrumentation to ensure that at all points during operation and software upgrade the system obeys the cyclic execution frequency. This can be calculated by summing the execution time of all functions and evaluating if it less than the cycle period. These times shall be saved to disk at the end of operation so that the instrumentation does not significantly affect the timings.
+
+% What is success?
+While this is a experimentation technique rather than case, success shall be measured against the schedule overrun metric. At no point in operation can the system exceed the defined control loop period, in any test case scenario.
+
+\subsection{Test Harness}
+
+To externally validate the real-time behaviour of the software infrastructure, the test harness described in section \ref{sec:testHarness} shall be used. This measures the end-to-end latency of the software infrastructure in an isolated hardware environment. The system shall follow a software upgrade as described in section \ref{sec:demoWalk}
+
+A successful experiment will complete a software update without altering the response timings recorded on the logic analyser. The response time from signal generate to receive should be consistent during software update. This validates hardware handover (\ref{sec:hardware}) and optimal time (\ref{sec:optimal}).
+
+\clearpage
+
+\subsection{Plant Model}
+
+To compliment the hardware test harness, another test case was created to further validate the live software update process. The goal of this test was to more closely resemble an implementation of a real-time controller.
+
+A drone flight controller usually maintains six degrees of freedom, this can be simplified to a single degree of freedom in a virtualised environment. A new controller can then be made to solely control this axis. \autoref{fig:plantModelForcesDiagram} displays the forces arrangement of the chosen environment model, a single object of mass $m$ is falling due to gravity. A thruster can fire to produce force $t$.
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}
+        \begin{scope}
+        \draw[<-] (0,0) -- node[right]{$mg$}(0,1.5)
+                node[draw=black,inner sep=6mm,thick,anchor=south] (m) {$m$};
+        \draw (m.north) -- node[right]{$T \uparrow$} +(0,1.5);
+        \end{scope}
+    \end{tikzpicture}
+    \caption[Plant model forces diagram]
+    {Plant model forces diagram}
+    \label{fig:plantModelForcesDiagram}
+\end{figure}
+
+To simulate the environment a plant model can be created that calculates all the forces and positions. The controller can subsequently be sent information from the plant, to calculate when the thruster should fire, using a simple PID controller. This is shown in \autoref{fig:plantControllerModelArange}.
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture} [block/.style = {draw, rectangle, minimum height=2em,minimum width=4em}]
+
+        \node[block] (est) {Estimation};
+        \node[block, right=1cm of est] (con) {Control};  
+
+        \node[draw,inner xsep=4mm,inner ysep=7mm,fit=(est)(con),label={Controller}, dashed] (mod) {};
+
+        \node[block, text width=8cm, below=0.5cm of mod, align=center] (plant) {Plant}; 
+
+        \draw [->] ([xshift=-3.47cm]plant.north) -- ([xshift=-1cm]est.west) -- (est.west);
+        \draw [->] (est) -- (con);
+        \draw [<-] ([xshift=3.47cm]plant.north) -- ([xshift=1cm]con.east) -- (con.east);
+
+    \end{tikzpicture}  
+    \caption[Plant and controller model arrangement]
+    {Plant and controller model arrangement}
+    \label{fig:plantControllerModelArange}
+\end{figure}
+
+The successes of this experiment shall be determined by evaluating if the mass maintains stable flight during software update. This tests validates clock synchronisation (\ref{sec:synchronisation}), state continuity (\ref{sec:state}) and optimal time (\ref{sec:optimal})

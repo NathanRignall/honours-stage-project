@@ -63,7 +63,7 @@ To access the shared memory functionality of Linux in the Rust language, this te
     \label{fig:rtPi4MemTimes}
 \end{figure}
 
-Shown in \autoref{fig:rtPi4MemTimes}, the average latency from parent request to child execute was 19$\mu$s. During the real-time analysis of the Linux kernel an average response time of 11$\mu$s was observed. This shows that the tests are approximately correct as the results are within the same order of magnitude. The additional latencies are likely due to the unpredictable nature of the conditional variable interrupts.
+Shown in \autoref{fig:rtPi4MemTimes}, the average latency from parent request to child execute was $19{\mu}s$. During the real-time analysis of the Linux kernel an average response time of 11$\mu$s was observed. This shows that the tests are approximately correct as the results are within the same order of magnitude. The additional latencies are likely due to the unpredictable nature of the conditional variable interrupts.
 
 \newpage
 
@@ -85,7 +85,7 @@ To signal the child component a two byte message was sent from the parent. This 
     \label{fig:rtPi4SocketTimesBlocking}
 \end{figure}
 
-Although the blocking socket test did perform reasonably well, it was on average over 50\% slower than the shared memory conditional variable implementation at 30$\mu$s.
+Although the blocking socket test did perform reasonably well, it was on average over 50\% slower than the shared memory conditional variable implementation at $30{\mu}s$.
 
 The was assumed to be because of how the sockets are implemented in the Linux kernel. When the child process is blocked waiting for a message, the time taken to move the process back into the unblocked state is unpredictable. This is in contrast to the conditional variables which appeared to move out of the blocked state much quicker. With further investigation into the kernel, this could be investigated but is out of the scope of the project.
 
@@ -194,7 +194,7 @@ There are additional signals that you can send
     \label{tbl:linuxSignalsSample}
 \end{table}
 
-Hence the final scheduling method investigated was Linux process signalling. No additional Rust crates were required as \verb|libc| implements the signalling functionalities.  However, the signal based programs were implemented slightly different. Rather than acknowledging a response to the parent process the child simply executed. This was because the signals tested were unidirectional, unlike the sockets and memory. This simply removes the overrun detection in the parent for the child process and should not impact the test results. 
+Hence the final scheduling method investigated was Linux process signalling. No additional Rust crates were required as \verb|libc| implements the signalling functionalities.  However, the signal based programs were implemented slightly different. Rather than acknowledging a response to the parent process, the child simply executed. This was because the signals tested were unidirectional, unlike the sockets and memory. This simply removes the overrun detection in the parent for the child process and should not impact the test results. 
 
 \begin{figure}[ht]
     \centering
@@ -209,9 +209,9 @@ Shown in \autoref{fig:rtPi4SignalTimes} the signal-based scheduler approach resu
 \newpage
 
 \subsection{Evaluation}
-\textcolor{red}{Signals worked best, memory second...}
+Signals performed the best ($17{\mu}s$) out of the different techniques tested with shared memory a close second ($19{\mu}s$). Therefore signals were selected as the primary choice for implementing an event-based scheduler. This does assume that the target runtime support signals, for example a virtual machine architecture may not allow signals between environments. In this scenario a shared memory implementation should be selected.
 
-\textcolor{red}{Non blocking sockets were technically better on a single iteration but impractical...}
+A socket-based scheduler solution could theoretically be developed if it was the only communication medium present. However, the extra work required to make a viable solution is out of the scope of this project, given the available solutions.
 
 \begin{figure}[ht]
     \centering
@@ -221,9 +221,11 @@ Shown in \autoref{fig:rtPi4SignalTimes} the signal-based scheduler approach resu
     \label{fig:rtPi4CompareTimes}
 \end{figure}
 
+\clearpage
+
 \subsubsection{Processor Differences}
 
-While all formal tests were carried out on the CM4, some quick tests were also performed on the Raspberry Pi 5. Displayed in \autoref{fig:rtPi4vsPi5CompareTimes} the Pi 5 performed much better than the CM4. This was ilkley due to the different processors and implementations of interrupts. The Pi 5 would be a good choice to implement a real-time system in a future project.
+While all formal tests were carried out on the CM4, some quick tests were also performed on the Raspberry Pi 5. Displayed in \autoref{fig:rtPi4vsPi5CompareTimes} the Pi 5 performed much better than the CM4. This was ilkley due to the different processors implementations of interrupts. The Pi 5 would be a good choice to implement a real-time system in a future project.
 
 \begin{figure}[ht]
     \centering
