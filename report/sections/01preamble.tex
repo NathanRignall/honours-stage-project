@@ -5,7 +5,7 @@
 % tikz drawing
 \usepackage{tikz}
 \usetikzlibrary{automata, positioning, arrows, shadows, fit, calc, matrix}
-\tikzset{block/.style={draw, thick, text width=3cm, minimum height=1.5cm, align=center}, line/.style={-latex}}  
+\tikzset{block/.style={draw, thick, text width=3cm, minimum height=1.5cm, align=center}}  
 
 % tikz uml thread diagrams
 \usepackage{pgf-umlsd}
@@ -62,3 +62,9 @@
 \renewcommand\theadgape{}
 \renewcommand\theadalign{lc}
 \renewcommand\rotheadgape{}
+
+\usepackage{atbegshi,picture}
+\immediate\write18{git rev-parse --short HEAD > githash.aux }
+\AtBeginShipout{\AtBeginShipoutUpperLeft{%
+  \put(\dimexpr\paperwidth-1cm\relax,-1.5cm){\makebox[0pt][r]{\framebox{DRAFT \input{githash.aux}}}}%
+}}
