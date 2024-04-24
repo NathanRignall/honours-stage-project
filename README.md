@@ -1,8 +1,8 @@
-# honours-stage-project
+# Live Software Updates in a Real-Time System 
 
 ## Report
 
-This folder contains the final report for the project. Written in LaTeX, it can be compiled using the following command:
+This folder contains the final report. Written in LaTeX, it can be compiled using the following command:
 
 Make graphics & report:
 ```bash

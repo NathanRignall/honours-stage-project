@@ -1,5 +1,23 @@
 \abstract{%
-  My abstract ...
+Real-time systems are used throughout the world's critical infrastructure. Updating software on these systems usually requires downtime, where new software is transferred and hardware is reset. Live software updates propose that this process of updating software can happen during operation, with no impact on the intended task. This both reduces the requirement for redundant hardware and increases the flexibility and upgradeability of software systems.
+
+Focusing on the aerospace sector, this report investigates existing dynamic software update solutions, critically analysing each implementation. And subsequently proposes an optimised design for integrated modular avionics systems with edges and nodes.
+
+The new design uses a component-based software architecture with isolated software components that contain distinct functionality and execute on a cyclic schedule. Message channels allow for component-component and edge-component communication. Components and message channels are configured dynamically using task lists which contain a series of actions to perform on the system. These configuration changes enable the dynamic software updates, as new configurations change the mappings of components and messages.
+
+The live update solution is validated using an external test harness that is capable of measuring accurate timings. The system is able to maintain a control loop frequency of 1kHz and an end-to-end latency of $2.2ms$ during software upgrade. Additional components are used to further test the state synchronisation methods in the software architecture.
+
+% The system adheres to real-time guarantees though the use of non-blocking and blocking tasks for performing reconfiguration activities. Long-running non-blocking tasks occur in a background thread 
+
+% while blocking tasks occur in the main
+
+% All blocking tasks are short and are ensured to
+
+% so that the system is always in a defined state 
+
+% Implemented in Rust on Linux
+% Evaluated tuntime environet for optimal development target
+
 }
 
 % The abstract is a short, self-contained statement describing the whole of your work.  It should be less than a page (typically half a page) and should summarise the scope, purpose, results and content of the work.  The abstract might be thought of as a summary which you would read quickly to decide if the rest of the document is worth taking the time to read in detail.  In scientific publishing, abstracts are often used as sources of keywords and concepts for searching, so it’s important to ensure that the main ideas and conclusions of your work are present.
@@ -7,3 +25,4 @@
 % When someone has read your abstract, they should know what your project was about, how you did it and what the end result was.  It doesn’t need to contain references or literature reviews.  For example, here’s the abstract from Bell and Brooks (2019)’ s paper “What makes students satisfied? A discussion and analysis of the UK's national student survey” (which, incidentally, is very interesting):
 
 % “This paper analyses data from the National Students Survey, determining which groups of students expressed the greatest levels of satisfaction. We find students registered on clinical degrees and those studying humanities to be the most satisfied, with those in general engineering and media studies the least. We also find contentment to be higher among part-time students, and significantly higher among Russell group and post-1992 universities. We further investigate the sub-areas that drive overall student satisfaction, finding teaching and course organisation to be the most important aspects, with resources and assessment and feedback far less relevant. We then develop a multi-attribute measure of satisfaction which we argue produces a more accurate and more stable reflection of overall student satisfaction than that based on a single question.”
+

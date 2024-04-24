@@ -23,27 +23,24 @@ Linux also supports containerization through cgroups and namespaces, which could
 
 \textcolor{red}{NOT DONE!!}
 
-Why xen? 
+To reap the benefits of dynamic updates it is preferred that the hypervisor is independent of the operating system. This is so that different operating systems can be upgraded during operation, using the hypervisor functionality to run new virtual machines. 
 
-This is because KVM is implemented on top of the Linux kernel.
+The KVM hypervisor is implemented on top of the Linux kernel, so is discarded from the search. Also, in a true real-time system it is unusual to use Linux. Rather a more preferable real-time OS such as Zephyr might be used. Using KVM as the hypervisor would constrain the system to Linux's real-time behaviour.
 
-To reap the benefits of dynamic updates it is preferred that the hypervisor is independent of the operating system (explain why).
-Also, in a true real-time system it is unusual to use linux. Rather a more preferable OS such as Zephyr or FreeRTOS (Free and open source solutions used.)
+\textcite{ayresVirtualisationMeansDynamic2019} completed a short study into the different available virtualisation technologies for embedded safety critical systems.
 
+Notable hypervisors not based on KVM...
 
-\autocite{ayresVirtualisationMeansDynamic2019} completed a short study into the different available virtualisation technologies for embedded safety critical systems.
-
-VxWorks, Jailhouse, KVM, Xen, Sel 4
+VxWorks, Xen, Sel 4
 All have public support for the raspberry pi 4
 
-Xen was selected for te hypervisor for its independence from linux and open source nature
+Xen was selected as the hypervisor for evaluation because of its independence from linux and open source nature.
 
 
+% HVM, PV, PVH
+% Xen uses para-virtualization and a modified version of the Linux kernel can run as a guest OS.
 
-HVM, PV, PVH
-Xen uses para-virtualization and a modified version of the Linux kernel can run as a guest OS.
-
-EXPLAIN RT LINUX
+% EXPLAIN RT LINUX
 
 % why xen for ramdisk etc
 % virtual switch, arrangement of dom0 with hardware control
@@ -54,6 +51,10 @@ All software images for the development cards were created using the Yocto Proje
 
 Yocto is an open source project that uses various layers to build an image using scripts.
 
+Xen version
+
+% cite xen too
+
 \begin{itemize}
     \item \verb|poky|
     \item \verb|meta-openembedded|
@@ -63,17 +64,11 @@ Yocto is an open source project that uses various layers to build an image using
 
 \clearpage
 
-Significant issues getting the cards to boot
+A custom layer (\verb|meta-cm4-uboot-fix|) was required in order to fix issues with the uBoot bootloader. As the CM4 has onboard flash, the numbering of the eMMC boot drives was slightly different from the Pi 4. Hence a patch was required to modify uBoot's source.
+
+Another layer \verb|meta-rpi4-kernel| was used to pin a specific kernel version. This ensured all images generated used a consistent kernel, 
 
 \begin{itemize}
     \item \verb|meta-cm4-uboot-fix|
     \item \verb|meta-rpi4-kernel|
 \end{itemize}
-
-xen version 
-
-linux version
-
-uboot version
-
-Use the uBoot boot loader.

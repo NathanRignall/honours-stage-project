@@ -48,7 +48,7 @@ Test programs were executed on the target development hardware (CM4) with Linux 
 \subsection{Shared Memory}
 
 % present tense
-On a Unix system each process has its own virtual memory space, so no process can normally access the memory of another process. This is to ensure proper isolation between processes. Shared memory can be used to allow multiple processes to access the same memory segment, though synchronisation methods such as mutexes must be used to ensure data and program integrity. \autocite{kentstateSharedMemory}
+On a Unix system each process has its own virtual memory space, so no process can normally access the memory of another process. This is to ensure proper isolation between processes. Shared memory can be used to allow multiple processes to access the same memory segment, though synchronisation methods such as mutexes must be used to ensure data and program integrity. \autocite{kentstateuniversitySharedMemory}
 
 To allocate \verb|shmget()| returns an identifier \verb|shm_id| that can later be used to access the memory segment. \autocite{ShmgetLinuxManual2024}. To add the memory segment to the current processes the \verb|shmat()| function is used, when provided with the \verb|shm_id| \autocite{ShmopLinuxManual2024}. Conditional variables, a synchronisation method, can then be waited on using \verb|pthread_cond_wait| \autocite{Pthread_cond_timedwait3pLinux}.
 
@@ -67,7 +67,7 @@ Shown in \autoref{fig:rtPi4MemTimes}, the average latency from parent request to
 
 \newpage
 
-\subsection{Sockets}
+\subsection{Sockets} \label{sec:schedSockets}
 
 % present tense
 Unix domain sockets are a useful tool for implementing interprocess communication (IPC). They are a special type of socket that behave similarly to local network sockets but bypass the network stack for efficiency. These sockets can either be unnamed or bound to a filesystem path. \autocite{UnixLinuxManual2024}. 
