@@ -76,7 +76,7 @@ The results of this experiment validate that the system is able to handover hard
 
 \clearpage
 
-\section{Plant Experiment}
+\section{Plant Model}
 
 The plant and controller models (\autoref{fig:testPlantExecOutput}) both outputted similar console messages to the test harness components. Differences being the communication error messages and the timing between each configuration change.To allow the plant simulation to run for longer, the configuration changes were scripted to change further apart. At $t=5000$ configuration one ($Plant$ + $Controller$), $t=15000$ configuration two ($Plant$ + $Controller^{\prime}$), $t=45000  $configuration three (empty) and $t=60000$ shutdown.
 
@@ -134,15 +134,5 @@ However, the system did keep to schedule during operation despite the significan
     \label{fig:testPlantExecutionTimes}
 \end{figure}
 
-WHAT DOES THIS VALIDATE!
-
-% \begin{figure}[ht]
-%     \centering
-%     \includegraphics[width=\textwidth]{elafry-plant-times-zoom.pdf}
-%     \caption[Test plant execution times (update)]
-%     {Test plant execution times (update)}
-%     \label{fig:testPlantExecutionTimesZoom}
-% \end{figure}
-
-
+Hence, this experiment validates correct clock synchronisation, state continuity and optimal time for software update.
 

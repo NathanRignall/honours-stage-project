@@ -190,7 +190,7 @@ Signals can be used in Linux to notify processes of actions, they are commonly u
     \label{tbl:linuxSignalsSample}
 \end{table}
 
-Final scheduling method investigated was Linux process signalling. No additional Rust crates were required as \verb|libc| implements the signalling functionalities.  However, the signal-based programs were implemented slightly differently. Rather than acknowledging a response to the parent process, the child simply executed. This was because the signals tested were unidirectional, unlike the sockets and memory. This simply removes the overrun detection in the parent for the child process and should not impact the test results. To request execution the parent triggered \verb|SIGCONT|, after execution the child put itself to sleep with \verb|SIGSTOP|.
+The final scheduling method investigated was Linux process signalling. No additional Rust crates were required as \verb|libc| implements the signalling functionalities.  However, the signal-based programs were implemented slightly differently. Rather than acknowledging a response to the parent process, the child simply executed. This was because the signals tested were unidirectional, unlike the sockets and memory. This simply removes the overrun detection in the parent for the child process and should not impact the test results. To request execution the parent triggered \verb|SIGCONT|, after execution the child put itself to sleep with \verb|SIGSTOP|.
 
 \begin{figure}[ht]
     \centering

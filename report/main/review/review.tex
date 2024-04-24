@@ -43,18 +43,27 @@ The software techniques used to implement a DSU system are expressed by \textcit
 \textcolor{red}{ALL THESE NEED EXPANDING...}
 
 \subsubsection{Level of Update}
-How much of the software is updated, components or entire system
-Sometimes a single line of code can fix a bug
+A software update often can consist of very minor changes, possibly fixing a software bug with a single line of code. Level of update considers how much of the software is updated, whether that is components or entire system \autocite{seifzadehSurveyDynamicSoftware2013}.
 
-\subsubsection{Update of Dependent Components}
-Connections between components can sometimes be duplex
-Sometimes the communications between software also changes
+\subsubsection{Dependent Components}
+The communications between software modules (functions or collections of functions) are often not singular. Instead a program may contain many communication between many functions in a many-to-many relationship. 
+
+This increases the complexity of upgrading singular modules, as one change could affect all other modules. Sometimes the data types used in communications also changes, so multiple dependant modules may need upgrading to use the new types.
+
 Proxies and Wrappers
 
 \subsubsection{Time of Update}
+When considering 
+
+This is particularly relevant to real-time.
+
 Activeness safety (AS), confreeness safety (CFS), and manual identification. (REFERENCE)
 
 \subsubsection{State Transfer}
+Most applications contain state that must be maintained during software upgrade.
+
+This can be automatic 
+
 Automatic or programmer defined
 
 Automatic, primitive type changes
@@ -66,11 +75,14 @@ Time of state transformation
 Lazy transformation
 Multiple cycles to transfer in a cyclic system 
 
-\subsubsection{Cleaning}
-High level languages (garbage collector)
-Stop old component
+\subsubsection{Reasource Cleaning}
+After software update old software modules should be cleared from memory to save resources. 
 
-\subsubsection{Rollback}
+In a low level language this would take place when defined by the developer. In a high level language the garbage collector would take this responsibility.
+
+\subsubsection{Atomicity and Rollback}
+Sometimes errors may occur during software update 
+
 In case of errors to support the availability of a system rollback is required
 Atomic actions, reversible operations 
 

@@ -12,13 +12,13 @@ Through instrumentation it was shown that the system was able to keep its real-t
 
 The software infrastructure was validated with a physical test harness that accurately measured the end-to-end latency of a mock avionics system. This included two edge data generators and receivers and the main processing node, connected over an ethernet network. A logic analyser captured a latency of approximately $2.2ms$, that was consistent throughout software update.
 
-Through the literature review, the principals of dynamic software updates that were relevant to real-time systems were investigated. These principals were then successfully applied onto the example hardware implementation, answering the research question.
+Through the literature review, the principals of dynamic software updates that were relevant to real-time systems were investigated; hardware handover, clock synchronisation, state continuity and optimal time. These principals were then successfully applied onto the example hardware implementation and validated with two experiments, answering the research question.
 
 % secondary
 
 Compared to the schedule defined at the beginning of the project, the timeline was delayed, this only affected the delivery of secondary objectives. As planned the software development followed an overall waterfall methodology, with periods of agile prototyping.
 
-While a simulated real-life test application was created, it was not for a physical unmanned aerial vehicle. Instead, a plant and controller model of a mass falling due to gravity with a thruster was used. This was satisfactory for demonstrating that state transfer between old and new software components was successful. During software update the body maintained stable flight. The fluctuations found in thrust values during software update were likely due to floating point precision errors from when the state was sent over the network. Modification to use fixed point decimals could solve this issue and is likely they would be required for a flight controller implementation anyway.
+While a simulated real-life test application was created, it was not for a physical unmanned aerial vehicle. Instead, a plant and controller model of a mass falling due to gravity with a thruster was used. This was satisfactory for demonstrating that state transfer between old and new software components was successful. During software update the body maintained stable flight. The fluctuations found in thrust values during software update were likely due to floating point precision errors from when the state was sent over the network. Modification to use fixed point decimals could solve this issue and is likely they would be required for a flight controller implementation.
 
 Plans were created for a physical drone implementation, but were not realised due to the lack of time. Deploying such flight controller would have required a large quantity of software, not related to dynamic updates. 
 
@@ -26,7 +26,7 @@ A software update using a public cloud continuous integration environment was no
 
 % what took a long time
 
-The project's runtime analysis and middleware development phases were both extended. This was due to the complexities in finding a suitable runtime environment for real-time software. It was challenging finding a solution to the event based scheduler, as many of the techniques used to send events in Linux caused too significant latencies. Solutions were found to both of these problems.
+The project's runtime analysis and middleware development phases were both extended. This was due to the complexities in finding a suitable runtime environment for real-time software. It was challenging finding a solution to the event based scheduler, as many of the techniques used to send events in Linux caused too significant latencies. Solutions were found to both of these problems. In hindsight these issues could have been avoided if a true real-time operating system such as VxWorks was used.
 
 \clearpage
 

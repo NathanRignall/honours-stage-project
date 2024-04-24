@@ -98,14 +98,25 @@ To facilitate real-time software updates this project will develop an embedded m
     \end{srsitems}
 \suspend{srsitems}
 
-\subsection{Non-Functional Requirements}
-\textcolor{red}{Latency, real-time stuff}
+\clearpage
 
-\newpage
+\subsection{Non-Functional Requirements}
+
+\resume{srsitems}
+    \item The software infrastructure must maintain all real-time guarantees defined by applications, even during software update.
+
+    \item The software infrastructure should exhibit high levels of reliability, every test should be repeatable.
+    
+    \item The software infrastructure should follow the general principals of certification, such that it is possible in the future.
+\suspend{srsitems}
+
+
 
 \section{Test Harness}
 
-To accurately test the real-time behaviour of the system, an external test harness is required. While latency and jitter can be measured on target, with instrumentation, this does not independently measure the system's performance. The following requirements define the high-level requirements required for a successful test harness.
+To accurately test the real-time behaviour of the system, an external test harness is required. While latency and jitter can be measured on target, with instrumentation, this does not independently measure the system's performance.
+
+% The following requirements define the requirements  for a successful test harness.
 
 % \subsubsection{High-Level}
 
@@ -118,41 +129,41 @@ To accurately test the real-time behaviour of the system, an external test harne
     \end{srsitems}
 
     \item An example software component, that is executed on the software infrastructure must interface with the test harness.
-\suspend{srsitems}
-
-\newpage
-
-\section{Demonstration Components}
-
-\textcolor{red}{MAY GET RID OF THIS AND PUT IN EXPERIMENT}
-
-While the test harness is designed to evaluate the real-time behaviour of the system, additional software components are required to evaluate the correct behaviour of the system during update. These components must run on the software infrastructure.
-
-% \subsubsection{High-Level}
-
-\resume{srsitems}
-    \item The demonstration application 
-    \item Something more here...
 \end{srsitems}
 
-% demo apps
-Example application that uses one differential equation and requires its state to be maintained with a plant for the example application to test it's functionality
+% \newpage
 
-% demo fcs
-The example application must 
-maintain 
+% \section{Demonstration Components}
 
-% demo plant model
-The plant must
-model a mass falling due to gravity
+% \textcolor{red}{MAY GET RID OF THIS AND PUT IN EXPERIMENT}
 
-\newpage
+% While the test harness is designed to evaluate the real-time behaviour of the system, additional software components are required to evaluate the correct behaviour of the system during update. These components must run on the software infrastructure.
+
+% % \subsubsection{High-Level}
+
+% \resume{srsitems}
+%     \item The demonstration application 
+%     \item Something more here...
+% \end{srsitems}
+
+% % demo apps
+% Example application that uses one differential equation and requires its state to be maintained with a plant for the example application to test it's functionality
+
+% % demo fcs
+% The example application must 
+% maintain 
+
+% % demo plant model
+% The plant must
+% model a mass falling due to gravity
+
+% \newpage
 
 \section{Development Hardware}
 
 \begin{hrsitems}
-    \item The development hardware must use dedicated hardware and not be virtualized.
+    \item The development hardware must use dedicated development hardware and not be virtualized.
     \item The development hardware must have hardware support for ethernet networking.
     \item The development hardware must support Linux and at least one open source hypervisor.
-    \item \textcolor{red}{The development hardware...}
+    \item The development hardware must have full remote control, including power and data.
 \end{hrsitems}

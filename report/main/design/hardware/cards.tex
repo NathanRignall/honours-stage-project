@@ -2,7 +2,7 @@
 
 \subsection{Development Cards}
 
-To build and test the real-time software dedicated development hardware was required to ensure an isolated testing environment. The Raspberry Pi 4 Compute Module 4 (CM4) was selected as the development card of choice for its comprehensive software support for operating systems and hypervisors. The Compute Module 4 contains the same overall hardware as the standard Raspberry Pi 4 but is more suited to industrial environments, with the option for custom carrier boards. \textcolor{red}{Exception being the ethernet IC and EMMC flash, which both caused issued when compiling the custom operating system and bootloader images.}
+To build and test the real-time software dedicated development hardware was required to ensure an isolated testing environment. The Raspberry Pi 4 Compute Module 4 (CM4) was selected as the development card of choice for its comprehensive software support for operating systems and hypervisors. The CM4 contains the same overall hardware as the standard Raspberry Pi 4 but is more suited to industrial environments, with the option for custom carrier boards. The Pi 4 and CM4 use different ethernet chips and the CM4 has additional embedded Multi-Media Card (eMMC) flash storage.
 
 Another requirement for the hardware was remote debugging support, with full power and data control. This was to ensure that development could take place away from the physical cards, remotely. To cater for the remote development the Pi KVM project was selected to control the cards. This was because it supported customisation of GPIO switches and could run on Raspberry Pi 4s that were also available.
 
@@ -43,6 +43,8 @@ Another requirement for the hardware was remote debugging support, with full pow
 \end{figure}
 
 The CM4's display was captured using the CSI port on the KVM with a HDMI to CSI converter. While this was not strictly necessary it was useful for debugging. To access the development card's console UART from the CM4 was connected to a USB serial converter. A Segger JTAG debugger was connected to the CM4 in case the kernel or bootloader require debugging. The power for the CM4 it was controlled using a simple relay, that switched the 12v supply through GPIO pins. The signal flags of the EMMC storage, mode and lock, were directly connected to the KVM GPIO pins. This was so the storage could be flashed and locked remotely. Hence, the USB host was connected to the KVM for flashing the CM4. The used GPIO channels were configured in the KVM user interface.
+
+\clearpage
 
 So that both software development and benchmarking/testing activities could take place at the same time two development setups were created. These were connected together using a managed switch so that the cards could either communicate with test hardware or connect to external development infrastructure. For the flexibility of loading software images over the network, a TFTP server was added to the network. This network arrangement is shown in \autoref{fig:developmentNetworkBlockDiagram}.
 
