@@ -10,42 +10,28 @@
 
 % Make it clear what you have done, and what is pre-existing.  For example, if you are using third party software libraries, describe how you have used them, and how they have benefited your project rather than simply what they do.  If you have built on a framework, make it clear how you have developed new functionality.
 
-Simplest part of the development lifecycle.
-
 \subsection{Development Utilities}
 
-Software Quality
-Github Jira Agile
+All software development took place on a Raspberry Pi 5 running Raspbian to mirror the target hardware's environment. Target software images were cross compiled using an x86 development machine following the Yocto build scripts.
 
-How this brings code down from github.
-
-Rust, added a layer onto the yocto to deploy application software on target
+Source code was configuration controlled with a Git repository, stored on GitHub shown in \autoref{fig:implementationGithub}. Test harness software and all hardware followed a waterfall software development methodology. The software infrastructure followed an Agile software development methodology as defined in the project definition document.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=\textwidth, clip, trim=0.1cm 5.2cm 0.1cm 2.6cm]{github.pdf}
+    \includegraphics[width=\textwidth, clip, trim=0.1cm 9cm 0.1cm 2.6cm]{github.pdf}
     \caption[Github]
     {Github}
     \label{fig:implementationGithub}
 \end{figure}
 
-\subsubsection{Proessing Environment}
-Did do some experimenting with unikernels and containers for the isolated processing environments
-Picked processes in linux, theoriecally can add permisions with cgroups
+
 
 
 \subsection{Software infrastructure}
 
-Took the analysis of signals, applied this to implement the scheduler in Linux.
+The software infrastructure implemented the majority of the designs identified in section \ref{sec:softwareDesign}. 
 
-What libraries
-
-Serde for data (yaml + bincode)
-simple\_logger
-uuid
-
-With INFO, WARN, ERROR enabled.
-
+% code organisation
 divided into apps and crates
 
 How do the classes fit together
@@ -54,11 +40,32 @@ Separate core library with management
 
 structure of code
 
+\clearpage
 
-\subsubsection{Configurations}
-Why YAML
-YAML, and how they fit into a task list
-Example YAML configuration
+
+\subsubsection{Libraries}
+Several software libraries were used during development; Serde, Bincode, Serde Yaml, Log, Env Logger, Uuid, Libc. Serde, a framework for serializing and deserializing data in Rust \autocite{SerdersSerde2024}, was used for all external data conversation. Bincode was used in combination with Serde to send data between components and the software infrastructure. Bincode is a simple binary encoder which allowed data to be sent binary streams \autocite{BincodeorgBincode2024}. 
+
+For a more human-readable format Serde Yaml was used to load Yaml data into the software infrastructure. Serde Yaml implements the Serde deserialization format for the Yaml file format \autocite{tolnayDtolnaySerdeyaml2024}. Hence, all the task lists used to configure the system were written using Yaml.
+
+To express the state of the system into the console, the Log crate was used in combination with Env Logger. Log provides a simple logging interface that other crates can implement \autocite{RustlangLog2024}. Env Logger was used to physically print the log messages to console as it can be configured using environment variables \autocite{Env_loggerSrcLib}. There were several different logging levels available; Trace, Debug, Info, Warn, Error. These different levels were useful for isolating errors in the system without using a debugger.
+
+Uuid was used to generate unique identifiers \autocite{UuidrsUuid2024}. To interface with the Linux kernel and perform scheduling operations Libc was used \autocite{RustlangLibc2024}. The project tried to minimise the number of libraries used as in a safety critical environment all libraries must also be certified.
+
+\subsubsection{Proessing Environment}
+While the Xen could have been suitable for the project, it was not used as a method for isolating components. This was due to the added complexities it would have required synchronising virtual machines across the system, 
+
+Instead, the scheduler was implemented on Linux using the signals approach with separate processes for each component. Theoretically, this implementation could be expanded to use Linux cgroups and namespaces to further isolate components while retaining the same scheduler implementation.
+
+In addition to the signalling, Unix sockets were used as the communication medium for message-based communications between the software infrastructure and components. As found in section \ref{sec:schedSockets}, sockets can provide relatively low latency communication between processes in Linux.
+
+\subsubsection{Development Issues}
+After developing the majority of the software infrastructure it was found that the management function would take a long period of time to execute when loading a configuration. This was due to the slow file read and processing time required to successfully decode the Yaml configuration file. This caused issues with the program not meeting the defined frequency of 1kHz.
+
+To fix this an additional background task was added to the management program to specifically impalement the configuration load procedure. Once the tasks were complete, the data was passed back to the main management thread for processing. While this was unplanned, the background thread load would be useful for when configurations are first downloaded over the network, rather than from disk.
+
+\subsubsection{Summary}
+The software development activities for the software infrastructure programs were a success. All software requirements were implemented to produce a real-time component system.
 
 \clearpage
 
@@ -68,7 +75,9 @@ The intention for the test harness's signal generator and receiver software was 
 
 However, the Rust libraries for the W5500 did not work as expected when first tested. Many packets were dropped and the reason for this is unknown. Given more time, it is likely this problem could have been fixed. For a quick solution, the microcontroller's switched to using C/C++ in the Arduino development environment.
 
-This enabled the built-in packages for the W5500 to be used, this fixed the packet loss problem straight away. Some modifications had to be made to support this change, as messages had to be decoded manually in C and Rust. This is displayed in \autoref{lst:decodeMessageRust} and \autoref{lst:decodeMessageArunio}.
+This allowed the built-in packages for the W5500 to be used, this fixed the packet loss problem straight away. Some modifications had to be made to support this change, as messages had to be decoded manually in C and Rust. This is displayed in \autoref{lst:decodeMessageRust} and \autoref{lst:decodeMessageArunio}.
+
+\hfill
 
 \begin{lstlisting}[caption=Decode message (Rust), label={lst:decodeMessageRust},captionpos=b]
 // first 4 bytes are channel id
@@ -102,6 +111,6 @@ updateState = packetBuffer[10];
 \end{lstlisting}
 
 
-Byte 0-4 channel ID
-Byte 5 
-Byte 6-Len 
+% Byte 0-4 channel ID
+% Byte 5 
+% Byte 6-Len 

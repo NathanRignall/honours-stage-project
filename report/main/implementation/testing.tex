@@ -2,7 +2,7 @@
 
 \section{Testing}
 
-Some text
+% Some text
 
 % If you are developing software or hardware, you must test it.  This section should explain how your work will be (or has been) tested.
 
@@ -10,13 +10,15 @@ Some text
 
 % Maybe also mention software quality here, following do178c etc.
 
-Test driven development
+% Test driven development
 
 \subsection{Unit Tests}
 
 To complement the end-to-end experiments for testing real-time behaviour, unit-tests were made across the software infrastructure packages. These were designed to find small software bugs in the implementation during development.
 
 An example unit test is shown in \autoref{lst:unitTestCommunication}. This was used to test that bad communication messages were rejected by the communication client library. The test mocked the communication socket so that false data could be sent through it.
+
+\hfill
 
 \begin{lstlisting}[caption=Example unit test (communications), label={lst:unitTestCommunication},captionpos=b]
 #[test]
@@ -45,6 +47,8 @@ Using the unit tests, code coverage reports were generated. These expressed the 
 
 Function coverage simply counts the number of times a function has been executed. This also includes inline functions. Line coverage checks how many times each line has been executed. Region coverage evaluates the number of times a subdivision of a function has been executed. For example, true/false control flow. \autocite{llvmSourcebasedCodeCoverage2024}
 
+\clearpage
+
 Each coverage metric is important for gaining a heuristic view of what percentage of the source code has been tested. This is specifically useful for software certification. DO-178B/C at the highest safety classification (DAL A) expects functions, lines, blocks and conditions coverage to be near 100\% \autocite{ibmHowCodeCoverage2022}. Currently Rust does not support condition coverage with llvm-cov. Condition coverage checks that all combinations of branches have been executed. \autocite{llvmSourcebasedCodeCoverage2024}
 
 
@@ -60,25 +64,25 @@ During development it was challenging producing the unit tests for every functio
 
 Packages that were entirely internal were easy to create unit tests for because they didn't interact with the operating system. For example, \verb|global_state| achieved 100\% code coverage as this class only contained functions that modified the program's local state. Given more development time, the unit test could be expanded for complete code coverage.
 
-\begin{table}[ht]
-  \centering
-  \caption{Caption}
-  \label{tab:table1}
-  \begin{tabular}{l|ccc|c}
-    \toprule
-     \thead{Requirements} & \rothead{Unit Tests} & \rothead{End-To-End Tests} & \rothead{Opinion} & \rothead{Complete}  \\
-    \midrule
+% \begin{table}[ht]
+%   \centering
+%   \caption{Caption}
+%   \label{tab:table1}
+%   \begin{tabular}{l|ccc|c}
+%     \toprule
+%      \thead{Requirements} & \rothead{Unit Tests} & \rothead{End-To-End Tests} & \rothead{Opinion} & \rothead{Complete}  \\
+%     \midrule
 
-    \ref{item:reqSIComp} & $\checkmark$ & & & \\
-    \ref{item:reqSICompStartStop} & $\checkmark$ & & & \\
-    \ref{item:reqSICompSched} & & $\checkmark$  & & \\
-    \ref{item:reqSIMess} & $\checkmark$ & & & \\
-    \ref{item:reqSIMessRoute} & $\checkmark$ & & & \\
-    \ref{item:reqSIMessRouteChange} & $\checkmark$ & & & \\
-    \ref{item:reqSIState} & $\checkmark$ & & & \\
-    \ref{item:reqSIStateSave} & $\checkmark$ & & & \\
-    \ref{item:reqSIStateRestore} & $\checkmark$ & & & \\
-    \ref{item:reqSIStateTransform} & $\checkmark$ & & & \\
-    \bottomrule
-\end{tabular}
-\end{table} 
+%     \ref{item:reqSIComp} & $\checkmark$ & & & \\
+%     \ref{item:reqSICompStartStop} & $\checkmark$ & & & \\
+%     \ref{item:reqSICompSched} & & $\checkmark$  & & \\
+%     \ref{item:reqSIMess} & $\checkmark$ & & & \\
+%     \ref{item:reqSIMessRoute} & $\checkmark$ & & & \\
+%     \ref{item:reqSIMessRouteChange} & $\checkmark$ & & & \\
+%     \ref{item:reqSIState} & $\checkmark$ & & & \\
+%     \ref{item:reqSIStateSave} & $\checkmark$ & & & \\
+%     \ref{item:reqSIStateRestore} & $\checkmark$ & & & \\
+%     \ref{item:reqSIStateTransform} & $\checkmark$ & & & \\
+%     \bottomrule
+% \end{tabular}
+% \end{table} 
