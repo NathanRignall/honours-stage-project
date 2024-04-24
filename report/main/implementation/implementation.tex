@@ -60,8 +60,48 @@ Why YAML
 YAML, and how they fit into a task list
 Example YAML configuration
 
+\clearpage
 
 \subsection{Test Harness}
 
-The intention for this software was to also use Rust, however could not get the Rust libaries for the W5500 working quickly, sure with extra time with sould have been possible.
-To simplify this software the arduino development environment was used. This as all the drivers for the w5500 are integrated in arduino libraries.
+The intention for the test harness's signal generator and receiver software was to also use Rust. This would have allowed type sharing across both the central processing nodes and edges so that packages like \verb|bincode| could serialise messages across the network, reducing development time.
+
+However, the Rust libraries for the W5500 did not work as expected when first tested. Many packets were dropped and the reason for this is unknown. Given more time, it is likely this problem could have been fixed. For a quick solution, the microcontroller's switched to using C/C++ in the Arduino development environment.
+
+This enabled the built-in packages for the W5500 to be used, this fixed the packet loss problem straight away. Some modifications had to be made to support this change, as messages had to be decoded manually in C and Rust. This is displayed in \autoref{lst:decodeMessageRust} and \autoref{lst:decodeMessageArunio}.
+
+\begin{lstlisting}[caption=Decode message (Rust), label={lst:decodeMessageRust},captionpos=b]
+// first 4 bytes are channel id
+let channel_id = u32::from_be_bytes([data[0], data[1], data[2], data[3]]);
+// next byte is count
+let count = data[4];
+// rest of data is message
+let data = data[5..].to_vec();
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Decode message (Arduino), label={lst:decodeMessageArunio},captionpos=b]
+// decode the packet
+int len = Udp.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE);
+// first - fourth bytes are packet length
+uint32_t packet_length = 0;
+for (int i = 0; i < 4; i++)
+{
+    packet_length = (packet_length << 8) | packetBuffer[i];
+}
+// second - fifth bytes are channel id
+channel_id = 0;
+for (int i = 4; i < 8; i++)
+{
+    channel_id = (channel_id << 8) | packetBuffer[i];
+}
+// sixth byte is packet number
+packet_number = packetBuffer[8];
+// seventh - last bytes are data
+ledState = packetBuffer[9];
+updateState = packetBuffer[10];
+\end{lstlisting}
+
+
+Byte 0-4 channel ID
+Byte 5 
+Byte 6-Len 
