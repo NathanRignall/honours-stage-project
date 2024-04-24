@@ -18,11 +18,13 @@
 
 % Design Constraints
 
-There are two main components of a Distributed Integrated Modular Avionics (DIMA) system, the processing nodes and the edges. The nodes run the main application software while the edges collect/send data from a variety of sensors/actuators. To apply dynamic software updates to a DIMA system, the focus should be within the processing nodes as that is where the majority of compute takes place.
+There are two main components of a Distributed Integrated Modular Avionics (DIMA) system/the processing nodes and the edges. The nodes run the main application software while the edges collect/send data from a variety of sensors/actuators. To apply dynamic software updates to a DIMA system, the focus should be within the processing nodes as that is where the majority of computing takes place.
 
-A component-based software infrastructure solution was selected for the central processing nodes. This was to enable multiple inter-connected applications to run on a single system. There were also many mature designs, such as FASA, that implement such dynamic software updates in a component system that a new design could be based off. A message-based approach was selected to connect different components with other components and edges. This was a simple technique that enables atomic control of data flow within the system, important for firmware upgrades. This design choice is analysed in more detail in section \ref{sec:designArch}.
+A component-based software infrastructure solution was selected for the central processing nodes. This was to enable multiple inter-connected applications to run on a single system. There are also many mature designs, such as FASA, that implement such dynamic software updates in a component system that a new design could be based on. A message-based approach was selected to connect different components with other components and edges. This was a simple technique that enables atomic control of data flow within the system, important for firmware upgrades. This design choice is analysed in more detail in section \ref{sec:designArch}.
 
 % Why channels, what static 
+
+% Assume single state transfer
 
 While little processing occurs within the edge data collectors, dynamic software updates could also be implemented here through pointer-swap update techniques. However, the focus of this project was on the main functionality of the system, hence this was left for a future implementation.
 
@@ -69,7 +71,7 @@ rightmargin=15pt}
 
 \section{Software Infrastructure}
 
-To facilitate real-time software updates this project will develop an embedded middleware framework that shall be known as the software infrastructure. This framework's should run software components which can be dynamically updated. To connect the different components together a message based approach shall be used.
+To facilitate real-time software updates this project will develop an embedded middleware framework that shall be known as the software infrastructure. This framework should run software components which can be dynamically updated. To connect the different components together a message-based approach shall be used.
 
 % The high-level requirements are first defined, followed by the more in-depth low-level requirement that shall be used to implement test-cases.
 
@@ -83,7 +85,7 @@ To facilitate real-time software updates this project will develop an embedded m
         \item The software infrastructure must allow users to create/start/stop/remove software components during operation. \label{item:reqSICompStartStop}
         \item The software infrastructure must allow users to change the configured cyclic schedule during operation. \label{item:reqSICompSched}
     \end{srsitems}
-    \item The software infrastructure must provide the functionality to allow components to communicate using messages passing. \label{item:reqSIMess}
+    \item The software infrastructure must provide the functionality to allow components to communicate using message passing. \label{item:reqSIMess}
     \begin{srsitems}
         \item The software infrastructure must allow users to configure communications between components using routes and channels. \label{item:reqSIMessRoute}
         \item The software infrastructure must allow users to add/remove routes between software components during operation. \label{item:reqSIMessRouteChange}
@@ -91,8 +93,8 @@ To facilitate real-time software updates this project will develop an embedded m
     \item The software infrastructure must provide the functionality to save and restore state between components. \label{item:reqSIState}
     \begin{srsitems}
         \item The software infrastructure must allow users to define which software components must save state during operation. \label{item:reqSIStateSave}
-        \item The software infrastructure must allow users to configure which component restore from state during operation. \label{item:reqSIStateRestore}
-        \item The software infrastructure must allow users define state transformation maps so different versions of state can be restored. \label{item:reqSIStateTransform}
+        \item The software infrastructure must allow users to configure which components restore from state during operation. \label{item:reqSIStateRestore}
+        \item The software infrastructure must allow users to define state transformation maps so different versions of state can be restored. \label{item:reqSIStateTransform}
     \end{srsitems}
 \suspend{srsitems}
 
@@ -103,7 +105,7 @@ To facilitate real-time software updates this project will develop an embedded m
 
 \section{Test Harness}
 
-To accurately test the real-time behaviour of the system, an external test harness is required. While latency and jitter can be measured on-target, with instrumentation, this does not independently measure the system's performance. The following requirements define the high-level requirements required for a successful test harness.
+To accurately test the real-time behaviour of the system, an external test harness is required. While latency and jitter can be measured on target, with instrumentation, this does not independently measure the system's performance. The following requirements define the high-level requirements required for a successful test harness.
 
 % \subsubsection{High-Level}
 

@@ -3,7 +3,7 @@
 \section{Scheduler}
 
 % WRONG TENSE
-To implement an event based cyclic scheduler, the scheduler must be able to send signals between processes without significant jitter and latency. This is because the signals effectively send execution requests for each component and if there are significant delays, the component will not execute when desired. The level of latency and jitter that is acceptable can be estimated by calculating a worst case execution time for a control loop in a particular application.
+To implement an event-based cyclic scheduler, the scheduler must be able to send signals between processes without significant jitter and latency. This is because the signals effectively send execution requests for each component and if there are significant delays, the component will not execute when desired. The level of latency and jitter that is acceptable can be estimated by calculating a worst-case execution time for a control loop in a particular application.
 
 % DIAGRAM (WHAT DO I ACTUALLY MEAN)
 
@@ -105,7 +105,7 @@ The non-blocking socket performed much better than both the blocking socket and 
 
 However, approximately every 100 cycles (1 second) significant latencies were introduced at over 40ms, making this solution completely unviable for a real-time system. It is assumed that these latencies are introduced periodically due to the kernel itself being moved onto the CPU. As the program is busy waiting it never enters the blocked state. Therefore it consumes 100\% of the CPU resources with no opportunity for the kernel to perform management functions.
 
-To resolve this, the scheduler could use a combination of both the blocking and non blocking sockets. The scheduler could first wakeup a component process using a blocking socket, once on the processor the component can now busy wait for a short period of time on the non blocking socket. Then the scheduler can send the execute command. This reduces the uncertainty of when the process will execute, but overall takes much longer to execute a component as two sequential messages are sent each cycle. An expected latency could be around $13{\mu}s + 19{\mu}s = 32{\mu}s$.
+To resolve this, the scheduler could use a combination of both the blocking and non blocking sockets. The scheduler could first wakeup a component process using a blocking socket, once on the processor the component can now busy wait for a short period of time on the non-blocking socket. Then the scheduler can send the execute command. This reduces the uncertainty of when the process will execute, but overall takes much longer to execute a component as two sequential messages are sent each cycle. An expected latency could be around $13{\mu}s + 19{\mu}s = 32{\mu}s$.
 
 To work around this the components could be put into the busy state on alternating processing cores. Component $a$ could be put into the busy wait and executed, while component $b$ is in the blocked state. These could then be alternated. While this would improve the real-time responsiveness of the system, it would unnecessarily consume CPU resources and increase latencies.
 
@@ -190,7 +190,7 @@ Signals can be used in Linux to notify processes of actions, they are commonly u
     \label{tbl:linuxSignalsSample}
 \end{table}
 
-Final scheduling method investigated was Linux process signalling. No additional Rust crates were required as \verb|libc| implements the signalling functionalities.  However, the signal based programs were implemented slightly different. Rather than acknowledging a response to the parent process, the child simply executed. This was because the signals tested were unidirectional, unlike the sockets and memory. This simply removes the overrun detection in the parent for the child process and should not impact the test results. To request execution the parent triggered \verb|SIGCONT|, after execution the child put itself to sleep with \verb|SIGSTOP|.
+Final scheduling method investigated was Linux process signalling. No additional Rust crates were required as \verb|libc| implements the signalling functionalities.  However, the signal-based programs were implemented slightly differently. Rather than acknowledging a response to the parent process, the child simply executed. This was because the signals tested were unidirectional, unlike the sockets and memory. This simply removes the overrun detection in the parent for the child process and should not impact the test results. To request execution the parent triggered \verb|SIGCONT|, after execution the child put itself to sleep with \verb|SIGSTOP|.
 
 \begin{figure}[ht]
     \centering

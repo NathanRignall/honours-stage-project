@@ -2,20 +2,20 @@
 
 \subsection{Analysis}
 
-To select the most optimal environment to develop the software infrastructure upon, a series of benchmarking activities were carried out. These focused on evaluating the operating systems and hypervisors which could operate in a real time environment. Comparing bare-metal Linux and Xen with Linux guests should give a good method to estimate the specific latencies brough about by Xen.
+To select the most optimal environment to develop the software infrastructure upon, a series of benchmarking activities were carried out. These focused on evaluating the operating systems and hypervisors which could operate in a real-time environment. Comparing bare-metal Linux and Xen with Linux guests should give a good method to estimate the specific latencies brough about by Xen.
 
 \subsubsection{Test Suite}
-There are several tools that can be used to analyse the real-time performance of an operating system. RT-Tests is a test suite that contains programs to test the various real-time linux features.
+There are several tools that can be used to analyse the real-time performance of an operating system. RT-Tests is a test suite that contains programs to test the various real-time Linux features.
 
-The RT-Tests suite includes a cyclictest program. This is a simple yet effective program that can be used to estimate the real time latencies in a system. It measures real time jitter by creating a interrupt event at a specific time in the future and measuring the time delay between the requested wake-up and actual wake-up time. While this provides a good method for identifying operating system induced latency and jitter it does not isolate latencies induced by hardware or low-level firmware. At this stage it can be assumed that the selected development targets do not induce significant latencies.
+The RT-Tests suite includes a cyclictest program. This is a simple yet effective program that can be used to estimate the real-time latencies in a system. It measures real-time jitter by creating a interrupt event at a specific time in the future and measuring the time delay between the requested wake-up and actual wake-up time. While this provides a good method for identifying operating system induced latency and jitter it does not isolate latencies induced by hardware or low-level firmware. At this stage it can be assumed that the selected development targets do not induce significant latencies.
 
 % Stress-ng
-Another tool that can be used during real-time testing is stress-ng (stress next generation) from \textcite{kingColinIanKingStressng2024}. This program can put artificial loads onto a Linux system. While stained memory and cpu pressures are unlikely in a real application scenario it is important to ensure that the real-time characteristics of an OS don't significantly change.
+Another tool that can be used during real-time testing is stress-ng (stress next generation) from \textcite{kingColinIanKingStressng2024}. This program can put artificial loads onto a Linux system. While sustained memory and CPU pressures are unlikely in a real application scenario it is important to ensure that the real-time characteristics of an OS do not significantly change.
 
 \subsubsection{Previous Work}
 
 % The paper results
-\textcite{abeniUsingXenKVM2020} compiled a similar study into the real time performance of open source hypervisors. Every hypervisor introduces some latencies into a virtual machine that can affect the correctness of the existing real-time analysis. Abeni and Faggioli compared the performance of both KVM and Xen on various intel x86 processors.
+\textcite{abeniUsingXenKVM2020} compiled a similar study into the real-time performance of open source hypervisors. Every hypervisor introduces some latencies into a virtual machine that can affect the correctness of the existing real-time analysis. Abeni and Faggioli compared the performance of both KVM and Xen on various intel x86 processors.
 
 The study found that the KVM hypervisor would be suitable for serving real-time workloads with worst-case latencies under $100\mu$s. This is applicable only when using RT kernels on both the guest and host. Likewise when using the Xen hypervisor the RT kernels on both the guest and host must also be used. Para-virtualised (PV) guests performed well but fully virtualised (HVM) guests did not, under $100\mu$s versus $1000000\mu$s.
 
@@ -39,7 +39,7 @@ Figure \autoref{fig:linux-i100-1h-allcores} displays that when not under load, t
 
     \includegraphics[width=\textwidth]{linux-i100-1h-allcores-sc4.pdf}
     \caption[Linux PREEMPT i100 cyclictest results (cpu load)]
-    {Linux PREEMPT i100 cyclictest results (cpu load)}
+    {Linux PREEMPT i100 cyclictest results (CPU load)}
     \label{fig:linux-i100-1h-allcores-sc4}
 
     \includegraphics[width=\textwidth]{linux-i100-1h-allcores-sm4.pdf}
@@ -100,9 +100,9 @@ Memory tests particularly strained the memory resources allocation processes of 
 
 \subsubsection{Xen Hypervisor}
 
-After validating the Linux kernel's real-time response, the Xen hypervisor can be evaluated using Linux as both Dom0 and a DomU guest. To ensure that the Xen scheduler itself did not interfere with any results, all vcpus were assigned on a one to one mapping of real cpus using the 'null' scheduler. 
+After validating the Linux kernel's real-time response, the Xen hypervisor can be evaluated using Linux as both Dom0 and a DomU guest. To ensure that the Xen scheduler itself did not interfere with any results, all vCPUs were assigned on a one to one mapping of real CPUs using the 'null' scheduler. 
 
-As shown in \autoref{fig:xen-rt-slop-i100-1h}, when Xen was evaluated using rt-tests at an interval of $100{\mu}s$ an almost even distribution of latencies is produced. This is very different to what was observed with bare metal Linux.
+As shown in \autoref{fig:xen-rt-slop-i100-1h}, when Xen was evaluated using rt-tests at an interval of $100{\mu}s$ an almost even distribution of latencies is produced. This is very different to what was observed with bare-metal Linux.
 
 \begin{figure}[ht]
     \centering
@@ -122,11 +122,11 @@ In attempt to find the cause of the increased latencies, Xen was measured again 
     \label{fig:xen-rt-slop-i100-i1000-1h}
 \end{figure}
 
-This problem as connotations to the issues \textcite{abeniUsingXenKVM2020} experienced with timer resolutions negatively affecting latency evaluations. As cyclictest uses the local cpu timer to measure latencies it is important that it is at a high enough resolution.
+This problem has connotations to the issues \textcite{abeniUsingXenKVM2020} experienced with timer resolutions negatively affecting latency evaluations. As cyclictest uses the local CPU timer to measure latencies it is important that it is at a high-enough resolution.
 
 \clearpage
 
-In a PVH virtualisation environment the cpu timers are often virtualized, hence they must be virtualised at high enough resolution for cyclictest to use. By modifying the \verb|timer_slop| command line property in Xen to $1{\mu}s$ from $50{\mu}s$ the timer resolution was significantly increased. This resulted in much better performance metrics at intervals of $100{\mu}s$ in \autoref{fig:xen-rt-i100-i1000-1h}.
+In a PVH virtualisation environment the CPU timers are often virtualized, hence they must be virtualised at high-enough resolution for cyclictest to use. By modifying the \verb|timer_slop| command line property in Xen to $1{\mu}s$ from $50{\mu}s$ the timer resolution was significantly increased. This resulted in much better performance metrics at intervals of $100{\mu}s$ in \autoref{fig:xen-rt-i100-i1000-1h}.
 
 \begin{figure}[ht]
     \centering
@@ -149,4 +149,4 @@ To confirm the real-time performance, Xen was also tested with artificial CPU lo
 
 \textbf{Evaluation}
 
-Xen approximately doubled the interrupt latency measured as compared to bare metal Linux. This is not ideal, but Xen could still be used in a soft-real time application if the latencies were accounted for. Before deploying Xen in a real-time environment, additional test should evaluate the multi-core interference across multiple guest virtual machines.
+Xen approximately doubled the interrupt latency measured as compared to bare-metal Linux. This is not ideal, but Xen could still be used in a soft real-time application if the latencies were accounted for. Before deploying Xen in a real-time environment, additional tests should evaluate the multi-core interference across multiple guest virtual machines.

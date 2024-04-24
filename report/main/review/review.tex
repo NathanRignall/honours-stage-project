@@ -10,11 +10,11 @@
 
 Dynamic software updating (DSU) refers to software applications which can be updated while running and without interrupting operation. \autocite{hicksDynamicSoftwareUpdating2005}
 
-Regular firmware upgrades require systems to be taken offline for firmware change and restart, which is generally time consuming and breaks continuity. High availability systems typically use hardware redundancy to provide operational continuity throughout updates. This is at the cost of extra hardware and complexity. \autocite{raoLiveSeamlessFirmware2023}
+Regular firmware upgrades require systems to be taken offline for firmware change and restart, which is generally time consuming and breaks continuity. High-availability systems typically use hardware redundancy to provide operational continuity throughout updates. This is at the cost of extra hardware and complexity. \autocite{raoLiveSeamlessFirmware2023}
 
-Physical tasks performed by software are often expensive to interrupt with high down time costs. For example within power substations, a power outage for customers would be costly. Hence, software is hardley updated during an embedded systems lifetime (typically of over 30 years). There are several solutions to updating software dynamically; few of these have been adapted to real-time systems. \autocite{wahlerDynamicSoftwareUpdates2009}
+Physical tasks performed by software are often expensive to interrupt with high down time costs. For example within power substations, a power outage for customers would be costly. Hence, software is hardly updated during an embedded system's lifetime (typically of over 30 years). There are several solutions to updating software dynamically; few of these have been adapted to real-time systems. \autocite{wahlerDynamicSoftwareUpdates2009}
 
-This chapter evaluates the requirements for a dynamic software updates system and the challenges involved. In addition, four existing implementations of dynamic updates for real-time systems are evaluated, considering both the advantages and disadvantages of each solution.
+This chapter evaluates the requirements for a system with dynamic software updates and the challenges involved. In addition, four existing implementations of dynamic updates for real-time systems are evaluated, considering both the advantages and disadvantages of each solution.
 
 \clearpage
 
@@ -32,7 +32,7 @@ A dynamic software system can be summarised into several requirements, regardles
 
 \begin{description}
     \item [Availability/Correctness] - Performing the software update should not impact the system's availability.
-    \item [Flexibility] - Any part of a running system should be updatable without downtime. This includes low level drivers and application software.
+    \item [Flexibility] - Any part of a running system should be updatable without downtime. This includes low level-drivers and application software.
     \item [Low Overhead]- The additional infrastructure required to support software updates should impact performance as little as possible.
     \item [Simplicity] - The dynamic update system should be simple, both to reduce complexity of a system and to ease developer usage.
 \end{description}

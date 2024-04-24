@@ -168,7 +168,7 @@ To implement \autoref{item:reqSIMessRoute} the software infrastructure shall imp
     \label{fig:communicationSoftwareArchietcture}
 \end{figure}
 
-Every component/device shall establish a single communication pathway with the software infrastructure, rather than one per channel. Reducing the complexity and enabling dynamic reconfigurations of channels without modifying sockets. This model displayed in \autoref{fig:communicationSoftwareArchietctureImp} with file-based addresses for components and ip-based addresses for edges.
+Every component/device shall establish a single communication pathway with the software infrastructure, rather than one per channel, reducing the complexity and enabling dynamic reconfigurations of channels without modifying sockets. This model displayed in \autoref{fig:communicationSoftwareArchietctureImp} with file-based addresses for components and IP-based addresses for edges.
 
 \begin{figure}[ht]
     \centering
@@ -307,7 +307,7 @@ The global state maintains a view of the entire system so that all services can 
 \subsubsection{Task Lists}
 The software infrastructure shall be configured using task lists, with each task representing a number of actions that should be performed on the system.
 
-Some actions may be long running and take multiple execution cycles to complete. Therefore there shall be two classes of action, blocking and non-blocking. A blocking action must complete in a single execution cycle and a non-blocking action can take multiple execution cycles to finish.
+Some actions may be long running and take multiple execution cycles to complete. Therefore there shall be two classes of action: blocking and non-blocking. A blocking action must complete in a single execution cycle and a non-blocking action can take multiple execution cycles to finish.
 
 All blocking actions within a task should complete in a single execution cycle. This is so that when the system begins the next execution cycle, the configuration is always in a defined (valid) state. Blocking actions are designed to be practically instant and simply modify the in-memory configuration. This enables the real-time dynamic software updates as switching configurations should not take a significant amount of time out of the main schedule (section \ref{sec:optimal}).
 

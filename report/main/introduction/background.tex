@@ -1,7 +1,7 @@
 \graphicspath{{main/introduction/graphics/}}
 
 \section{Real-Time}
-A real-time system is defined as a system which requires correct logical operation with completion in a configured deadline. This is in contrast to a non-real-time system which correct operation is desired but lacks configured deadlines. \autocite{kaviRealTimeSystems2009}
+A real-time system is defined as a system which requires correct logical operation with completion before a configured deadline. This is in contrast to a non-real-time system which correct operation is desired but lacks configured deadlines. \autocite{kaviRealTimeSystems2009}
 
 These real-time systems can be categorised into hard and soft. Hard real-time systems contain strict timing constraints, where a response must be calculated in a specified time-frame and a missed deadline could result in a catastrophic outcome. Soft real-time systems also have timing constraints, but a missed deadline should not result in a catastrophic outcome.
 
@@ -13,10 +13,10 @@ Typical hard real-time systems include aircraft or robotic control computers and
 
 \section{Safety Critical Software}
 % Page 3
-The Institute of Electrical and Electronic Engineers (IEEE) defines safety-critical software as software that's use in a system can result in an unacceptable risk. Software by itself is neither safe nor unsafe but when used as part of a safety critical system it can contribute to unsafe scenarios. \autocite{riersonDevelopingSafetyCriticalSoftware2017}
+The Institute of Electrical and Electronic Engineers (IEEE) defines safety-critical software as software thats use in a system can result in an unacceptable risk. Software by itself is neither safe nor unsafe but when used as part of a safety critical system it can contribute to unsafe scenarios. \autocite{riersonDevelopingSafetyCriticalSoftware2017}
 
 % certification
-Software certification is a technique used to demonstrate the safety and reliability of a software system. This verification is usually taken place with an independent authority following strict regulations and guidance. \autocite{denneySoftwareCertificationSoftware2005}
+Software certification is a technique used to demonstrate the safety and reliability of a software system. This verification is usually undertaken by independent authority following strict regulations and guidance. \autocite{denneySoftwareCertificationSoftware2005}
 
 % DO 178
 Software Considerations in Airborne Systems and Equipment Certification or DO-178B/C is a software certification standard for airborne systems on commercial aircraft \autocite{WhatDO178B}. The standard defines different critically levels from A to E (high to low) and the evidence required to certify software to the standard. This includes steps such as software testing with coverage metrics along with requirements traceability. \autocite{brosgolDO178CNewStandard}
@@ -24,7 +24,7 @@ Software Considerations in Airborne Systems and Equipment Certification or DO-17
 \newpage
 
 \section{Control Systems}
-A control system is a system that is designed to manage, regulate and stabilize the behaviour of a dynamic system. Often computers are used to implement real-time control laws in applications such as aircraft fight control or chemical process controls. \autocite{hindiControlSystemsDesign1987}
+A control system is a system that is designed to manage, regulate and stabilize the behaviour of a dynamic system. Often computers are used to implement real-time control laws in applications such as aircraft flight control or chemical process controls. \autocite{hindiControlSystemsDesign1987}
 
 \begin{figure}[ht]
     \centering
@@ -67,7 +67,7 @@ An Operating System (OS) is a piece of software that controls the execution of a
 
 % REFERENCE THIS
 In order to develop a real-time applications with an OS, a RTOS (Real-Time Operating System) is usually required. This is to ensure the time deadlines for an application are enforced.
-Hard real time operating system are designed to run applications with absolute timing.
+Hard real-time operating system are designed to run applications with absolute timing.
 \textcolor{red}{Worst-Case Execution Time
 Assigned a relative deadline, all tasks must complete in their deadline.
 Modelled mathematically to ensure that all tasks run to completion
@@ -93,7 +93,7 @@ Hypervisors that directly access the underlying machine resources are known as T
 \end{figure}
 
 % type 2
-Rather type 2 hypervisors negotiate resource allocation with the operating system, which makes the process slower and less efficient, \autocite{awsWhatDifferenceType} such as VMware Workstation \autocite{vmwareWhatHypervisorVMware}.
+Rather type 2 hypervisors negotiate resource allocation with the operating system, which makes the process slower and less efficient \autocite{awsWhatDifferenceType}, such as VMware Workstation \autocite{vmwareWhatHypervisorVMware}.
 
 % types
 A fully virtualized hypervisor emulates privileged instructions and I/O operations, abstracting the hardware resources from the virtual machine. The guest operating system therefore requires no modifications as it is unaware of the virtualisation. In contrast, with para-virtualization the guest operating system requires significant modifications and is aware of the underlying hardware. Hardware assisted virtualisation uses additional CPU instructions to isolate virtual machines in a hypervisor, for example AMD-V \autocite{liSurveyVirtualMachine2010}.
@@ -104,7 +104,7 @@ A fully virtualized hypervisor emulates privileged instructions and I/O operatio
 \section{Mixed Criticality}
 Mixed criticality refers to heterogeneous software with mixed software integrities running on a shared hardware platform. Virtualisation technology is often used to isolate this software, even in a real-time environment. \autocite{guStateoftheArtSurveyRealTime2012}.
 
-The ARINC 653 standard is a software standard that defines a software architecture for both spatial and temporal partitioning of virtual machines or \textit{partitions}. Spatial refers to the isolation of code and data between virtual machines while temporal aims to limit the impacts of resource consumptions across virtual machines \autocite{cinqueVirtualizingMixedcriticalitySystems2022}. Hypervisors that follow this standard or similar must be certified when used in a safety critical application.
+The ARINC 653 standard is a software standard that defines a software architecture for both spatial and temporal partitioning of virtual machines or \textit{partitions}. Spatial refers to the isolation of code and data between virtual machines while temporal aims to limit the impacts of resource consumption across virtual machines \autocite{cinqueVirtualizingMixedcriticalitySystems2022}. Hypervisors that follow this standard or similar must be certified when used in a safety critical application.
 
 \section{Embedded Middleware}
 % intro
@@ -119,7 +119,7 @@ There is no one definition for middleware used in embedded systems. It is usuall
 \end{figure}
 
 % what is middleware for
-The goal of middleware is to make software components more portable and flexible as developed software should be agnostic of the underlying hardware. Middleware can also provide the infrastructure for software components to communicate between each other. Message passing is just one example of a communication technique. \autocite{noergaardDemystifyingEmbeddedSystems2010}
+The goal of middleware is to make software components more portable and flexible as developed software should be agnostic of the underlying hardware. Middleware can also provide the infrastructure for software components to communicate with each other. Message passing is just one example of a communication technique. \autocite{noergaardDemystifyingEmbeddedSystems2010}
 
 \newpage
 
