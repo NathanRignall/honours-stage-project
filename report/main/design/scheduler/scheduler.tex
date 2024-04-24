@@ -70,7 +70,7 @@ Shown in \autoref{fig:rtPi4MemTimes}, the average latency from parent request to
 \subsection{Sockets} \label{sec:schedSockets}
 
 % present tense
-Unix domain sockets are a useful tool for implementing interprocess communication (IPC). They are a special type of socket that behave similarly to local network sockets but bypass the network stack for efficiency. These sockets can either be unnamed or bound to a filesystem path. \autocite{UnixLinuxManual2024}. 
+Unix domain sockets are a useful tool for implementing interprocess communication (IPC). They are a special type of socket that behave similarly to local network sockets but bypass the network stack for efficiency. These sockets can either be unnamed or bound to a filesystem path \autocite{UnixLinuxManual2024}. 
 
 % past tense
 The second test implemented a simple unnamed socket pair between a parent and child process. The child socket was shared with the child process using file descriptors with the \verb|command_fds| crate \autocite{GoogleCommandfds2024}.

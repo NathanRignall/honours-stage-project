@@ -45,11 +45,11 @@ fn test_communication_zero_length() {
 
 Using the unit tests, code coverage reports were generated. These expressed the percentages of the different sections of the code that were executed during the unit tests. The \verb|llvm-cov| reports were created using \verb|cargo-llvm-cov| \autocite{endoTaikieCargollvmcov2024} and are shown in \autoref{fig:tetsingCoverage}.
 
-Function coverage simply counts the number of times a function has been executed. This also includes inline functions. Line coverage checks how many times each line has been executed. Region coverage evaluates the number of times a subdivision of a function has been executed. For example, true/false control flow. \autocite{llvmSourcebasedCodeCoverage2024}
+Function coverage simply counts the number of times a function has been executed. This also includes inline functions. Line coverage checks how many times each line has been executed. Region coverage evaluates the number of times a subdivision of a function has been executed. For example, true/false control flow \autocite{llvmSourcebasedCodeCoverage2024}.
 
 \clearpage
 
-Each coverage metric is important for gaining a heuristic view of what percentage of the source code has been tested. This is specifically useful for software certification. DO-178B/C at the highest safety classification (DAL A) expects functions, lines, blocks and conditions coverage to be near 100\% \autocite{ibmHowCodeCoverage2022}. Currently Rust does not support condition coverage with llvm-cov. Condition coverage checks that all combinations of branches have been executed. \autocite{llvmSourcebasedCodeCoverage2024}
+Each coverage metric is important for gaining a heuristic view of what percentage of the source code has been tested. This is specifically useful for software certification. DO-178B/C at the highest safety classification (DAL A) expects functions, lines, blocks and conditions coverage to be near 100\% \autocite{ibmHowCodeCoverage2022}. Currently Rust does not support condition coverage with llvm-cov. Condition coverage checks that all combinations of branches have been executed \autocite{llvmSourcebasedCodeCoverage2024}.
 
 
 \begin{figure}[ht]
