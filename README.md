@@ -14,13 +14,13 @@ Make report:
 make thesis.pdf
 ```
 
-## [Elafry](elafry)
+## [Elafry] (elafry)
 
 This is the codebase for the developed software infrastructure, codenamed Elafry.
 
 It contains two main components:
-1. [Elafry](elafry/crates) - The main library for the Elafry software infrastructure.
-2. [Apps](elafry/apps) - The applications that use the Elafry library.
+1. Elafry - The main library for the Elafry software infrastructure.
+2. Apps - The applications that use the Elafry library.
 
 This can be compiled using the following command:
 
@@ -28,6 +28,6 @@ This can be compiled using the following command:
 cargo build --release
 ```
 
-## Data Test
+## [Data Test] (data)
 
 This folder contains all the test programs used to test scheduling methods.
