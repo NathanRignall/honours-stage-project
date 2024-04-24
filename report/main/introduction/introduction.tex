@@ -6,62 +6,75 @@
 % There may be some overlap with the content of the PDD in this section, but it should not simply be a repeat.  The introduction in this report will be informed by the activities you have undertaken and their results, whereas the PDD was concerned with forward planning.
 % Note that the sub-headings below are suggestions only; you may organise this section differently as appropriate to your project
 
-Real-time systems are used in a variety of sectors, including avionics, manufacturing, power, automotive, and medical which are predominantly safety-critical environments. This real-time software is increasingly being used within embedded systems that power the world's critical infrastructure.
+% Air traffic control
+% Rail control systems
+% Industrial control systems
+% Patient monitoring systems
 
-Taking software systems off-line to perform code changes may pose an unacceptable risk or danger to human life. \autocite{montgomeryModelUpdatingRealTime2004}
+Real-time systems are used in a variety of sectors, including avionics, manufacturing, power, automotive, and medical. Software is increasingly being used within embedded real-time systems that power the world's critical infrastructure \autocite{stankovicStrategicDirectionsRealtime1996}.Taking such software systems off-line to perform code changes may pose an unacceptable risk or danger to human life \autocite{montgomeryModelUpdatingRealTime2004}. This is contrary to the requirements for regular software updates as systems become more flexible and dynamic.
 
-Air traffic control
-Rail control systems
-Industrial control systems
-Patient monitoring systems
+% An example of a dynamic and flexible real-time system would be smart power grids.
 
-% software updates
-% why do we even need updates, cyber threats etcs
-% Update vs Upgrade
+% which are predominantly safety-critical env
+% ironments
 
-% Real Time
-% Software Updates
+A live software update is the process of changing software code, without taking the system it resides in off-line \autocite{montgomeryModelUpdatingRealTime2004}. Changes to software usually require the deployment of entirely new software binaries \autocite{wahlerDisruptionfreeSoftwareUpdates2014}. Live software updates strive to change this by allowing software to be upgraded during operation.
 
-% define software component
+This project investigates the principals of dynamic software updates, gathered from previous papers, and applies them to the aerospace domain. Aerospace software is particularly sensitive for certification with strict certification requirements. A live software update solution is useful for aerospace applications is it could allow for longer duration missions. Modern unmanned aerial vehicles can be airborne for months \autocite{baesystemsPHASA352023}, so there is an increasing need to update software during a mission to improve the performance and features of the aircraft.
 
 \newpage
 
+\section{Project Impact}
+
+\subsection{Benefits}
+
+The primary benefit for this project is the reduced service downtime due to software updates.
+Usually upgrading software requires inactive periods, if software could be upgraded dynamically and without reset, this downtime should be reduced. These savings could result in cost savings for businesses as systems operationally available for longer periods of time \autocite{seifzadehSurveyDynamicSoftware2013}.
+
+Secondary benefits from this project result from the ability to make more frequent software updates. This allows developed code to be more agile and deployed faster onto productions real-time systems. These updates could be used to add functionality, provide optimisations or fix problems with the existing systems. Depending on the applications of the embedded hardware, this could reap social and commerical benefits. For example software vulnerabilities can be fixed quicker, reducing the likelihood of a cyber-attack on critical infrastructure \autocite{wallaLiveUpdatingUnikernels2017}.
+
+\subsection{Ethics}
+
+While dynamic software updates in real-time systems are largely beneficial for businesses and individuals, there are risks associated with performing such operations on safety-critical systems. A malformed or malicious software update has a high probability of a negative professional, social, legal or ethical impact.
+
+However, there are steps that can be taken to reduce the probability of such error or attack.
+The software architecture can be certified to the sector-specific standard, to ensure the management program has correct behaviour during update. Furthermore, application updates can first be tested in isolated environments to further validate correct behaviors.
+
+Techniques such as cryptography can be used to protect new software images and confirmations from attacks so only authorised users can perform updates. As this project is experimental, cryptography methods will not be investigated but should be considered in deployed systems.
+
+\newpage
+
+
 \section{Project Objectives}
+
+The objectives outlined are similar, but refined to those defined in the project definition document. Primary objectives are required for a successful completion of project, secondary are optional.
 
 \subsection{Primary Objectives}
 
-This project seeks to develop multiple methods and system architectures for live software updates in a real-time system via an example application. Using a timing analysis solution, such as a logic analyser, this will be tested to ensure that the real-time application meets all imposed deadlines (defined latency and jitter). The goal of this is to prove that it is feasibly possible to update software on a live system whilst maintaining real-time guarantees.
+This project seeks to develop a system architecture that enables repeatable live software updates in a real-time system. This architecture should be tested using an example application and timing analysis solution. The testing should validate that the developed software maintains all application imposed real-time deadlines (defined latency and jitter). Hence, goal of this is to prove that it is feasibly possible to update software whilst maintaining real-time guarantees on a live system.
 
-Another primary objective is to implement a reliable external testing method for a real-time environment, using existing research. This will allow for accurate measurement of the real-time behaviour of the program at all stages of the update, to validate that the upgrade is successful.
+In addition, another primary objective is to implement a reliable external testing method in a real-time environment. The solution should accurately measure the response latency of the entire software system. This is required to validate the dynamic software update solution maintains the real-time guarantees at all stages of the update process.
 
 \subsection{Secondary Objectives}
-One secondary objective is to demonstrate the live software update is successful in a real-life test application, such as an unmanned aerial vehicle (UAV) flight controller. A demonstration flight will measure the success of this by evaluating if the vehicle maintains a stable flight path during a software update. This is a good real-life test as the control loops for aircraft tend to be very fast (200hz) so the software handover must be in the region of five milliseconds. This requires specialised UAV hardware but much of the software required is open source and as this is a secondary goal, this objective is optional.
+One secondary objective is to demonstrate the software update process is successful in a real-life test application. An example test application could be an unmanned aerial vehicle (UAV) flight controller. A demonstration flight will measure the success of this by evaluating if the vehicle maintains a stable flight path during a software update. This is a good real-life test as the control loops for aircraft tend to be very fast (200hz) so the software handover must be in the region of five milliseconds. This requires specialised UAV hardware but much of the software required is open source and as this is a secondary goal, this objective is optional.
 
 Another secondary objective is to update the software using a public cloud in a continuous integration pipeline, which can be verified by demonstrating a software upgrade using the cloud. This seeks to prove the scalability of such software upgrades and to show that it can be used in a modern development environment. There are plentiful cloud resources available and time is the main limiting factor therefore this is also a secondary goal.
 
 \newpage
 
-\section{Research Questions}
+\subsection{Research Questions}
 How can the principals of live software updates be applied to a real-time system?
 
 What is required to implement such live updates into an avionics architecture?
 
-\section{Ethics}
-
-Some little bit here...
-
 \section{Methodology}
-
-Jira?
-
-Chapter layout?
+Chapter two begins by explaining much of the necessary background technical information relevant to this project. In chapter three existing implementations of live software updates are investigated and critically evaluated against a set of criteria. Next, chapter four defines the software and hardware requirements of a dynamic software solution. Chapter five starts by expressing the hardware designs for equipment used in development, followed by the main software. Runtime environments and implementation techniques are then invested, to find the most optimal environment to build the solution upon. The implementation and testing progress is explained in chapter six followed by evaluation of results in chapter seven 
 
 
-% NEW CHAPTER HERE
 
 \chapter{Technical Background}
 
-Some background information
+Before evaluating dynamic software update solutions, technical background information is provided. This chapter expresses the technical description of real-time software and typical applications. In addition, complex computer architectures are explained. This includes operating systems, virtualisation and aerospace specific Integrated Modular Avionics (IMA). 
 
 \newpage
 
