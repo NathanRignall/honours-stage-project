@@ -14,7 +14,7 @@ Make report:
 make thesis.pdf
 ```
 
-## [Elafry] (elafry)
+## Elafry
 
 This is the codebase for the developed software infrastructure, codenamed Elafry.
 
@@ -28,6 +28,6 @@ This can be compiled using the following command:
 cargo build --release
 ```
 
-## [Data Test] (data)
+## Data Test
 
 This folder contains all the test programs used to test scheduling methods.
