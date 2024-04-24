@@ -5,41 +5,55 @@
 % You should also use this section to reflect on the process by which you undertook the project.  Was your methodology appropriate (and did you stick to it)?  Was your time planning good?  Did you complete the primary and secondary objectives, and if not then why?  What have you learned from the process?  What would you do better/differently if you had more time?
 % Sometimes, it's appropriate to include a subsection on 'Further work', making suggestions of how to proceed and what could be done to enhance the project in future.
 
-Challanging finding a solution to the event based scheduler
+% what have i done
+The project achieved the two primary objectives outlined in the introduction. A system architecture for updating software in a running real-time system was developed and tested with a reliable external testing method.
 
-Maybe could investigate features built into the RT patch 
+Through instrumentation it was shown that the system was able to keep its real-time guarantees at a control frequency of 1kHz during software update. This was developed using a middleware software infrastructure with components and message channels. The specific implementation of the software infrastructure introduced the concept of blocking and non-blocking tasks to configure the system and maintain real-time guarantees. These reconfiguration capabilities were used to facilitate the dynamic software updates. A new event-based scheduler approach was used to schedule components in and out of the system that used Linux signalling.
 
+The software infrastructure was validated with a physical test harness that accurately measured the end-to-end latency of a mock avionics system. This included two edge data generators and receivers and the main processing node, connected over an ethernet network. A logic analyser captured a latency of approximately $2.2ms$, that was consistent throughout software update.
 
+Through the literature review, the principals of dynamic software updates that were relevant to real-time systems were investigated. These principals were then successfully applied onto the example hardware implementation, answering the research question.
 
-With more time move the implementation into containers or virtual machines.
+% secondary
 
-Modification to the scheduler.
+Compared to the schedule defined at the beginning of the project, the timeline was delayed, this only affected the delivery of secondary objectives. As planned the software development followed an overall waterfall methodology, with periods of agile prototyping.
 
-Expand to load software from remote locations.
+While a simulated real-life test application was created, it was not for a physical unmanned aerial vehicle. Instead, a plant and controller model of a mass falling due to gravity with a thruster was used. This was satisfactory for demonstrating that state transfer between old and new software components was successful. During software update the body maintained stable flight. The fluctuations found in thrust values during software update were likely due to floating point precision errors from when the state was sent over the network. Modification to use fixed point decimals could solve this issue and is likely they would be required for a flight controller implementation anyway.
 
+Plans were created for a physical drone implementation, but were not realised due to the lack of time. Deploying such flight controller would have required a large quantity of software, not related to dynamic updates. 
 
-Fluctuations are likley due to prcesion loss
+A software update using a public cloud continuous integration environment was not demonstrated. This remains trivial task in comparison to the software infrastructure developed. The background task features of the software infrastructure could be modified to download new software files from an internet-connected file store. This should not affect the real-time behaviour as file transfer tasks would be performed on the background thread.
 
+% what took a long time
+
+The project's runtime analysis and middleware development phases were both extended. This was due to the complexities in finding a suitable runtime environment for real-time software. It was challenging finding a solution to the event based scheduler, as many of the techniques used to send events in Linux caused too significant latencies. Solutions were found to both of these problems.
+
+\clearpage
 
 \section{Future Research}
 
+With more time and in addition to the defined objectives, the project could be expanded to use more software techniques.
 
+The implementation of isolated processing environments (processes) could be switched to use virtual machines or containerization. This would provide a better degree of separation between software components. The implementation would require modifications to the scheduler.
 
-Edges, DSU also
+This project did not investigate the distributed nature of a Distributed Integrated Modular Avionics architecture (DIMA). The developed software infrastructure could be expanded to control and synchronise multiple processing nodes across the network. This would take the software in the direction of a distributed software problem. Advanced blockchain technologies could even be used to maintain the state of the system across the distributed network.
 
+The software of DIMA edges was not considered for dynamic software updates in this project. The embedded nature of edge data collectors could benefit from using an approach as defined by \textcite{raoLiveSeamlessFirmware2023}. Implementing such dynamic software update would allow the entire avionics application stack to be updatable.
 
-\subsection{Isolation}
+% Maybe could investigate features built into the RT patch 
 
-Completed work evaluation xen... move that forward to swerpate applciations using virtualization.
-Use moder techniques such as unikernesl
+% \subsection{Isolation}
 
-Or Stick to single operatings and try out containers. VxWorks and Linux both support containers.
+% Completed work evaluation xen... move that forward to swerpate applciations using virtualization.
+% Use moder techniques such as unikernesl
 
-\subsection{Distributed}
-Expand from a single node to multiple
+% Or Stick to single operatings and try out containers. VxWorks and Linux both support containers.
 
-Blockchain
+% \subsection{Distributed}
+% Expand from a single node to multiple
 
-Mutliple nodes
+% Blockchain
 
-Synronisation.
+% Mutliple nodes
+
+% Synronisation.
