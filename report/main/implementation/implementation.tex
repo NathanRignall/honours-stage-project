@@ -44,13 +44,13 @@ structure of code
 
 
 \subsubsection{Libraries}
-Several software libraries were used during development; Serde, Bincode, Serde Yaml, Log, Env Logger, Uuid, Libc. Serde, a framework for serializing and deserializing data in Rust \autocite{SerdersSerde2024}, was used for all external data conversation. Bincode was used in combination with Serde to send data between components and the software infrastructure. Bincode is a simple binary encoder which allowed data to be sent binary streams \autocite{BincodeorgBincode2024}. 
+Several software libraries were used during development; Serde, Bincode, Serde Yaml, Log, Env Logger, Uuid, Libc. Serde, a framework for serializing and deserializing data in Rust \autocite{serde-rsSerdersSerde2024}, was used for all external data conversation. Bincode was used in combination with Serde to send data between components and the software infrastructure. Bincode is a simple binary encoder which allowed data to be sent binary streams \autocite{bincode-orgBincodeorgBincode2024}. 
 
 For a more human-readable format Serde Yaml was used to load Yaml data into the software infrastructure. Serde Yaml implements the Serde deserialization format for the Yaml file format \autocite{tolnayDtolnaySerdeyaml2024}. Hence, all the task lists used to configure the system were written using Yaml.
 
-To express the state of the system into the console, the Log crate was used in combination with Env Logger. Log provides a simple logging interface that other crates can implement \autocite{RustlangLog2024}. Env Logger was used to physically print the log messages to console as it can be configured using environment variables \autocite{Env_loggerSrcLib}. There were several different logging levels available; Trace, Debug, Info, Warn, Error. These different levels were useful for isolating errors in the system without using a debugger.
+To express the state of the system into the console, the Log crate was used in combination with Env Logger. Log provides a simple logging interface that other crates can implement \autocite{rust-langRustlangLog2024}. Env Logger was used to physically print the log messages to console as it can be configured using environment variables \autocite{rust-cliEnv_loggerSrcLib}. There were several different logging levels available; Trace, Debug, Info, Warn, Error. These different levels were useful for isolating errors in the system without using a debugger.
 
-Uuid was used to generate unique identifiers \autocite{UuidrsUuid2024}. To interface with the Linux kernel and perform scheduling operations Libc was used \autocite{RustlangLibc2024}. The project tried to minimise the number of libraries used as in a safety critical environment all libraries must also be certified.
+Uuid was used to generate unique identifiers \autocite{uuid-rsUuidrsUuid2024}. To interface with the Linux kernel and perform scheduling operations Libc was used \autocite{rust-langRustlangLibc2024}. The project tried to minimise the number of libraries used as in a safety critical environment all libraries must also be certified.
 
 \subsubsection{Proessing Environment}
 While the Xen could have been suitable for the project, it was not used as a method for isolating components. This was due to the added complexities it would have required synchronising virtual machines across the system, 

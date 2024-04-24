@@ -41,7 +41,7 @@ The parent process ran at a controlled frequency of 100Hz for 3,000 iterations, 
 % diagram of the time delay
 
 % past tense
-Test programs were executed on the target development hardware (CM4) with Linux kernel 6.1.65 and the real-time kernel patch applied. These programs used the Rust programming language to align with the final development software infrastructure. To set schedule parameters and interface with Linux they used the \verb|libc| crate \autocite{RustlangLibc2024}. In addition, they used the \verb|csv| crate \autocite{gallantBurntSushiRustcsv2024} to save timing data to a csv file.
+Test programs were executed on the target development hardware (CM4) with Linux kernel 6.1.65 and the real-time kernel patch applied. These programs used the Rust programming language to align with the final development software infrastructure. To set schedule parameters and interface with Linux they used the \verb|libc| crate \autocite{rust-langRustlangLibc2024}. In addition, they used the \verb|csv| crate \autocite{gallantBurntSushiRustcsv2024} to save timing data to a csv file.
 
 \newpage
 
@@ -73,7 +73,7 @@ Shown in \autoref{fig:rtPi4MemTimes}, the average latency from parent request to
 Unix domain sockets are a useful tool for implementing interprocess communication (IPC). They are a special type of socket that behave similarly to local network sockets but bypass the network stack for efficiency. These sockets can either be unnamed or bound to a filesystem path \autocite{UnixLinuxManual2024}. 
 
 % past tense
-The second test implemented a simple unnamed socket pair between a parent and child process. The child socket was shared with the child process using file descriptors with the \verb|command_fds| crate \autocite{GoogleCommandfds2024}.
+The second test implemented a simple unnamed socket pair between a parent and child process. The child socket was shared with the child process using file descriptors with the \verb|command_fds| crate \autocite{googleGoogleCommandfds2024}.
 
 To signal the child component a two byte message was sent from the parent. This contained a byte indicating run and another byte with the iteration loop and was useful in ensuring no executions were missed. The iteration loop was incremented on the parent process from 0-255, the child checked the message was exactly one increment up from the previous iteration.
 

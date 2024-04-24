@@ -6,12 +6,12 @@ The focus of this project's software was real-time embedded and safety critical 
 
 In addition, there is even a certified compiler for Java \autocite{hentiesJavaSafetyCriticalApplications2009}. However, Java would be an impractical choice for this embedded development as it requires the Java Virtual Machine (JVM) to execute developed software. There is no guarantee the JVM would support the target hardware, especially on microcontrollers with limited resources.
 
-Rust is increasingly being used in such safety critical scenarios, with Ferrocene providing a new certified compiler. Rust is a compelling choice due to having more packages available for prototyping in its package manger. Alire, the Ada package manager, has just over 400 crates \autocite{AlireCrates}. In contrast Rust has over 144,000 crates \autocite{StateCratesEcosystem}.
+Rust is increasingly being used in such safety critical scenarios, with Ferrocene providing a new certified compiler. Rust is a compelling choice due to having more packages available for prototyping in its package manger. Alire, the Ada package manager, has just over 400 crates \autocite{alireAlireCrates2024}. In contrast Rust has over 144,000 crates \autocite{lib.rsStateCratesEcosystem}.
 
 Hence, Rust shall was selected for its safety critical properties and wide package support to develop all software.
 
 \subsubsection{Deployment}
 
-To compile and deploy the developed Rust software into the target Yocto images, additional layers were required. The \verb|meta-rust-bin| layer was used to add support for the Rust language to Yocto \autocite{RustembeddedMetarustbin2024}.
+To compile and deploy the developed Rust software into the target Yocto images, additional layers were required. The \verb|meta-rust-bin| layer was used to add support for the Rust language to Yocto \autocite{rustembeddedRustembeddedMetarustbin2024}.
 
 Compiling the developed software also required a custom application layer, \verb|meta-app|. This layer pulled the requested source code from GitHub, built using cargo, then deployed into the image.

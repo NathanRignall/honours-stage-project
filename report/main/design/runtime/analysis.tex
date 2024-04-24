@@ -15,7 +15,7 @@ Another tool that can be used during real-time testing is stress-ng (stress next
 \subsubsection{Previous Work}
 
 % The paper results
-\textcite{abeniUsingXenKVM2020} compiled a similar study into the real-time performance of open source hypervisors. Every hypervisor introduces some latencies into a virtual machine that can affect the correctness of the existing real-time analysis. Abeni and Faggioli compared the performance of both KVM and Xen on various intel x86 processors.
+\textcite{abeniUsingXenKVM2020} compiled a similar study into the real-time performance of open source hypervisors. Every hypervisor introduces some latencies into a virtual machine that can affect the correctness of the existing real-time analysis. They compared the performance of both KVM and Xen on various intel x86 processors.
 
 The study found that the KVM hypervisor would be suitable for serving real-time workloads with worst-case latencies under $100\mu$s. This is applicable only when using RT kernels on both the guest and host. Likewise when using the Xen hypervisor the RT kernels on both the guest and host must also be used. Para-virtualised (PV) guests performed well but fully virtualised (HVM) guests did not, under $100\mu$s versus $1000000\mu$s.
 

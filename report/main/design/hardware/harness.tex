@@ -89,28 +89,25 @@ The generator, receiver and logic analyser were all implemented using the RP2040
         \hline
         Name & Manufacturer & Quantity & Task \\ 
         \hline
-        \href{https://www.raspberrypi.com/products/compute-module-4/}{Compute Module 4} & Raspberry Pi & 1 & Development Card \\ 
-
-        HDMI Male-Male & & 1 & \\ 
-        USB Micro B - A Cable & & 3 & \\ 
-        Dupont Jumper & & X & \\ 
-        \hline
+        \href{https://www.raspberrypi.com/products/raspberry-pi-4-model-b/}{Raspberry Pi 4} & Raspberry Pi & 1 & Boot Server \\ 
+        \href{https://www.raspberrypi.com/products/raspberry-pi-pico/}{Raspberry Pi Pico} & Raspberry Pi & 3 & Test Hardware \\ 
+        \href{https://botblox.io/products/small-ethernet-switch}{Small Ethernet Switch} & SwitchBlox & 1 & Network Switch \\ 
     \end{tabular}
     \caption[Development hardware bill-of-materials]
-    {Development hardware bill-of-materials \textcolor{red}{NOT DONE}}
+    {Development hardware bill-of-materials}
     \label{tbl:TestHarnessHardwareBOM}
 \end{table}
 
 
 
-The chosen logic analyser software was PulseView as it is open-source and supports many different logic analyser devices \autocite{PulseViewSigrok}. Boards which use the RP2040 microprocessor (Pi Pico) can use the ULA logic analyser firmware \autocite{domnikovDotcypressUla2024}.
+The chosen logic analyser software was PulseView as it is open-source and supports many different logic analyser devices \autocite{pulseviewPulseViewSigrok}. Boards which use the RP2040 microprocessor (Pi Pico) can use the ULA logic analyser firmware \autocite{domnikovDotcypressUla2024}.
 
 When flashed, the Pi Pico can capture the status of 16 input channels at specified frequencies. An example capture is shown in \autoref{fig:testHarnessPluseViewCapture}.
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\textwidth]{testHarnessPluseViewCapture.png}
-    \caption[Test Harness PluseView Capture]
-    {Test Harness PluseView Capture}
+    \caption[Test harness PluseView capture]
+    {Test harness PluseView capture}
     \label{fig:testHarnessPluseViewCapture}
 \end{figure}
