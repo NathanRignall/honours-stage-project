@@ -10,7 +10,7 @@
 
 % Students will be able to review, reflect and document consequences of personal decisions that impact upon their capacity to study effectively and on their general well-being. Review, reflect, plan and maintain a diverse professional portfolio of experience that fosters life-long learning.
 
-During software implementation, the experiments expressed in section \ref{sec:experiment} were regularly executed to asses the progress of development. Upon completion of software development, these tests were performed for a final time on the target development hardware and runtime.
+During software implementation, the experiments expressed in section \ref{sec:experiment} were regularly executed to assess the progress of development. Upon completion of software development, these tests were performed for a final time on the target development hardware and runtime.
 
 The results of these experiments are evaluated in the following chapter, where  possible explanations to the results are expressed. These subsequently determine the overall success of the project.
 
@@ -18,7 +18,7 @@ The results of these experiments are evaluated in the following chapter, where  
 
 \section{Test Harness}
 
-After executing the test harness software components on the target hardware, the output in \autoref{fig:testHarnessExecOutput} was produced. This console displays the logs of the both the management program and software components over time.
+After executing the test harness software components on the target hardware, the output in \autoref{fig:testHarnessExecOutput} was produced. This console displays the logs of both the management program and software components over time.
 
 \begin{figure}[ht]
     \centering
@@ -48,7 +48,7 @@ Displayed on the logic analyser, the end-to-end latency from signal generator to
 
 This latency was likely due to the execution clocks being out of sync across the network. The signal generator, receiver and controller all operated at 1kHz. Hence, in a worse-case scenario the latency induced from poor synchronisation could be up to $1+1=2ms$. When measuring the execution frequency of both the generator and receiver it was visible that the control loops drifted slightly over time. This problem was not specifically related to the dynamic software updates but rather a problem with distributed systems.
 
-To solve this, more complex software within the test harness components could synchronise all cyclic execution clocks using protocols such at precision time protocol (PTP).
+To solve this, more complex software within the test harness components could synchronise all cyclic execution clocks using protocols such as precision time protocol (PTP).
 
 \clearpage
 
@@ -88,7 +88,7 @@ The plant and controller models (\autoref{fig:testPlantExecOutput}) both outputt
     \label{fig:testPlantExecOutput}
 \end{figure}
 
-Rather than the packet loss detection algorithms triggering due to hardware that had already started, the errors were generated due to the update process. This is because the new controller component was out of sync with the plant component. The state synchronisations between the old and new component were taking place, but message counters were excluded from this transfer, triggering the errors. Like the test harness, these errors do no impact the functionality and are purely informative.
+Rather than the packet loss detection algorithms triggering due to hardware that had already started, the errors were generated due to the update process. This is because the new controller component was out of sync with the plant component. The state synchronisations between the old and new component were taking place, but message counters were excluded from this transfer, triggering the errors. Like the test harness, these errors do not impact the functionality and are purely informative.
 
 \clearpage
 

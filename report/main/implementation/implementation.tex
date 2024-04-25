@@ -2,6 +2,8 @@
 
 \section{Implementation}
 
+This chapter outlines the code structure and software libraries used during development activities. Any changes to the original design and issues encountered during development are noted. The process for generating coverage reports using unit tests is also explained.
+
 % In this section you will describe what you did, and why you made the important decisions affecting your actions.  It's not a diary - don't write a blow-by-blow account of every little thing that happened.  Be selective and report those choices and techniques which made a difference.  Make sure you discuss what options you considered.  Explain how the criteria and methodology you used to select amongst different options (which tools are most appropriate, for example).
 
 % It may help to imagine that you are reading this project in the future, trying to replicate the work without making the same mistakes along the way.  What would you need to know to make your job easier, and what is unimportant or obvious?  Explain how you implemented the design in the previous chapter.
@@ -29,12 +31,12 @@ Source code was configuration controlled with a Git repository, stored on GitHub
 
 \subsection{Software infrastructure}
 
-The software infrastructure implemented the majority of the designs identified in the design section \ref{sec:softwareDesign}. The software was divided into apps and crates, with crates containing the core software infrastructure code. The Elafry crate contained the shared types and services and the runner crate contained the management functionality. The app folder contained all test components using in the experiments, including $Agent$.
+The software infrastructure implemented the majority of the designs identified in the design section \ref{sec:softwareDesign}. The software was divided into apps and crates, with crates containing the core software infrastructure code. The Elafry crate contained the shared types and services and the runner crate contained the management functionality. The app folder contained all test components used in the experiments, including $Agent$.
 
 \clearpage
 
 \subsubsection{Libraries}
-Several software libraries were used during development; Serde, Bincode, Serde Yaml, Log, Env Logger, Uuid, Libc. Serde, a framework for serializing and deserializing data in Rust \autocite{serde-rsSerdersSerde2024}, was used for all external data conversation. Bincode was used in combination with Serde to send data between components and the software infrastructure. Bincode is a simple binary encoder which allowed data to be sent binary streams \autocite{bincode-orgBincodeorgBincode2024}. 
+Several software libraries were used during development: Serde, Bincode, Serde Yaml, Log, Env Logger, Uuid, Libc. Serde, a framework for serializing and deserializing data in Rust \autocite{serde-rsSerdersSerde2024}, was used for all external data conversion. Bincode was used in combination with Serde to send data between components and the software infrastructure. Bincode is a simple binary encoder which allowed data to be sent over binary streams \autocite{bincode-orgBincodeorgBincode2024}. 
 
 For a more human-readable format Serde Yaml was used to load Yaml data into the software infrastructure. Serde Yaml implements the Serde deserialization format for the Yaml file format \autocite{tolnayDtolnaySerdeyaml2024}. Hence, all the task lists used to configure the system were written using Yaml.
 
@@ -43,16 +45,16 @@ To express the state of the system into the console, the Log crate was used in c
 Uuid was used to generate unique identifiers \autocite{uuid-rsUuidrsUuid2024}. To interface with the Linux kernel and perform scheduling operations Libc was used \autocite{rust-langRustlangLibc2024}. The project tried to minimise the number of libraries used as in a safety critical environment all libraries must also be certified.
 
 \subsubsection{Processing Environment}
-While the Xen could have been suitable for the project, it was not used as a method for isolating components. This was due to the added complexities it would have required synchronising virtual machines across the system, 
+While the Xen hypervisor could have been suitable for the project, it was not used as a method for isolating components. This was due to the added complexities it would have required synchronising virtual machines across the system, 
 
 Instead, the scheduler was implemented on Linux using the signals approach with separate processes for each component. Theoretically, this implementation could be expanded to use Linux cgroups and namespaces to further isolate components while retaining the same scheduler implementation.
 
 In addition to the signalling, Unix sockets were used as the communication medium for message-based communications between the software infrastructure and components. As found in section \ref{sec:schedSockets}, sockets can provide relatively low latency communication between processes in Linux.
 
 \subsubsection{Development Issues}
-After developing the majority of the software infrastructure it was found that the management function would take a long period of time to execute when loading a configuration. This was due to the slow file read and processing time required to successfully decode the Yaml configuration file. This caused issues with the program not meeting the defined frequency of 1kHz.
+After developing the majority of the software infrastructure, it was found that the management function would take a long period of time to execute when loading a configuration. This was due to the slow file read and processing time required to successfully decode the Yaml configuration file. This caused issues with the program not meeting the defined frequency of 1kHz.
 
-To fix this an additional background task was added to the management program to specifically impalement the configuration load procedure. Once the tasks were complete, the data was passed back to the main management thread for processing. While this was unplanned, the background thread load would be useful for when configurations are first downloaded over the network, rather than from disk.
+To fix this an additional background task was added to the management program to specifically implement the configuration load procedure. Once the tasks were complete, the data was passed back to the main management thread for processing. While this was unplanned, the background thread load would be useful for when configurations are first downloaded over the network, rather than from disk.
 
 \subsubsection{Summary}
 The software development activities for the software infrastructure programs were a success. All software requirements were implemented to produce a real-time component system.

@@ -12,7 +12,7 @@ Dynamic software updating (DSU) refers to software applications which can be upd
 
 Regular firmware upgrades require systems to be taken offline for firmware change and restart, which is generally time consuming and breaks continuity. High-availability systems typically use hardware redundancy to provide operational continuity throughout updates. This is at the cost of extra hardware and complexity \autocite{raoLiveSeamlessFirmware2023}.
 
-Physical tasks performed by software are often expensive to interrupt with high down time costs. For example within power substations, a power outage for customers would be costly. Hence, software is hardly updated during an embedded system's lifetime (typically of over 30 years). There are several solutions to updating software dynamically; few of these have been adapted to real-time systems \autocite{wahlerDynamicSoftwareUpdates2009}.
+Physical tasks performed by software are often expensive to interrupt with high down time costs. For example, within power substations, a power outage for customers would be costly. Hence, software is hardly updated during an embedded system's lifetime (typically of over 30 years). There are several solutions to updating software dynamically; few of these have been adapted to real-time systems \autocite{wahlerDynamicSoftwareUpdates2009}.
 
 This chapter evaluates the requirements for a system with dynamic software updates and the challenges involved. In addition, four existing implementations of dynamic updates for real-time systems are evaluated, considering both the advantages and disadvantages of each solution.
 
@@ -43,10 +43,10 @@ The software techniques used to implement a DSU system are expressed by \textcit
 % \textcolor{red}{ALL THESE NEED EXPANDING...}
 
 \subsubsection{Level of Update}
-A software update often can consist of very minor changes, possibly fixing a software bug with a single line of code. Level of update considers how much of the software is updated, whether that is components or entire system \autocite{seifzadehSurveyDynamicSoftware2013}.
+A software update often can consist of very minor changes, possibly fixing a software bug with a single line of code. Level of update considers how much of the software is updated, whether that is components or the entire system \autocite{seifzadehSurveyDynamicSoftware2013}.
 
 \subsubsection{Dependent Components}
-The communications between software modules (functions or collections of functions) are often not singular. Instead a program may contain many communication between many functions in a many-to-many relationship. 
+The communications between software modules (functions or collections of functions) are often not singular. Instead, a program may contain many communications between many functions in a many-to-many relationship. 
 
 This increases the complexity of upgrading singular modules, as one change could affect all other modules. Sometimes the data types used in communications also changes, so multiple dependant modules may need upgrading to use the new types.
 
@@ -72,7 +72,7 @@ This transformation can be either automatic or programmer defined, automatic is 
 
 \subsubsection{Resource Cleaning}
 After software update old software modules should be cleared from memory to save resources. 
-In a low level language this would take place when defined by the developer. In a high level language the garbage collector would take this responsibility.
+In a low-level language this would take place when defined by the developer. In a high-level language the garbage collector would take this responsibility.
 
 \subsubsection{Atomicity and Rollback}
 Sometimes errors may occur during software update. Systems can support rollback to ensure the stability of the system. Techniques such as atomic actions and reversible operations can be used to achieve this.

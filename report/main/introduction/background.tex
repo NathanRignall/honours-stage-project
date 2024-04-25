@@ -5,14 +5,14 @@ A real-time system is defined as a system which requires correct logical operati
 
 These real-time systems can be categorised into hard and soft. Hard real-time systems contain strict timing constraints, where a response must be calculated in a specified time-frame and a missed deadline could result in a catastrophic outcome. Soft real-time systems also have timing constraints, but a missed deadline should not result in a catastrophic outcome \autocite{wangRealTimeSystems}.
 
-Typical hard real-time systems include aircraft or robotic control computers and soft real-time systems include media players or gaming computers. Soft real-time systems can be used in control applications, but the nature of soft timings must be considered in the system design \autocite{kaviRealTimeSystems2009}.
+Typical hard real-time systems include aircraft or robotic control computers, and soft real-time systems include media players or gaming computers. Soft real-time systems can be used in control applications, but the nature of soft timings must be considered in the system design \autocite{kaviRealTimeSystems2009}.
 
 \section{Safety Critical Software}
 % Page 3
 The Institute of Electrical and Electronic Engineers (IEEE) defines safety-critical software as software that's use in a system can result in an unacceptable risk. Software by itself is neither safe nor unsafe but when used as part of a safety critical system it can contribute to unsafe scenarios \autocite{riersonDevelopingSafetyCriticalSoftware2017}.
 
 % certification
-Software certification is a technique used to demonstrate the safety and reliability of a software system. This verification is usually undertaken by independent authority following strict regulations and guidance \autocite{denneySoftwareCertificationSoftware2005}.
+Software certification is a technique used to demonstrate the safety and reliability of a software system. This verification is usually undertaken by an independent authority following strict regulations and guidance \autocite{denneySoftwareCertificationSoftware2005}.
 
 % DO 178
 Software Considerations in Airborne Systems and Equipment Certification or DO-178B/C is a software certification standard for airborne systems on commercial aircraft \autocite{WhatDO178B}. The standard defines different critically levels from A to E (high to low) and the evidence required to certify software to the standard. This includes steps such as software testing with coverage metrics along with requirements traceability \autocite{brosgolDO178CNewStandard2010}.
@@ -20,7 +20,7 @@ Software Considerations in Airborne Systems and Equipment Certification or DO-17
 \newpage
 
 \section{Control Systems}
-A control system is a system that is designed to manage, regulate and stabilize the behaviour of a dynamic system. Often computers are used to implement real-time control laws in applications such as aircraft flight or chemical process controls \autocite{hindiControlSystemsDesign1987}.
+A control system is a system that is designed to manage, regulate, and stabilize the behaviour of a dynamic system. Often computers are used to implement real-time control laws in applications such as aircraft flight or chemical process controls \autocite{hindiControlSystemsDesign1987}.
 
 \begin{figure}[ht]
     \centering
@@ -56,11 +56,11 @@ Sensors measure signals from the environment such as speed or pressure. Controll
 
 
 \section{Operating Systems}
-An Operating System (OS) is a piece of software that controls the execution of application programs on a hardware system. Usually this involves managing resource allocations, such as a processor execution time, memory usage and inputs/outputs \autocite{stallings2018operating}.
+An Operating System (OS) is a piece of software that controls the execution of application programs on a hardware system. Usually this involves managing resource allocations, such as processor execution time, memory usage and inputs/outputs \autocite{stallings2018operating}.
 
 % REFERENCE THIS
-In order to develop a real-time applications with an OS, a RTOS (Real-Time Operating System) is usually required. This is to ensure the time deadlines for an application are enforced.
-Hard real-time operating system are designed to run applications with absolute timing. A worst-case execution time is measured, then the system is modelled mathematically to check all tasks can run to completion \autocite{slomkaLimitationsRealtimeScheduling2021}. In a soft real-time system tasks are assigned a relative deadline, and are usually de-scheduled in the event they overrun.
+In order to develop real-time applications with an OS, a RTOS (Real-Time Operating System) is usually required. This is to ensure the time deadlines for an application are enforced.
+Hard real-time operating systems are designed to run applications with absolute timing. A worst-case execution time is measured, then the system is modelled mathematically to check all tasks can run to completion \autocite{slomkaLimitationsRealtimeScheduling2021}. In a soft real-time system tasks are assigned a relative deadline, and are usually de-scheduled in the event they overrun.
 
 The Portable Operating System Interface (POSIX) is a set of standards that define the interface between Unix-like operating systems and applications \textcite{kenlonWhatPOSIXRichard}.
 

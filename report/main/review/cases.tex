@@ -1,7 +1,7 @@
 \section{Case Studies}
 
 \subsection{Review Criteria}
-To evaluate existing implementations of dynamic software updates in a real-time control system the following categories were selected. These specifically targeted the problems associated with implementing `live' updates in real-time system.
+To evaluate existing implementations of dynamic software updates in a real-time control system the following categories were selected. These specifically targeted the problems associated with implementing `live' updates in real-time systems.
 
 While the source code for these implementations was not public, the respective papers were used to summarise the different techniques that could be used.
 
@@ -9,7 +9,7 @@ While the source code for these implementations was not public, the respective p
 
 Most hardware devices do not understand the concept of real-time software updates where new software rapidly starts and stops during operation. This is especially the case with software drivers for hardware. The process shall be known as hardware handover. Solutions can either implement \textbf{hardware} or \textbf{software} techniques to compensate for this issue. 
 
-Software is also not usually designed to cope with this. \autoref{fig:problemHardwareHandover} shows how the hardware connections are changed to the $Controller$ software during an update. At points in time, the software is neither connected to sensors or actuator. Developed software must be designed to either never execute in this scenario or understand that it does not have control.
+Software is also not usually designed to cope with this. \autoref{fig:problemHardwareHandover} shows how the hardware connections are changed to the $Controller$ software during an update. At points in time, the software is neither connected to sensors or an actuator. Developed software must be designed to either never execute in this scenario or understand that it does not have control.
 
 \begin{figure}[ht]
     \centering
@@ -135,7 +135,7 @@ Solutions can either synchronise new software components with old software compo
 
 \subsubsection{State Continuity \& Transformation} \label{sec:state}
 
-State continuity is another challenge with dynamic software updates. Applications usually contain state which is vital to operation. For example a drone flight computer might complete dead reckoning to calculate its position over time using an accelerometer and gyroscope. After software update the position cannot be simply reset to zero, as the drone would effectively be lost without GPS.
+State continuity is another challenge with dynamic software updates. Applications usually contain state which is vital to operation. For example, a drone flight computer might complete dead reckoning to calculate its position over time using an accelerometer and gyroscope. After software update the position cannot be simply reset to zero, as the drone would effectively be lost without GPS.
 
 Another problem is state transformation \autocite{seifzadehSurveyDynamicSoftware2013}. Different versions of the software may use different data types to store the same information, for example old versions might use metres, and new kilometres. Entirely new persistent data fields may also be added in the new updates to support additional functionality.
 
@@ -173,7 +173,7 @@ Dynamic software update systems can implement state \textbf{synchronisation} and
 
 The final challenge for live software updates in a real-time system is determining the optimal time to complete the update \autocite{mlinaricChallengesDynamicSoftware2020}. Completing management functionality to perform update tasks takes time out of the application schedule. This could delay the real-time schedule and impact external tasks.
 
-A software solution can either ensure the dynamic update has no impact on the running task or determine the optimal time relative to an applications tasks (\textbf{fast} or \textbf{optimal}).
+A software solution can either ensure the dynamic update has no impact on the running task or determine the optimal time relative to an application's tasks (\textbf{fast} or \textbf{optimal}).
 
 \newpage
 
@@ -191,7 +191,7 @@ A software solution can either ensure the dynamic update has no impact on the ru
 
 Multiple hardware features are used to implement the live software update processes. The first is multi-bank non-volatile memory to store multiple different versions of the firmware images (usually two). Next interrupt vector swap enables hardware support for quickly swapping multiple interrupt vectors in a simple CPU cycle, rather than in multiple. RAM block swap is similar and allows blocks of memory to be swapped during execution e.g. function pointers \autocite{raoLiveSeamlessFirmware2023}.
 
-First the controller boots into the latest firmware image on the appropriate flash bank. Upon update, the user-generated request is processed in a background task and the new firmware is loaded onto the opposite flash bank. The main function branches to the new main where the compiler-generated initialisation routine is executed, this initializes any new variables and sets the. Now the new firmware's main routine is executed, performing any variable transformations and initialisation. During this process all the previous control loop functions can still run. A custom compiler was created to generate these routines \autocite{raoLiveSeamlessFirmware2023}.
+First the controller boots into the latest firmware image on the appropriate flash bank. Upon update, the user-generated request is processed in a background task and the new firmware is loaded onto the opposite flash bank. The main function branches to the new main where the compiler-generated initialisation routine is executed, this initializes any new variables. Now the new firmware's main routine is executed, performing any variable transformations and initialisation. During this process all the previous control loop functions can still run. A custom compiler was created to generate these routines \autocite{raoLiveSeamlessFirmware2023}.
 
 \begin{figure}[ht]
     \centering
@@ -204,7 +204,7 @@ First the controller boots into the latest firmware image on the appropriate fla
 The controller waits for the most optimal switchover point, between control interrupts. When ready interrupts are disabled, the hardware interrupt vector table and ram blocks swap and global interrupts are re-enabled finishing the upgrade process. \ref{fig:raoLiveSeamlessFirmware2023_LfuFlow} displays this process flow during software upgrade.
 
 \subsubsection{Test Case}
-To validate the updates \textcite{raoLiveSeamlessFirmware2023}, implemented a DC-DC buck converter with a tightly regulated output voltage, typically used in server power supplies. These converters are often controlled using a digital power controller implemented on an microcontroller. A live update must complete within the  idle time between interrupts on the PSU, with less than 1us of switch time.
+To validate the updates \textcite{raoLiveSeamlessFirmware2023}, implemented a DC-DC buck converter with a tightly regulated output voltage, typically used in server power supplies. These converters are often controlled using a digital power controller implemented on a microcontroller. A live update must complete within the  idle time between interrupts on the PSU, with less than 1us of switch time.
 
 \begin{figure}[ht]
     \centering
@@ -253,7 +253,7 @@ A custom component-based framework was used on top of the operating system to ex
 
 The system identifies when an update can occur by performing checks at the end of every execution cycle. The updated component is sent to the target system using OS functions (scp) in a low priority thread and is detected by the component manager. When ready, the old component is told to exit, and the channels are handed back to the manager. The new component then starts its operation with the correct channels attached. Once the upgrade begins in the main thread, it must complete before the end of the execution cycle \autocite{wahlerDynamicSoftwareUpdates2009}.
 
-To enable state transfer, the component manager creates an area of shared memory that is passed to the components. Before a component exits it writes its state to the area and adds appropriate version information. When a component is started, it reads the memory, assess if a state transformation must occur (that is present within the new components) and begins. To state transfer and execution must complete in one execution cycle \autocite{wahlerDynamicSoftwareUpdates2009}.
+To enable state transfer, the component manager creates an area of shared memory that is passed to the components. Before a component exits it writes its state to the area and adds appropriate version information. When a component is started, it reads the memory, assesses if a state transformation must occur (that is present within the new components) and begins. To state transfer and execution must complete in one execution cycle \autocite{wahlerDynamicSoftwareUpdates2009}.
 
 \clearpage
 
@@ -271,7 +271,7 @@ The example application used to validate the dynamic software updates was an ent
 \subsubsection{Evaluation}
 The dynamic software update solution uses a component architecture, this maintains the clock synchronisation. State is transformed and synced internally using shared memory between components. All transformations must be statically defined within new components.
 
-The report does not detail hardware support, it simply explains how software components with functionality can be implemented on the infrastructure. This is shown in the test case, where only a virtual real-time application is tested.
+The report does not detail hardware support, it simply explains how software components with functionality can be implemented on the infrastructure. This is shown in the test-case, where only a virtual real-time application is tested.
 
 \begin{table}[ht]
     \centering
@@ -369,12 +369,12 @@ The process relies upon the old program implementing the module load function, a
 \end{figure}
 
 \subsubsection{Test Case}
-Before testing this application, \textcite{montgomeryModelUpdatingRealTime2004} performed offline timing analysis of the entire software upgrade system. Specifically they used the generalized fault-tolerant rate monotonic scheduling algorithm (GFTRMS) \autocite{ghoshFaultTolerantRateMonotonicScheduling1998} to perform the analysis.
+Before testing this application, \textcite{montgomeryModelUpdatingRealTime2004} performed offline timing analysis of the entire software upgrade system. Specifically, they used the generalized fault-tolerant rate monotonic scheduling algorithm (GFTRMS) \autocite{ghoshFaultTolerantRateMonotonicScheduling1998} to perform the analysis.
 
 % \textcolor{red}{Next Montgomery created a simple application}
 
 \subsubsection{Evaluation}
-The approach defined by \textcite{montgomeryModelUpdatingRealTime2004} is efficient, the process only upgrades functions that have been changed between software versions. Hence, many of the categories of measurement do not apply, as the overall program executing the task does not change. For example state synchronisation or transformation does not occur as the original variables are still present in memory.
+The approach defined by \textcite{montgomeryModelUpdatingRealTime2004} is efficient, the process only upgrades functions that have been changed between software versions. Hence, many of the categories of measurement do not apply, as the overall program executing the task does not change. For example, state synchronisation or transformation does not occur as the original variables are still present in memory.
 
 While this paper does consider a novel approach to live software updates, it doesn't resolve issues around the use of heap memory to store new functions. The heap is not write protected and therefore is a security risk \autocite{montgomeryModelUpdatingRealTime2004}. It is likely this method of upgrade would not be certified in a safety critical system.
 
