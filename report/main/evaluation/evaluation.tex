@@ -78,7 +78,7 @@ The results of this experiment validate that the system is able to handover hard
 
 \section{Plant Model}
 
-The plant and controller models (\autoref{fig:testPlantExecOutput}) both outputted similar console messages to the test harness components. Differences being the communication error messages and the timing between each configuration change.To allow the plant simulation to run for longer, the configuration changes were scripted to change further apart. At $t=5000$ configuration one ($Plant$ + $Controller$), $t=15000$ configuration two ($Plant$ + $Controller^{\prime}$), $t=45000  $configuration three (empty) and $t=60000$ shutdown.
+The plant and controller models (\autoref{fig:testPlantExecOutput}) both outputted similar console messages to the test harness components. Differences being the communication error messages and the timing between each configuration change. To allow the plant simulation to run for longer, the configuration changes were scripted to change further apart. At $t=5000$ configuration one ($Plant$ + $Controller$), $t=15000$ configuration two ($Plant$ + $Controller^{\prime}$), $t=45000  $configuration three (empty) and $t=60000$ shutdown.
 
 \begin{figure}[ht]
     \centering
@@ -88,7 +88,7 @@ The plant and controller models (\autoref{fig:testPlantExecOutput}) both outputt
     \label{fig:testPlantExecOutput}
 \end{figure}
 
-Rather than the packet loss detection algorithms triggering due to hardware that had already started, the errors were generated due to the update process. This is because the new controller component was out of sync with the plant component. The state synchronisations between the old and new component were taking place, but message counters were excluded from this transfer, triggering the errors. Like the test harness, these errors do no impact the functionality and are purley informative.
+Rather than the packet loss detection algorithms triggering due to hardware that had already started, the errors were generated due to the update process. This is because the new controller component was out of sync with the plant component. The state synchronisations between the old and new component were taking place, but message counters were excluded from this transfer, triggering the errors. Like the test harness, these errors do no impact the functionality and are purely informative.
 
 \clearpage
 

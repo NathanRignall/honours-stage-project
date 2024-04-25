@@ -30,7 +30,7 @@ For the purpose of this project the real-time performance on an Arm64 target, th
 
 To set a baseline the real-time behaviour of Linux with the standard PREEMPT kernel was tested with different artificial loads in the system. Each test ran for exactly 1 hour collecting latency information at an interval of $100{\mu}s$.
 
-Figure \autoref{fig:linux-i100-1h-allcores} displays that when not under load, the standard Linux kernel performs well in a real-time environment. However as soon as load was introduced into the system \autoref{fig:linux-i100-1h-allcores-sc4} and \autoref{fig:linux-i100-1h-allcores-sm4} the real-time performance was significantly worse.
+\autoref{fig:linux-i100-1h-allcores} displays that when not under load, the standard Linux kernel performs well in a real-time environment. However as soon as load was introduced into the system \autoref{fig:linux-i100-1h-allcores-sc4} and \autoref{fig:linux-i100-1h-allcores-sm4} the real-time performance was significantly worse.
 
 \begin{figure}[ht]
     \centering
@@ -40,7 +40,7 @@ Figure \autoref{fig:linux-i100-1h-allcores} displays that when not under load, t
     \label{fig:linux-i100-1h-allcores}
 
     \includegraphics[width=\textwidth]{linux-i100-1h-allcores-sc4.pdf}
-    \caption[Linux PREEMPT i100 cyclictest results (cpu load)]
+    \caption[Linux PREEMPT i100 cyclictest results (CPU load)]
     {Linux PREEMPT i100 cyclictest results (CPU load)}
     \label{fig:linux-i100-1h-allcores-sc4}
 
@@ -62,8 +62,8 @@ The following tests in \autoref{fig:linux-rt-i100-1h-allcores}, \autoref{fig:lin
     \label{fig:linux-rt-i100-1h-allcores}
 
     \includegraphics[width=\textwidth]{linux-rt-i100-1h-allcores-sc4.pdf}
-    \caption[Linux PREEMPT\_RT i100 cyclictest results (cpu load)]
-    {Linux PREEMPT\_RT i100 cyclictest results (cpu load)}
+    \caption[Linux PREEMPT\_RT i100 cyclictest results (CPU load)]
+    {Linux PREEMPT\_RT i100 cyclictest results (CPU load)}
     \label{fig:linux-rt-i100-1h-allcores-sc4}
 
     \includegraphics[width=\textwidth]{linux-rt-i100-1h-allcores-sm4.pdf}
@@ -84,8 +84,8 @@ Memory tests particularly strained the memory resources allocation processes of 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\textwidth]{linux-vs-rt-linux-i100-1h-sc4.pdf}
-    \caption[Linux PREEMPT vs PREEMPT\_RT i100 cyclictest results (cpu load)]
-    {Linux PREEMPT vs PREEMPT\_RT i100 cyclictest results (cpu load)}
+    \caption[Linux PREEMPT vs PREEMPT\_RT i100 cyclictest results (CPU load)]
+    {Linux PREEMPT vs PREEMPT\_RT i100 cyclictest results (CPU load)}
     \label{fig:linux-vs-rt-linux-i100-1h-sc4}
 \end{figure}
 
@@ -143,8 +143,8 @@ To confirm the real-time performance, Xen was also tested with artificial CPU lo
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\textwidth]{xen-rt-i100-i1000-1h-sc1.pdf}
-    \caption[Xen timer adjustment i100, i200, i500, i1000 cyclictest results (cpu load)]
-    {Xen timer adjustment i100, i200, i500, i1000 cyclictest results (cpu load)}
+    \caption[Xen timer adjustment i100, i200, i500, i1000 cyclictest results (CPU load)]
+    {Xen timer adjustment i100, i200, i500, i1000 cyclictest results (CPU load)}
     \label{fig:xen-rt-i100-i1000-1h-sc1}
 \end{figure}
 

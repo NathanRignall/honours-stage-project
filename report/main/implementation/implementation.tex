@@ -19,8 +19,8 @@ Source code was configuration controlled with a Git repository, stored on GitHub
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\textwidth, clip, trim=0.1cm 9cm 0.1cm 2.6cm]{github.pdf}
-    \caption[Github]
-    {Github}
+    \caption[Code repository (GitHub)]
+    {Code repository (GitHub)}
     \label{fig:implementationGithub}
 \end{figure}
 
@@ -42,7 +42,7 @@ To express the state of the system into the console, the Log crate was used in c
 
 Uuid was used to generate unique identifiers \autocite{uuid-rsUuidrsUuid2024}. To interface with the Linux kernel and perform scheduling operations Libc was used \autocite{rust-langRustlangLibc2024}. The project tried to minimise the number of libraries used as in a safety critical environment all libraries must also be certified.
 
-\subsubsection{Proessing Environment}
+\subsubsection{Processing Environment}
 While the Xen could have been suitable for the project, it was not used as a method for isolating components. This was due to the added complexities it would have required synchronising virtual machines across the system, 
 
 Instead, the scheduler was implemented on Linux using the signals approach with separate processes for each component. Theoretically, this implementation could be expanded to use Linux cgroups and namespaces to further isolate components while retaining the same scheduler implementation.

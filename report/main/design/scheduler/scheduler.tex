@@ -10,7 +10,7 @@ To implement an event-based cyclic scheduler, the scheduler must be able to send
 % WHAT AM I TRYING TO LEARN HERE
 
 % past tense
-There are several different methods that can be used to send signals between processes in a Linux system. Shared memory, sockets and signalling were all investigated as they could be easily migrated onto a non-linux POSIX compatible system if required. This evaluation focused on gathering latency and jitter metrics for the different techniques.
+There are several different methods that can be used to send signals between processes in a Linux system. Shared memory, sockets and signalling were all investigated as they could be easily migrated onto a non-Linux POSIX compatible system if required. This evaluation focused on gathering latency and jitter metrics for the different techniques.
 
 \subsubsection*{Test Program Design}
 
@@ -70,7 +70,7 @@ Shown in \autoref{fig:rtPi4MemTimes}, the average latency from parent request to
 \subsection{Sockets} \label{sec:schedSockets}
 
 % present tense
-Unix domain sockets are a useful tool for implementing interprocess communication (IPC). They are a special type of socket that behave similarly to local network sockets but bypass the network stack for efficiency. These sockets can either be unnamed or bound to a filesystem path \autocite{UnixLinuxManual2024}. 
+Unix domain sockets are a useful tool for implementing inter-process communication (IPC). They are a special type of socket that behave similarly to local network sockets but bypass the network stack for efficiency. These sockets can either be unnamed or bound to a filesystem path \autocite{UnixLinuxManual2024}. 
 
 % past tense
 The second test implemented a simple unnamed socket pair between a parent and child process. The child socket was shared with the child process using file descriptors with the \verb|command_fds| crate \autocite{googleGoogleCommandfds2024}.
@@ -162,7 +162,7 @@ This potential implementation is shown in \autoref{fig:socketDualComponentExecut
         \node[anchor=west] (t14) at (mess from) {$t_{14}$};
         \node[anchor=east] (t15) at (mess to) {$t_{15}$};
     \end{sequencediagram}
-    \caption{Something}
+    \caption{Alternative parent-child execution diagram}
     \label{fig:socketDualComponentExecute}
 \end{figure}
 
@@ -221,7 +221,7 @@ A socket-based scheduler solution could theoretically be developed if it was the
 
 \subsubsection{Processor Differences}
 
-While all formal tests were carried out on the CM4, some quick tests were also performed on the Raspberry Pi 5. Displayed in \autoref{fig:rtPi4vsPi5CompareTimes} the Pi 5 performed much better than the CM4. This was ilkley due to the different processors implementations of interrupts. The Pi 5 would be a good choice to implement a real-time system in a future project.
+While all formal tests were carried out on the CM4, some quick tests were also performed on the Raspberry Pi 5. Displayed in \autoref{fig:rtPi4vsPi5CompareTimes} the Pi 5 performed much better than the CM4. This was likely due to the different processors implementations of interrupts. The Pi 5 would be a good choice to implement a real-time system in a future project.
 
 \begin{figure}[ht]
     \centering
