@@ -353,7 +353,7 @@ An alternative approach to task-lists could implement scheduler-like functionali
 \clearpage
 
 \subsubsection{Background Thread}
-Some non-blocking actions cannot be simply subdivided across a number of execution cycles as they interface with external software. For example, calls to modify an operating systems schedule priorities may take a 'long' period of time to return.
+Some non-blocking actions cannot be simply subdivided across a number of execution cycles as they interface with external software. For example, calls to modify an operating systems schedule priorities may take a `long' period of time to return.
 
 Therefore a background thread is required to perform these long running tasks in the background. The main management thread shall communicate with the background thread using a queue, whereby new tasks are placed in a queue and finished tasks are placed in another. To keep track of the state of the non-blocking actions in the management thread the state machine in \autoref{fig:actionStateStateMachine} is used. Every non-blocking task must implement these states.
 
@@ -405,7 +405,7 @@ The three non-blocking actions implement the state machine. Not all the states a
 \end{description}
 
 \subsubsection{Control}
-To configure which task list is loaded the management program must accept communications from component or external devices. Adding 'management' as an alternative endpoint type to component and edge is a simple way to integrate this into the message router.
+To configure which task list is loaded the management program must accept communications from component or external devices. Adding `management' as an alternative endpoint type to component and edge is a simple way to integrate this into the message router.
 
 Channel 1 is used to stop the middleware's operation and shutdown the system and channel 2 is to send the configuration identifiers that the manager should load.
 

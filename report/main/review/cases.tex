@@ -1,7 +1,7 @@
 \section{Case Studies}
 
 \subsection{Review Criteria}
-To evaluate existing implementations of dynamic software updates in a real-time control system the following categories were selected. These specifically targeted the problems associated with implementing 'live' updates in real-time system.
+To evaluate existing implementations of dynamic software updates in a real-time control system the following categories were selected. These specifically targeted the problems associated with implementing `live' updates in real-time system.
 
 While the source code for these implementations was not public, the respective papers were used to summarise the different techniques that could be used.
 
@@ -180,7 +180,7 @@ A software solution can either ensure the dynamic update has no impact on the ru
 % ----- CASE STUDY 1 -----
 
 \subsection{Live \& Seamless Firmware Upgrade in Real Time Control Systems} \label{caseStudy1}
-\textcite{raoLiveSeamlessFirmware2023} implements live firmware upgrades on a single microcontroller, without using any additional hardware or operating system. The paper describes the techniques used in both hardware and software to achieve such updates without reset (seamless).
+\textcite{raoLiveSeamlessFirmware2023} implement live firmware upgrades on a single microcontroller, without using any additional hardware or operating system. The paper describes the techniques used in both hardware and software to achieve such updates without reset (seamless).
 
 \subsubsection{Implementation}
 
@@ -238,7 +238,7 @@ Only state transformation occurs as variables that do not change use the same me
 % ----- CASE STUDY 2 -----
 
 \subsection{Dynamic Software Updates for Real-Time Systems} \label{caseStudy2}
-\textcite{wahlerDynamicSoftwareUpdates2009} defines a solution for updating component-based cyclic execution real-time embedded systems. This implementation focused on using COTS operating systems rather than a bare-metal approach, specifically Integrity OS.
+\textcite{wahlerDynamicSoftwareUpdates2009} define a solution for updating component-based cyclic execution real-time embedded systems. This implementation focused on using COTS operating systems rather than a bare-metal approach, specifically Integrity OS.
 
 \subsubsection{Implementation}
 A custom component-based framework was used on top of the operating system to execute software components, effectively an embedded middleware. Each component had its own address space with strict separation and defined inputs and outputs. These components communicated using using message passing (channel buffers). A manager program (which was also an upgradable component) created and maintained the channels \autocite{wahlerDynamicSoftwareUpdates2009}.
@@ -246,8 +246,8 @@ A custom component-based framework was used on top of the operating system to ex
 \begin{figure}[ht]
     \centering
     \includegraphics[width=8cm]{wahlerDynamicSoftwareUpdates2009_Function}
-    \caption[Updating component 'History' \autocite{wahlerDynamicSoftwareUpdates2009}]
-    {Updating component 'History' \autocite{wahlerDynamicSoftwareUpdates2009}}
+    \caption[Updating component `History' \autocite{wahlerDynamicSoftwareUpdates2009}]
+    {Updating component `History' \autocite{wahlerDynamicSoftwareUpdates2009}}
     \label{fig:wahlerDynamicSoftwareUpdates2009_Function}
 \end{figure}
 
@@ -295,7 +295,7 @@ The report does not detail hardware support, it simply explains how software com
 Another approach to updating software at runtime without disruption was developed by \textcite{wahlerDisruptionfreeSoftwareUpdates2014}. This uses a component based architecture developed by ABB Corporate Research (FASA), shown in \autoref{fig:wahlerDisruptionfreeSoftwareUpdates2014_FASA}.
 
 \subsubsection{Implementation}
-FASA defines function blocks that can be aggregated together to form a component, only compute components are stateful. These function blocks are executed cyclically at a desired frequency and connected by communication channels. A background thread with low priority performs the management actions. Multiple FASA systems are synchronised over the network using precision time protocol (PTP). While no specific real-time operating systems are mentioned, it is assumed that this component infrastructure is compatible with POSIX \autocite{wahlerDisruptionfreeSoftwareUpdates2014}.
+FASA defines function blocks that can be aggregated together to form a component, only compute components are stateful. These function blocks are executed cyclically at a desired frequency and connected by communication channels. A background thread with low priority performs the management actions. Multiple FASA systems are synchronised over the network using precision time protocol (PTP) \autocite{wahlerDisruptionfreeSoftwareUpdates2014}.
 
 \begin{figure}[ht]
     \centering

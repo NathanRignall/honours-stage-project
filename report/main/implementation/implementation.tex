@@ -14,7 +14,7 @@
 
 All software development took place on a Raspberry Pi 5 running Raspbian to mirror the target hardware's environment. Target software images were cross compiled using an x86 development machine following the Yocto build scripts.
 
-Source code was configuration controlled with a Git repository, stored on GitHub shown in \autoref{fig:implementationGithub}. Test harness software and all hardware followed a waterfall software development methodology. The software infrastructure followed an Agile software development methodology as defined in the project definition document.
+Source code was configuration controlled with a Git repository, stored on GitHub shown in \autoref{fig:implementationGithub} and codenamed \textit{Elafry}. Test harness software and all hardware followed a waterfall software development methodology. The software infrastructure followed an Agile software development methodology as defined in the project definition document.
 
 \begin{figure}[ht]
     \centering
@@ -29,19 +29,9 @@ Source code was configuration controlled with a Git repository, stored on GitHub
 
 \subsection{Software infrastructure}
 
-The software infrastructure implemented the majority of the designs identified in section \ref{sec:softwareDesign}. 
-
-% code organisation
-divided into apps and crates
-
-How do the classes fit together
-
-Separate core library with management
-
-structure of code
+The software infrastructure implemented the majority of the designs identified in the design section \ref{sec:softwareDesign}. The software was divided into apps and crates, with crates containing the core software infrastructure code. The Elafry crate contained the shared types and services and the runner crate contained the management functionality. The app folder contained all test components using in the experiments, including $Agent$.
 
 \clearpage
-
 
 \subsubsection{Libraries}
 Several software libraries were used during development; Serde, Bincode, Serde Yaml, Log, Env Logger, Uuid, Libc. Serde, a framework for serializing and deserializing data in Rust \autocite{serde-rsSerdersSerde2024}, was used for all external data conversation. Bincode was used in combination with Serde to send data between components and the software infrastructure. Bincode is a simple binary encoder which allowed data to be sent binary streams \autocite{bincode-orgBincodeorgBincode2024}. 
