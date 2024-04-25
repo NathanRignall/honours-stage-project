@@ -2,7 +2,7 @@
 
 \subsection{Analysis}
 
-To select the most optimal environment to develop the software infrastructure upon, a series of benchmarking activities were carried out. These focused on evaluating the operating systems and hypervisors which could operate in a real-time environment. Comparing bare-metal Linux and Xen with Linux guests should give a good method to estimate the specific latencies brough about by Xen.
+To select the most optimal environment to develop the software infrastructure upon, a series of benchmarking activities were carried out. These focused on evaluating the operating systems and hypervisors which could operate in a real-time environment. Comparing bare-metal Linux and Xen with Linux VMs should give a good method to estimate the specific latencies brough about by Xen.
 
 \subsubsection{Test Suite}
 There are several tools that can be used to analyse the real-time performance of an operating system. RT-Tests is a test suite that contains programs to test the various real-time Linux features.
@@ -11,6 +11,8 @@ The RT-Tests suite includes a cyclictest program. This is a simple yet effective
 
 % Stress-ng
 Another tool that can be used during real-time testing is stress-ng (stress next generation) from \textcite{kingColinIanKingStressng2024}. This program can put artificial loads onto a Linux system. While sustained memory and CPU pressures are unlikely in a real application scenario it is important to ensure that the real-time characteristics of an OS do not significantly change.
+
+\clearpage
 
 \subsubsection{Previous Work}
 

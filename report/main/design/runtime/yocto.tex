@@ -21,21 +21,13 @@ Linux also supports containerization through cgroups and namespaces, which could
 
 \subsection{Hypervisors}
 
-\textcolor{red}{NOT DONE!!}
-
 To reap the benefits of dynamic updates it is preferred that the hypervisor is independent of the operating system. This is so that different operating systems can be upgraded during operation, using the hypervisor functionality to run new virtual machines. 
 
 The KVM hypervisor is implemented on top of the Linux kernel, so is discarded from the search. Also, in a true real-time system it is unusual to use Linux. Rather a more preferable real-time OS such as Zephyr might be used. Using KVM as the hypervisor would constrain the system to Linux's real-time behaviour.
 
-\textcite{ayresVirtualisationMeansDynamic2019} completed a short study into the different available virtualisation technologies for embedded safety critical systems.
+\textcite{ayresVirtualisationMeansDynamic2019} completed a short study into the different available virtualisation technologies for embedded safety critical systems. Notable hypervisors from the study include VxWorks, Xen, Sel 4 which all have public support for the Raspberry Pi 4.
 
-Notable hypervisors not based on KVM...
-
-VxWorks, Xen, Sel 4
-All have public support for the raspberry pi 4
-
-Xen was selected as the hypervisor for evaluation because of its independence from linux and open source nature.
-
+Xen was selected as the hypervisor for evaluation because of its independence from Linux and open-source nature. It also had extensive documentation available compiling Xen for a Raspberry Pi 4 target device.
 
 % HVM, PV, PVH
 % Xen uses para-virtualization and a modified version of the Linux kernel can run as a guest OS.
@@ -47,28 +39,18 @@ Xen was selected as the hypervisor for evaluation because of its independence fr
 
 \subsection{Build Process}
 
-All software images for the development cards were created using the Yocto Project build environment because of it's support for both Linux and Xen. Although some images for Linux were initially created manually, this process was exceptionally slow and an inefficient use of time.
+All software images for the development cards were created using the Yocto Project build environment because of it's support for both Linux and Xen. Although some images for Linux were initially created manually, this process was exceptionally slow and an inefficient use of time.Yocto is an open source project that uses various layers to build an image using scripts \autocite{linuxfoundationYoctoProject2024}.
 
-Yocto is an open source project that uses various layers to build an image using scripts.
+Xen version - 4.18
 
-Xen version
-
-% cite xen too
+Linux kernel version - 6.1.6
 
 \begin{itemize}
-    \item \verb|poky|
-    \item \verb|meta-openembedded|
-    \item \verb|meta-raspberrypi|
-    \item \verb|meta-virtualization|
+    \item \verb|poky| - Base Yocto distribution (4.3.3) \autocite{yoctoPokyPokyBuild2024}
+    \item \verb|meta-openembedded| - Embedded drivers \autocite{openembeddedOpenembeddedMetaopenembedded2024}
+    \item \verb|meta-raspberrypi| - Raspberry Pi focused drivers \autocite{yoctoMetaraspberrypiHardwareSpecific}
+    \item \verb|meta-virtualization| - Virtualisation applications (Xen) \autocite{yoctoMetavirtualizationLayerEnabling}
 \end{itemize}
 
-\clearpage
 
-A custom layer (\verb|meta-cm4-uboot-fix|) was required in order to fix issues with the uBoot bootloader. As the CM4 has onboard flash, the numbering of the eMMC boot drives was slightly different from the Pi 4. Hence a patch was required to modify uBoot's source.
-
-Another layer \verb|meta-rpi4-kernel| was used to pin a specific kernel version. This ensured all images generated used a consistent kernel, 
-
-\begin{itemize}
-    \item \verb|meta-cm4-uboot-fix|
-    \item \verb|meta-rpi4-kernel|
-\end{itemize}
+A custom layer (\verb|meta-cm4-uboot-fix|) was required in order to fix issues with the uBoot bootloader. As the CM4 has onboard flash, the numbering of the eMMC boot drives was slightly different from the Pi 4. Hence a patch was required to modify uBoot's source. Another layer (\verb|meta-rpi4-kernel|) was used to pin a specific kernel version. This ensured all images generated used a consistent kernel version.
