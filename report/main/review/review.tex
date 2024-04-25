@@ -22,10 +22,10 @@ This chapter evaluates the requirements for a system with dynamic software updat
 
 \textcite{mlinaricChallengesDynamicSoftware2020} completed an in-depth analysis into the challenges in dynamic software updating. This built upon the work on previous surveys into dynamic software updating from \textcite{seifzadehSurveyDynamicSoftware2013}.
 
-% TODO
-\textcolor{red}{How techniques have changed over time...}
+% % TODO
+% \textcolor{red}{How techniques have changed over time...}
 
-Oldest... Notable... Latest...
+% Oldest... Notable... Latest...
 
 \subsection{Requirements for dynamic updates}
 A dynamic software system can be summarised into several requirements, regardless of the implementation. Almost every DSU approach balances between the following requirements as they are contrary to each other \autocite{mlinaricChallengesDynamicSoftware2020}.
@@ -40,7 +40,7 @@ A dynamic software system can be summarised into several requirements, regardles
 \subsection{Techniques and Mechanisms}
 The software techniques used to implement a DSU system are expressed by \textcite{mlinaricChallengesDynamicSoftware2020}. The requirements defined for a DSU system can be resolved with the appropriate techniques.
 
-\textcolor{red}{ALL THESE NEED EXPANDING...}
+% \textcolor{red}{ALL THESE NEED EXPANDING...}
 
 \subsubsection{Level of Update}
 A software update often can consist of very minor changes, possibly fixing a software bug with a single line of code. Level of update considers how much of the software is updated, whether that is components or entire system \autocite{seifzadehSurveyDynamicSoftware2013}.
@@ -50,42 +50,32 @@ The communications between software modules (functions or collections of functio
 
 This increases the complexity of upgrading singular modules, as one change could affect all other modules. Sometimes the data types used in communications also changes, so multiple dependant modules may need upgrading to use the new types.
 
-Proxies and Wrappers
+% Proxies and Wrappers
 
-\subsubsection{Time of Update}
-When considering 
+% \subsubsection{Time of Update}
+% When considering 
 
-This is particularly relevant to real-time.
+% This is particularly relevant to real-time.
 
-Activeness safety (AS), confreeness safety (CFS), and manual identification. (REFERENCE)
+% Activeness safety (AS), confreeness safety (CFS), and manual identification. (REFERENCE)
 
 \subsubsection{State Transfer}
-Most applications contain state that must be maintained during software upgrade.
+Most applications contain state that must be maintained during software upgrade. Sometimes state requires transformation if new functionality is added to a system.
 
-This can be automatic 
+This transformation can be either automatic or programmer defined, automatic is suitable for primitive type changes. Manual written transformation functions from previous state, to the next state are required when there are more complex state changes.
 
-Automatic or programmer defined
+% Useful for large code chnages but adds complexity.
 
-Automatic, primitive type changes
-
-Manual written transformation functions from previous state, to the next state
-Useful for large code chnages but adds complexity.
-
-Time of state transformation
-Lazy transformation
-Multiple cycles to transfer in a cyclic system 
+% Time of state transformation
+% Lazy transformation
+% Multiple cycles to transfer in a cyclic system 
 
 \subsubsection{Reasource Cleaning}
 After software update old software modules should be cleared from memory to save resources. 
-
 In a low level language this would take place when defined by the developer. In a high level language the garbage collector would take this responsibility.
 
 \subsubsection{Atomicity and Rollback}
-Sometimes errors may occur during software update 
-
-In case of errors to support the availability of a system rollback is required
-Atomic actions, reversible operations 
-
+Sometimes errors may occur during software update. Systems can support rollback to ensure the stability of the system. Techniques such as atomic actions and reversible operations can be used to achieve this.
 
 \clearpage
 
@@ -93,14 +83,6 @@ Atomic actions, reversible operations
 
 \section{Summary}
 
-\textcolor{red}{Mention two different 'types' of updates vector swap and component...}
+The case studies show there are two different classes of live software updates, function-pointer swap and component-based. Component solutions take the software updates to a higher abstraction level where a system's functionality is divided into chunks known as components that communicate using messages. Function-pointer swap systems do not use an abstraction layer, rather the software updates are implemented using the programming languages native features.
 
-\textcolor{red}{FASA gets closest, not with a focus on aerospace systems...}
-
-\textcolor{red}{FASA does not detail isolation... this could be improved}
-
-\textcolor{red}{Review against categories where to expand...}
-
-Final bit...
-
-Plan is to take approaches of FASA and apply to avionics.... and increase separation
+FASA from \textcite{wahlerDisruptionfreeSoftwareUpdates2014} achieves the majority of the real-time software update criteria. However, it lacks the isolation properties from \textcite{wahlerDynamicSoftwareUpdates2009}. The plan is to take approaches of FASA and apply them to an avionics system while increasing the separation and isolation of components.

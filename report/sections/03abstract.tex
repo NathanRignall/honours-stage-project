@@ -1,7 +1,7 @@
 \abstract{%
 Real-time systems are used throughout the world's critical infrastructure. Updating software on these systems usually requires downtime, where new software is transferred and hardware is reset. Live software updates propose that this process of updating software can happen during operation, with no impact on the intended task. This both reduces the requirement for redundant hardware and increases the flexibility and upgradeability of software systems.
 
-Focusing on the aerospace sector, this report investigates existing dynamic software update solutions, critically analysing each implementation. And subsequently proposes an optimised design for integrated modular avionics systems with edges and nodes.
+Focusing on the aerospace sector, this report investigates existing dynamic software update solutions, critically analysing each implementation. And subsequently develops an optimised design for integrated modular avionics systems with edges and nodes.
 
 The new design uses a component-based software architecture with isolated software components that contain distinct functionality and execute on a cyclic schedule. Message channels allow for component-component and edge-component communication. Components and message channels are configured dynamically using task lists which contain a series of actions to perform on the system. These configuration changes enable the dynamic software updates, as new configurations change the mappings of components and messages.
 
