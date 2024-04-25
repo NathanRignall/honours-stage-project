@@ -3,13 +3,9 @@
 \section{Real-Time}
 A real-time system is defined as a system which requires correct logical operation with completion before a configured deadline. This is in contrast to a non-real-time system which correct operation is desired but lacks configured deadlines \autocite{kaviRealTimeSystems2009}.
 
-These real-time systems can be categorised into hard and soft. Hard real-time systems contain strict timing constraints, where a response must be calculated in a specified time-frame and a missed deadline could result in a catastrophic outcome. Soft real-time systems also have timing constraints, but a missed deadline should not result in a catastrophic outcome.
+These real-time systems can be categorised into hard and soft. Hard real-time systems contain strict timing constraints, where a response must be calculated in a specified time-frame and a missed deadline could result in a catastrophic outcome. Soft real-time systems also have timing constraints, but a missed deadline should not result in a catastrophic outcome \autocite{wangRealTimeSystems}.
 
-% some equations for the hard vs soft
-% some examples of what is required for hard and soft systems
-% REFERENCE THIS
-
-Typical hard real-time systems include aircraft or robotic control computers and soft real-time systems include media players or gaming computers. Soft real-time systems can be used in control applications, but the nature of soft timings must be considered in the system design.
+Typical hard real-time systems include aircraft or robotic control computers and soft real-time systems include media players or gaming computers. Soft real-time systems can be used in control applications, but the nature of soft timings must be considered in the system design \autocite{kaviRealTimeSystems2009}.
 
 \section{Safety Critical Software}
 % Page 3
@@ -24,7 +20,7 @@ Software Considerations in Airborne Systems and Equipment Certification or DO-17
 \newpage
 
 \section{Control Systems}
-A control system is a system that is designed to manage, regulate and stabilize the behaviour of a dynamic system. Often computers are used to implement real-time control laws in applications such as aircraft flight control or chemical process controls \autocite{hindiControlSystemsDesign1987}.
+A control system is a system that is designed to manage, regulate and stabilize the behaviour of a dynamic system. Often computers are used to implement real-time control laws in applications such as aircraft flight or chemical process controls \autocite{hindiControlSystemsDesign1987}.
 
 \begin{figure}[ht]
     \centering
@@ -47,7 +43,7 @@ A control system is a system that is designed to manage, regulate and stabilize 
     \label{fig:realTimeSystem}
 \end{figure}
 
-Sensors measure signals from the environment such as speed or pressure. Controllers take an input from a sensor and completes processing to determine the appropriate action. An example control algorithm is a Proportion-Integral-Derivative (PID) controller. Actuators are devices that receive an input and perform an action in an environment for example motors or values \autocite{pazDesignPIDController2001}.
+Sensors measure signals from the environment such as speed or pressure. Controllers take an input from a sensor and complete processing to determine the appropriate action. An example control algorithm is a Proportion-Integral-Derivative (PID) controller. Actuators are devices that receive an input and perform an action in an environment for example motors or values \autocite{pazDesignPIDController2001}. A PID controller is commonly used in engineering to regulate processes such as temperature, pressure, or speed by adjusting an input based on feedback to maintain desired set-points. This process is displayed in \autoref{fig:pidController}.
 
 \begin{figure}[ht]
     \centering
@@ -57,19 +53,16 @@ Sensors measure signals from the environment such as speed or pressure. Controll
     \label{fig:pidController}
 \end{figure}
 
-% REFERANCE THIS
-A PID controller is commonly used in engineering to regulate processes such as temperature, pressure, or speed by adjusting an input based on feedback to maintain desired set-points. This process is displayed in \autoref{fig:pidController}.
 
-\newpage
 
 \section{Operating Systems}
 An Operating System (OS) is a piece of software that controls the execution of application programs on a hardware system. Usually this involves managing resource allocations, such as a processor execution time, memory usage and inputs/outputs \autocite{stallings2018operating}.
 
 % REFERENCE THIS
 In order to develop a real-time applications with an OS, a RTOS (Real-Time Operating System) is usually required. This is to ensure the time deadlines for an application are enforced.
-Hard real-time operating system are designed to run applications with absolute timing. A worst-case execution time is measured, then the system is modelled mathematically to check all tasks can run to completion. In a soft real-time system tasks are assigned a relative deadline, and are usually de-scheduled in the event they overrun.
+Hard real-time operating system are designed to run applications with absolute timing. A worst-case execution time is measured, then the system is modelled mathematically to check all tasks can run to completion \autocite{slomkaLimitationsRealtimeScheduling2021}. In a soft real-time system tasks are assigned a relative deadline, and are usually de-scheduled in the event they overrun.
 
-The Portable Operating System Interface (POSIX) is a set of standards that define the interface between Unix-like operating systems and applications.
+The Portable Operating System Interface (POSIX) is a set of standards that define the interface between Unix-like operating systems and applications \textcite{kenlonWhatPOSIXRichard}.
 
 \section{Virtualization}
 % intro
@@ -102,20 +95,19 @@ The ARINC 653 standard is a software standard that defines a software architectu
 
 \section{Embedded Middleware}
 % intro
-There is no one definition for middleware used in embedded systems. It is usually considered the piece of software that resides between the operating system and application software. Software that sits between application software can also be classed as middleware \autocite{gazisMiddleware101What2022}.
+There is no one definition for middleware used in embedded systems. It is usually considered the piece of software that resides between the operating system and application software. Any software that sits between application software can also be classed as middleware \autocite{gazisMiddleware101What2022}.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=8cm]{middleware}
-    \caption[Embedded systems middleware models \autocite{ednEmbeddedOperatingSystems2013}]
-    {Embedded systems middleware models \autocite{ednEmbeddedOperatingSystems2013}}
+    \includegraphics[width=7.5cm]{middleware}
+    \caption[Embedded systems middleware model \autocite{chaudronHLAHighPerformance2011}]
+    {Embedded systems middleware model \autocite{chaudronHLAHighPerformance2011}}
     \label{fig:embeddedSystemsMiddleware}
 \end{figure}
 
 % what is middleware for
 The goal of middleware is to make software components more portable and flexible as developed software should be agnostic of the underlying hardware. Middleware can also provide the infrastructure for software components to communicate with each other. Message passing is just one example of a communication technique \autocite{noergaardDemystifyingEmbeddedSystems2010}.
 
-\newpage
 
 \section{Integrated Modular Avionics (IMA)}
 % intro
